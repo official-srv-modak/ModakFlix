@@ -45,11 +45,18 @@ public class Description extends AppCompatActivity {
             JSONObject card = new JSONObject(getIntent().getStringExtra("description"));
             ImageView imageView = (ImageView) findViewById(R.id.image);
 
-            Glide.with(this).load(card.getString("album_art_path")).into(imageView);
+            String album_art_path = card.getString("album_art_path");
+            if(!album_art_path.isEmpty())
+                Glide.with(this).load(album_art_path).into(imageView);
             TextView showName = findViewById(R.id.showName);
             showName.setText(card.getString("name"));
-            TextView description = findViewById(R.id.description);
-            description.setText(card.getString("des"));
+            String desc = card.getString("des");
+            if(!desc.isEmpty())
+            {
+                TextView description = findViewById(R.id.description);
+                description.setText(desc);
+            }
+
 
             ImageButton backBtn = findViewById(R.id.backBtn);
 

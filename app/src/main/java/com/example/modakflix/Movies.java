@@ -52,7 +52,7 @@ public class Movies extends Fragment {
 
 
         LoadCard ld = new LoadCard();
-        ld.execute("http://192.168.0.4/OTTServer/ModakFlix/get_movies_list_json.php");
+        ld.execute("http://192.168.0.7/ModakFlix/get_movies_list_json.php");
 
 
 
@@ -137,8 +137,9 @@ public class Movies extends Fragment {
                                 idList.add(uniqueId);
 
                                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
-
-                                Glide.with(getContext()).load(card.getString("album_art_path")).into(imageView);
+                                String album_art_path = card.getString("album_art_path");
+                                if(!album_art_path.isEmpty())
+                                    Glide.with(getContext()).load(album_art_path).into(imageView);
 
                                 view.setOnClickListener(new View.OnClickListener() {
                                     @Override

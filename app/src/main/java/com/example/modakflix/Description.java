@@ -1,5 +1,9 @@
 package com.example.modakflix;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -7,6 +11,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -77,23 +82,60 @@ public class Description extends AppCompatActivity {
             });
 
             Button playBtn = findViewById(R.id.playBtn);
+            String videoUrl = handleUrl(card.getString("playable_file_path"));
             playBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    try {
-                        MKPlayer m = new MKPlayer();
-                        m.configPlayer(Description.this).play(handleUrl(card.getString("playable_file_path")));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    MKPlayer m = new MKPlayer();
+                    m.configPlayer(Description.this).play(videoUrl);
 
+                }
+            });
+
+            Button openWith = findViewById(R.id.playWithBtn);
+            openWith.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String appPackageName = "com.mxtech.videoplayer.ad";
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setPackage("com.mxtech.videoplayer.ad");
+                        intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
+                        Uri videoUri = Uri.parse(videoUrl);
+                        intent.setDataAndType(videoUri, "application/x-mpegURL");
+                        intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
+                        intent.putExtra("position", 3521729);
+                        intent.putExtra("return_result", true);
+                        startActivityForResult(intent, 1);
+
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(Description.this, "MX Player not installed. Install MX Player" , Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
                 }
             });
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK)  // -1 RESULT_OK : Playback was completed or stopped by user request.
+            //Activity.RESULT_CANCELED: User canceled before starting any playback.
+            //RESULT_ERROR (=Activity.RESULT_FIRST_USER): Last playback was ended with an error.
+
+            if (data.getAction().equals("com.mxtech.intent.result.VIEW")) {
+                //data.getData()
+                int pos = data.getIntExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
+                int dur = data.getIntExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
+                String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
+
+            }
     }
 
     public static String handleUrl(String URL)

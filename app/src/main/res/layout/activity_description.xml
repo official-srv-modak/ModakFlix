@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/black">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,40 +27,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/logo"
-                    android:layout_width="287dp"
-                    android:layout_height="69dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="10sp"
+                <TextView
+                    android:id="@+id/showName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10pt"
+                    android:text="Show Name"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/modakflix" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
                     android:id="@+id/backBtn"
                     android:layout_width="67dp"
                     android:layout_height="64dp"
                     android:background="#00FFFFFF"
-                    app:layout_constraintBottom_toBottomOf="@+id/logo"
-                    app:layout_constraintEnd_toStartOf="@+id/logo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/abc_vector_test" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/showName"
-                android:layout_marginHorizontal="10pt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Show Name"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp"
-                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/image"

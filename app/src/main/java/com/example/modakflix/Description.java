@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.khizar1556.mkvideoplayer.MKPlayerActivity;
@@ -34,6 +35,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+class MKPlayer extends MKPlayerActivity{
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(MKPlayer.this, "HIhihIHIHIHi" , Toast.LENGTH_LONG).show();
+        finish();
+    }
+}
 public class Description extends AppCompatActivity {
 
     @Override
@@ -73,7 +82,8 @@ public class Description extends AppCompatActivity {
                 public void onClick(View v) {
 
                     try {
-                        MKPlayerActivity.configPlayer(Description.this).play(handleUrl(card.getString("playable_file_path")));
+                        MKPlayer m = new MKPlayer();
+                        m.configPlayer(Description.this).play(handleUrl(card.getString("playable_file_path")));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -85,7 +95,6 @@ public class Description extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
     public static String handleUrl(String URL)
     {

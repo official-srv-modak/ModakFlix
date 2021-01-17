@@ -31,6 +31,13 @@
                 android:background="#A4454444"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="COMING SOON"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
             </LinearLayout>
         </ScrollView>
 

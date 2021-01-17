@@ -52,7 +52,7 @@ public class Movies extends Fragment {
 
 
         LoadCard ld = new LoadCard();
-        ld.execute("http://192.168.0.7/ModakFlix/get_movies_list_json.php");
+        ld.execute("http://192.168.0.4/OTTServer/ModakFlix/get_movies_list_json.php");
 
 
 

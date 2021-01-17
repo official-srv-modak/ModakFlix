@@ -1,9 +1,11 @@
 package com.example.modakflix;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -15,16 +17,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.khizar1556.mkvideoplayer.MKPlayerActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,9 +40,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,6 +58,7 @@ class MKPlayer extends MKPlayerActivity{
     }
 }
 public class Description extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +131,45 @@ public class Description extends AppCompatActivity {
         }
     }
 
+    public static String pingDataServer(String URL)
+    {
+        String output = "";
+        try{
+            java.net.URL url = new URL(URL);
+            Map params = new LinkedHashMap<>();
+            StringBuilder postData = new StringBuilder();
+            Set<Map.Entry> s = params.entrySet();
+            for (Map.Entry param : s) {
+                if (postData.length() != 0) postData.append('&');
+                postData.append(URLEncoder.encode((String) param.getKey(), "UTF-8"));
+                postData.append('=');
+                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+            }
+            byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+            conn.setDoOutput(true);
+            conn.getOutputStream().write(postDataBytes);
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                {
+                    output += inputLine;
+                }
+            }
+            in.close();
+            JSONObject jsonObj = new JSONObject(output);
+            return output;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -131,10 +180,8 @@ public class Description extends AppCompatActivity {
 
             if (data.getAction().equals("com.mxtech.intent.result.VIEW")) {
                 //data.getData()
-                int pos = data.getIntExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
-                int dur = data.getIntExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
-                String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
-
+                PostProcess p = new PostProcess();
+                p.execute(data);
             }
     }
 
@@ -154,4 +201,37 @@ public class Description extends AppCompatActivity {
         output += temp;
         return output;
     }
+    private void doPostProcess(Intent data)
+    {
+        int pos = data.getIntExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
+        int dur = data.getIntExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
+        String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
+        Uri uri = data.getData();
+        try {
+            pingDataServer(Movies.record_position_path+"?username=admin&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class PostProcess extends AsyncTask<Intent, Void, Integer> {
+        protected Integer doInBackground(Intent... data) {
+            doPostProcess(data[0]);
+            /*runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });*/
+            return 0;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+    }
+
 }

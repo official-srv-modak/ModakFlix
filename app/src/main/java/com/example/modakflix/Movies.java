@@ -44,6 +44,7 @@ import java.util.Set;
 
 public class Movies extends Fragment {
 
+    public static String record_position_path = "http://192.168.0.4/OTTServer/ModakFlix/record_position.php";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,

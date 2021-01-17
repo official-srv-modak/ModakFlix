@@ -45,6 +45,7 @@ import java.util.Set;
 public class Movies extends Fragment {
 
     public static String record_position_path = "http://192.168.0.4/OTTServer/ModakFlix/record_position.php";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -106,9 +107,10 @@ public class Movies extends Fragment {
     private class LoadCard extends AsyncTask<String, Void, Integer> {
         protected Integer doInBackground(String... urls) {
 
-            JSONObject jsonData = null;
+            JSONObject jsonData = null, resumeData = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 jsonData = getDataFromServer(urls[0]);
+               // resumeData = getDataFromServer(""); //**************
             }
             JSONObject finalJsonData = jsonData;
             getActivity().runOnUiThread(new Runnable() {
@@ -117,6 +119,8 @@ public class Movies extends Fragment {
                     LinearLayout linearLayout1 = getView().findViewById(R.id.linearLayout1);
                     List<Integer> idList = new ArrayList<Integer>();
                     try {
+                        //JSONArray show = finalJsonData.getJSONArray("show"); //**************
+
                         JSONArray cards = finalJsonData.getJSONArray("cards");
                         for(int i = 0; i < cards.length(); i++)
                         {

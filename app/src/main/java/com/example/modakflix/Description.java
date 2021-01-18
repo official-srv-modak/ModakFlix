@@ -105,7 +105,7 @@ public class Description extends AppCompatActivity {
 
 
 
-            if(resumeFlag.equals("0"))
+            if(resumeFlag.equals("0")) // start over
             {
                 String videoUrl = handleUrl(card.getString("playable_file_path"));
                 Button playBtn = findViewById(R.id.playBtn);
@@ -130,7 +130,7 @@ public class Description extends AppCompatActivity {
                             intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
                             Uri videoUri = Uri.parse(videoUrl);
                             intent.setDataAndType(videoUri, "application/x-mpegURL");
-                            int pos = 1;
+                            int pos = 1000;
                             //intent.putExtra("position", 0000);
                             intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
                             intent.putExtra("position", pos);
@@ -144,7 +144,7 @@ public class Description extends AppCompatActivity {
                     }
                 });
             }
-            else
+            else    // Resume
             {
                 String videoUrl = handleUrl(card.getString("url"));
                 Button openWith = findViewById(R.id.playWithBtn);

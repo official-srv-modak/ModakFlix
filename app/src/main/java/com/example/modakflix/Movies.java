@@ -2,11 +2,7 @@ package com.example.modakflix;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
-import android.net.UrlQuerySanitizer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -32,10 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -43,8 +37,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static android.app.Activity.RESULT_OK;
 
 public class Movies extends Fragment {
 
@@ -126,7 +118,7 @@ public class Movies extends Fragment {
                     linearLayout1.removeAllViews();
                     List<Integer> idList = new ArrayList<Integer>();
                     try {
-                        if (finalresumeData!=null)
+                        if (finalresumeData!=null) // Resume
                         {
                             JSONArray show = finalresumeData.getJSONArray("cards");
 
@@ -153,11 +145,15 @@ public class Movies extends Fragment {
                                 JSONObject card = show.getJSONObject(i);
 
 
-                                View view = LayoutInflater.from(getContext()).inflate(R.layout.front_page_elemets, null);
+                                View view = LayoutInflater.from(getContext()).inflate(R.layout.resume_elements, null);
                                 @SuppressLint({"NewApi", "LocalSuppress"}) int uniqueId = View.generateViewId();
                                 view.setId(uniqueId);
                                 idList.add(uniqueId);
-
+                                ProgressBar progressBarH = (ProgressBar) view.findViewById(R.id.resumeBar);
+                                double pos = Double.parseDouble(card.getString("position")), dur = Double.parseDouble(card.getString("duration"));
+                                double rem = ((dur - pos)/dur)*100;
+                                int remaining = (int) (100 - rem);
+                                progressBarH.setProgress(remaining);
                                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
                                 String album_art_path = card.getString("album_art_path");
                                 if(!album_art_path.isEmpty())
@@ -178,6 +174,7 @@ public class Movies extends Fragment {
                             linearLayout1.addView(scrollViewH);
                         }
 
+                        // Normal
 
                         JSONArray cards = finalJsonData.getJSONArray("cards");
                         TextView heading2 = new TextView(getContext());
@@ -205,6 +202,8 @@ public class Movies extends Fragment {
                                 view.setId(uniqueId);
                                 idList.add(uniqueId);
 
+                                /*ProgressBar progressBarH = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+                                progressBarH.setVisibility(View.INVISIBLE);*/
                                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
                                 String album_art_path = card.getString("album_art_path");
                                 if(!album_art_path.isEmpty())

@@ -41,7 +41,7 @@ import java.util.Set;
 public class Movies extends Fragment {
 
     public static String record_position_path = "http://192.168.0.4/OTTServer/ModakFlix/record_position.php", delete_position_path = "http://192.168.0.4/OTTServer/ModakFlix/delete_from_shows_watched.php";
-
+    public static String get_shows_watched_path = "http://192.168.0.4/OTTServer/ModakFlix/get_shows_watched.php?username=admin";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -164,6 +164,7 @@ public class Movies extends Fragment {
                                     public void onClick(View v) {
                                         Intent intent = new Intent(getContext(), Description.class);
                                         intent.putExtra("description", card.toString());
+                                        //intent.putExtra("url", get_shows_watched_path);
                                         intent.putExtra("resumeFlag", "1");
                                         getActivity().startActivity(intent);
                                     }
@@ -214,6 +215,7 @@ public class Movies extends Fragment {
                                     public void onClick(View v) {
                                         Intent intent = new Intent(getContext(), Description.class);
                                         intent.putExtra("description", card.toString());
+                                        //intent.putExtra("url", get_shows_watched_path);
                                         intent.putExtra("resumeFlag", "0");
                                         Movies.this.startActivityForResult(intent, 1);
                                     }

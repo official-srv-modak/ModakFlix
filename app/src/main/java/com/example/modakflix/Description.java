@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -73,6 +74,7 @@ public class Description extends AppCompatActivity {
         super.onResume();
 
         try {
+            //JSONObject card = reload.execute(Movies.get_shows_watched_path);
             JSONObject card = new JSONObject(getIntent().getStringExtra("description"));
             String resumeFlag = getIntent().getStringExtra("resumeFlag");
 
@@ -198,6 +200,8 @@ public class Description extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description);
+
+
     }
 
     public static String pingDataServer(String URL)
@@ -294,6 +298,29 @@ public class Description extends AppCompatActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    private class Reload extends AsyncTask<String, Void, JSONObject> {
+        protected JSONObject doInBackground(String... url) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                JSONObject jsonObject = Movies.getDataFromServer(url[0]);
+                return jsonObject;
+            }
+            /*runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });*/
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
     }
 
     private class PostProcess extends AsyncTask<Intent, Void, Integer> {

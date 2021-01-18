@@ -1,6 +1,7 @@
 package com.example.modakflix;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -59,6 +60,13 @@ class MKPlayer extends MKPlayerActivity{
 }
 public class Description extends AppCompatActivity {
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +75,16 @@ public class Description extends AppCompatActivity {
 
         try {
             JSONObject card = new JSONObject(getIntent().getStringExtra("description"));
+            String resumeFlag = getIntent().getStringExtra("resumeFlag");
+
             ImageView imageView = (ImageView) findViewById(R.id.image);
 
             String album_art_path = card.getString("album_art_path");
             if(!album_art_path.isEmpty())
                 Glide.with(this).load(album_art_path).into(imageView);
             TextView showName = findViewById(R.id.showName);
-            showName.setText(card.getString("name"));
+            String name = card.getString("name");
+            showName.setText(name);
             String desc = card.getString("des");
             if(!desc.isEmpty())
             {
@@ -87,43 +98,95 @@ public class Description extends AppCompatActivity {
             backBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                 }
             });
 
-            Button playBtn = findViewById(R.id.playBtn);
-            String videoUrl = handleUrl(card.getString("playable_file_path"));
-            playBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    MKPlayer m = new MKPlayer();
-                    m.configPlayer(Description.this).play(videoUrl);
 
-                }
-            });
+            if(resumeFlag.equals("0"))
+            {
+                String videoUrl = handleUrl(card.getString("playable_file_path"));
+                Button playBtn = findViewById(R.id.playBtn);
+                playBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-            Button openWith = findViewById(R.id.playWithBtn);
-            openWith.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String appPackageName = "com.mxtech.videoplayer.ad";
-                    try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setPackage("com.mxtech.videoplayer.ad");
-                        intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
-                        Uri videoUri = Uri.parse(videoUrl);
-                        intent.setDataAndType(videoUri, "application/x-mpegURL");
-                        intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
-                        intent.putExtra("return_result", true);
-                        startActivityForResult(intent, 1);
+                        MKPlayer m = new MKPlayer();
+                        m.configPlayer(Description.this).play(videoUrl);
 
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(Description.this, "MX Player not installed. Install MX Player" , Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                     }
+                });
+
+                Button openWith = findViewById(R.id.playWithBtn);
+                openWith.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String appPackageName = "com.mxtech.videoplayer.ad";
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setPackage("com.mxtech.videoplayer.ad");
+                            intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
+                            Uri videoUri = Uri.parse(videoUrl);
+                            intent.setDataAndType(videoUri, "application/x-mpegURL");
+                            //intent.putExtra("position", 0000);
+                            intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
+                            intent.putExtra("return_result", true);
+                            startActivityForResult(intent, 1);
+
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(Description.this, "MX Player not installed. Install MX Player" , Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                        }
+                    }
+                });
+            }
+            else
+            {
+                String videoUrl = handleUrl(card.getString("url"));
+                Button openWith = findViewById(R.id.playWithBtn);
+                int dur = Integer.parseInt(card.getString("duration")), pos = Integer.parseInt(card.getString("position"));
+                int rem = dur - pos;
+                rem /= 1000;
+                int mins = rem/60;
+                int hrs = mins/60;
+                if(hrs > 0)
+                {
+                    mins = mins%60;
+                    openWith.setText("Resume "+hrs+" hour "+mins+" min(s) left");
                 }
-            });
+                else
+                {
+                    openWith.setText("Resume "+mins+" min(s) left");
+                }
+
+                openWith.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String appPackageName = "com.mxtech.videoplayer.ad";
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setPackage("com.mxtech.videoplayer.ad");
+                            intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
+                            Uri videoUri = Uri.parse(videoUrl);
+                            intent.setDataAndType(videoUri, "application/x-mpegURL");
+                            intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
+                            intent.putExtra("position", pos);
+                            intent.putExtra("return_result", true);
+                            startActivityForResult(intent, 1);
+
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(Description.this, "MX Player not installed. Install MX Player" , Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                        }
+                    }
+                });
+                Button playBtn = findViewById(R.id.playBtn);
+                playBtn.setVisibility(View.INVISIBLE);
+            }
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -206,8 +269,20 @@ public class Description extends AppCompatActivity {
         int dur = data.getIntExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
         String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
         Uri uri = data.getData();
+        String name = "";
         try {
-            pingDataServer(Movies.record_position_path+"?username=admin&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause);
+            name = URLDecoder.decode(uri.toString().split("/")[uri.toString().split("/").length - 2], "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            double rem = 0;
+            rem = dur - pos;
+            rem = (rem/dur)*100;
+            if (rem >= 5)
+                pingDataServer(Movies.record_position_path+"?username=admin&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
+            else
+                pingDataServer(Movies.delete_position_path+"?username=admin&show="+name);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

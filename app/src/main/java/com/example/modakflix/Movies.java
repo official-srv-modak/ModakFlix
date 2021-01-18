@@ -17,9 +17,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 
@@ -42,6 +44,22 @@ public class Movies extends Fragment {
 
     public static String record_position_path = "http://192.168.0.4/OTTServer/ModakFlix/record_position.php", delete_position_path = "http://192.168.0.4/OTTServer/ModakFlix/delete_from_shows_watched.php";
     public static String get_shows_watched_path = "http://192.168.0.4/OTTServer/ModakFlix/get_shows_watched.php?username=admin";
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        final SwipeRefreshLayout pullToRefresh = (SwipeRefreshLayout) getView().findViewById(R.id.swipeRefresh);
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -52,12 +70,17 @@ public class Movies extends Fragment {
         /*LoadCard ld = new LoadCard();
         ld.execute("http://192.168.0.4/OTTServer/ModakFlix/get_movies_list_json.php", "http://192.168.0.4/OTTServer/ModakFlix/get_shows_watched.php?username=admin");*/
 
-
-
         return inflater.inflate(R.layout.fragment_movies, container, false);
+
 
     }
 
+
+    public void refreshData()
+    {
+        LoadCard ld = new LoadCard();
+        ld.execute("http://192.168.0.4/OTTServer/ModakFlix/get_movies_list_json.php", "http://192.168.0.4/OTTServer/ModakFlix/get_shows_watched.php?username=admin", "http://192.168.0.4/OTTServer/ModakFlix/reload_shows_watched.php");
+    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("WrongConstant")
 
@@ -108,6 +131,8 @@ public class Movies extends Fragment {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 jsonData = getDataFromServer(urls[0]);
                 resumeData = getDataFromServer(urls[1]); //**************
+                if(urls.length > 2)
+                    pingDataServer(urls[2]);
             }
             JSONObject finalJsonData = jsonData;
             JSONObject finalresumeData = resumeData;
@@ -245,6 +270,7 @@ public class Movies extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         LoadCard ld = new LoadCard();
         ld.execute("http://192.168.0.4/OTTServer/ModakFlix/get_movies_list_json.php", "http://192.168.0.4/OTTServer/ModakFlix/get_shows_watched.php?username=admin");
     }

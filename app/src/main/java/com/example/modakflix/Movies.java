@@ -128,7 +128,7 @@ public class Movies extends Fragment {
                     try {
                         if (finalresumeData!=null)
                         {
-                            JSONArray show = finalresumeData.getJSONArray("cards"); //**************
+                            JSONArray show = finalresumeData.getJSONArray("cards");
 
                             TextView heading1 = new TextView(getContext());
                             heading1.setText("\nResume watching the shows\n");

@@ -69,9 +69,8 @@ public class Description extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_description);
+    protected void onResume() {
+        super.onResume();
 
         try {
             JSONObject card = new JSONObject(getIntent().getStringExtra("description"));
@@ -131,8 +130,10 @@ public class Description extends AppCompatActivity {
                             intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
                             Uri videoUri = Uri.parse(videoUrl);
                             intent.setDataAndType(videoUri, "application/x-mpegURL");
+                            int pos = 1;
                             //intent.putExtra("position", 0000);
                             intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
+                            intent.putExtra("position", pos);
                             intent.putExtra("return_result", true);
                             startActivityForResult(intent, 1);
 
@@ -193,6 +194,12 @@ public class Description extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_description);
+    }
+
     public static String pingDataServer(String URL)
     {
         String output = "";
@@ -231,6 +238,7 @@ public class Description extends AppCompatActivity {
             return null;
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

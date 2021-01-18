@@ -115,7 +115,6 @@ public class Description extends AppCompatActivity {
                         Uri videoUri = Uri.parse(videoUrl);
                         intent.setDataAndType(videoUri, "application/x-mpegURL");
                         intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
-                        intent.putExtra("position", 3521729);
                         intent.putExtra("return_result", true);
                         startActivityForResult(intent, 1);
 
@@ -160,7 +159,7 @@ public class Description extends AppCompatActivity {
                 }
             }
             in.close();
-            JSONObject jsonObj = new JSONObject(output);
+            //JSONObject jsonObj = new JSONObject(output);
             return output;
         }
         catch(Exception e)
@@ -208,7 +207,7 @@ public class Description extends AppCompatActivity {
         String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
         Uri uri = data.getData();
         try {
-            pingDataServer(Movies.record_position_path+"?username=admin&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos);
+            pingDataServer(Movies.record_position_path+"?username=admin&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

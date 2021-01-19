@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -73,6 +74,28 @@ public class Description extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        refreshData();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_description);
+
+        final SwipeRefreshLayout pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshDesc);
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
+    }
+
+    public void refreshData()
+    {
         try {
             //JSONObject card = reload.execute(Movies.get_shows_watched_path);
             JSONObject card = new JSONObject(getIntent().getStringExtra("description"));
@@ -195,15 +218,6 @@ public class Description extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_description);
-
-
-    }
-
     public static String pingDataServer(String URL)
     {
         String output = "";

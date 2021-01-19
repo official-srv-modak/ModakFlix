@@ -42,8 +42,12 @@ import java.util.Set;
 
 public class Movies extends Fragment {
 
-    public static String record_position_path = "http://192.168.0.4/OTTServer/ModakFlix/record_position.php", delete_position_path = "http://192.168.0.4/OTTServer/ModakFlix/delete_from_shows_watched.php";
-    public static String get_shows_watched_path = "http://192.168.0.4/OTTServer/ModakFlix/get_shows_watched.php?username=admin";
+    public static String domain_name = "http://192.168.0.4/OTTServer/ModakFlix/";
+    public static String record_position_path = domain_name+"record_position.php";
+    public static String delete_position_path = domain_name+"delete_from_shows_watched.php";
+    public static String get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";
+    public static String get_movies_list = domain_name+"get_movies_list_json.php";
+    public static String reload_shows_watched = domain_name+"reload_shows_watched.php";
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -68,7 +72,7 @@ public class Movies extends Fragment {
 
 
         /*LoadCard ld = new LoadCard();
-        ld.execute("http://192.168.0.4/OTTServer/ModakFlix/get_movies_list_json.php", "http://192.168.0.4/OTTServer/ModakFlix/get_shows_watched.php?username=admin");*/
+        ld.execute(get_movies_list, get_shows_watched_path);*/
 
         return inflater.inflate(R.layout.fragment_movies, container, false);
 
@@ -79,7 +83,7 @@ public class Movies extends Fragment {
     public void refreshData()
     {
         LoadCard ld = new LoadCard();
-        ld.execute("http://192.168.0.4/OTTServer/ModakFlix/get_movies_list_json.php", "http://192.168.0.4/OTTServer/ModakFlix/get_shows_watched.php?username=admin", "http://192.168.0.4/OTTServer/ModakFlix/reload_shows_watched.php");
+        ld.execute(get_movies_list, get_shows_watched_path, reload_shows_watched);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("WrongConstant")
@@ -272,7 +276,7 @@ public class Movies extends Fragment {
         super.onResume();
 
         LoadCard ld = new LoadCard();
-        ld.execute("http://192.168.0.4/OTTServer/ModakFlix/get_movies_list_json.php", "http://192.168.0.4/OTTServer/ModakFlix/get_shows_watched.php?username=admin");
+        ld.execute(get_movies_list, get_shows_watched_path);
     }
 
     public static String pingDataServer(String URL)

@@ -52,6 +52,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
+
 class MKPlayer extends MKPlayerActivity{
 
     @Override
@@ -94,6 +96,7 @@ public class Description extends AppCompatActivity {
 
     }
 
+    @SuppressLint("WrongConstant")
     public void refreshData()
     {
         try {
@@ -112,8 +115,18 @@ public class Description extends AppCompatActivity {
             String desc = card.getString("des");
             if(!desc.isEmpty())
             {
-                TextView description = findViewById(R.id.description);
-                description.setText(desc);
+                TextView description = findViewById(R.id.summary);
+                String summary = desc.split("IMDB")[0].trim();
+                String rest = "IMDB "+desc.split("IMDB")[1].trim();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    description.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+                }
+
+                description.setText(summary);
+                TextView restOfThings = findViewById(R.id.rest);
+                restOfThings.setText(rest);
+
             }
 
 

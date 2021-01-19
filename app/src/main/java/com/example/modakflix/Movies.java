@@ -80,6 +80,7 @@ public class Movies extends Fragment {
             public void onRefresh() {
                 refreshData();
                 pullToRefresh.setRefreshing(false);
+                cc.fullScroll(ScrollView.FOCUS_UP);
             }
 
         });
@@ -94,7 +95,7 @@ public class Movies extends Fragment {
                 float Y_axis = event.getAxisValue(MotionEvent.AXIS_Y);
                 double perc = Y_axis/height;
                 perc *= 100;
-                if(perc>80){
+                if(perc<30){
                     pullToRefresh.setEnabled(true);
                 }else {
 

@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10sp"
-        app:cardCornerRadius="5pt"
         android:background="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +38,6 @@
                 android:id="@+id/resumeBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-
                 android:progressDrawable="@layout/progress_bar"
                 android:layout_height="5dp" />
         </LinearLayout>

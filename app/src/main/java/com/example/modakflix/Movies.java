@@ -6,24 +6,33 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.view.menu.MenuView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.transition.MaterialSharedAxis;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,19 +58,74 @@ public class Movies extends Fragment {
     public static String get_movies_list = domain_name+"get_movies_list_json.php";
     public static String reload_shows_watched = domain_name+"reload_shows_watched.php";
 
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final SwipeRefreshLayout pullToRefresh = (SwipeRefreshLayout) getView().findViewById(R.id.swipeRefresh);
+        final SwipeRefreshLayout pullToRefresh = getView().findViewById(R.id.swipeRefresh);
+        refreshData();
 
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+
+        /*Boolean flag = pullToRefresh.canChildScrollUp();
+        Toast.makeText(getActivity(), flag.toString() , Toast.LENGTH_LONG).show();*/
+
+        ScrollView cc = getView().findViewById(R.id.scrollView1);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshData();
                 pullToRefresh.setRefreshing(false);
             }
+
         });
+
+        cc.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+
+                //pullToRefresh.setEnabled(true);
+                float Y_axis = event.getAxisValue(MotionEvent.AXIS_Y);
+                double perc = Y_axis/height;
+                perc *= 100;
+                if(perc>50){
+                    pullToRefresh.setEnabled(true);
+                }else {
+
+                    pullToRefresh.setEnabled(false);
+                }
+                Log.e("yy",""+Y_axis);
+                Log.e("Height",""+height);
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_MOVE:
+                    case MotionEvent.ACTION_UP:
+                }
+
+                return false;
+            }
+        });
+
+    }
+
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        int x = (int)event.getX();
+        int y = (int)event.getY();
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_UP:
+        }
+
+        return false;
     }
 
     @Nullable
@@ -85,9 +149,10 @@ public class Movies extends Fragment {
         LoadCard ld = new LoadCard();
         ld.execute(get_movies_list, get_shows_watched_path, reload_shows_watched);
     }
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("WrongConstant")
-
     public static JSONObject getDataFromServer(String URL)
     {
         String output = "";
@@ -275,8 +340,7 @@ public class Movies extends Fragment {
     public void onResume() {
         super.onResume();
 
-        LoadCard ld = new LoadCard();
-        ld.execute(get_movies_list, get_shows_watched_path);
+        refreshData();
     }
 
     public static String pingDataServer(String URL)

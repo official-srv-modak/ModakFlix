@@ -169,9 +169,13 @@ public class Description extends AppCompatActivity {
                             Uri videoUri = Uri.parse(videoUrl);
                             intent.setDataAndType(videoUri, "application/x-mpegURL");
                             int pos = 1000;
+
                             //intent.putExtra("position", 0000);
                             intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
                             intent.putExtra("position", pos);
+                            byte decoder = 2;
+                            intent.putExtra("decode_mode", decoder);
+                            intent.putExtra("fast_mode", true);
                             intent.putExtra("return_result", true);
                             startActivityForResult(intent, 1);
 
@@ -213,6 +217,9 @@ public class Description extends AppCompatActivity {
                             intent.setDataAndType(videoUri, "application/x-mpegURL");
                             intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
                             intent.putExtra("position", pos);
+                            byte decoder = 2;
+                            intent.putExtra("decode_mode", decoder);
+                            intent.putExtra("fast_mode", true);
                             intent.putExtra("return_result", true);
                             startActivityForResult(intent, 1);
 

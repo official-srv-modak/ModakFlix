@@ -19,20 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.view.menu.MenuView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.transition.MaterialSharedAxis;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -210,7 +204,7 @@ public class Movies extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    LinearLayout linearLayout1 = getView().findViewById(R.id.linearLayout1);
+                    LinearLayout linearLayout1 = getView().findViewById(R.id.linearLayout);
                     linearLayout1.removeAllViews();
                     List<Integer> idList = new ArrayList<Integer>();
                     try {

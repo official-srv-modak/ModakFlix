@@ -96,8 +96,8 @@ public class Movies extends Fragment {
 
                     pullToRefresh.setEnabled(false);
                 }
-                Log.e("yy",""+Y_axis);
-                Log.e("Height",""+height);
+                //Log.e("yy",""+Y_axis);
+                //Log.e("Height",""+height);
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                     case MotionEvent.ACTION_MOVE:
@@ -285,7 +285,7 @@ public class Movies extends Fragment {
                             linearLayout2.setOrientation(LinearLayout.HORIZONTAL);
                             linearLayout2.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
 
-                            for(int j = 0; j<2; j++)
+                            for(int j = 0; j<2 && (i+j) < cards.length(); j++)
                             {
                                 JSONObject card = cards.getJSONObject(i+j);
                                 View view = LayoutInflater.from(getContext()).inflate(R.layout.front_page_elemets, null);

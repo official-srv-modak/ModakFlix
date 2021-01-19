@@ -312,6 +312,20 @@ public class Description extends AppCompatActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        Button openWith = findViewById(R.id.playWithBtn);
+        int rem = dur - pos;
+        rem /= 1000;
+        int mins = rem/60;
+        int hrs = mins/60;
+        if(hrs > 0)
+        {
+            mins = mins%60;
+            openWith.setText("Resume "+hrs+" hour "+mins+" min(s) left");
+        }
+        else
+        {
+            openWith.setText("Resume "+mins+" min(s) left");
+        }
     }
 
     private class Reload extends AsyncTask<String, Void, JSONObject> {

@@ -95,7 +95,7 @@ public class Movies extends Fragment {
                 float Y_axis = event.getAxisValue(MotionEvent.AXIS_Y);
                 double perc = Y_axis/height;
                 perc *= 100;
-                if(perc<30){
+                if(perc<40){
                     pullToRefresh.setEnabled(true);
                 }else {
 

@@ -118,7 +118,7 @@ public class Movies extends Fragment {
 
     }
 
-    public boolean onTouchEvent(MotionEvent event)
+    public boolean onTouchEvent(MotionEvent event)  // not used but just for fun
     {
         int x = (int)event.getX();
         int y = (int)event.getY();
@@ -216,6 +216,8 @@ public class Movies extends Fragment {
                 public void run() {
                     LinearLayout linearLayout1 = getView().findViewById(R.id.linearLayout);
                     linearLayout1.removeAllViews();
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(50, 0, 0, 0);
                     List<Integer> idList = new ArrayList<Integer>();
                     try {
                         if (finalresumeData!=null) // Resume
@@ -224,8 +226,9 @@ public class Movies extends Fragment {
 
                             TextView heading1 = new TextView(getContext());
                             heading1.setText("\nResume watching the shows\n");
-                            heading1.setGravity(Gravity.CENTER);
+                            //heading1.setGravity(Gravity.CENTER);
                             heading1.setTextSize(18f);
+                            heading1.setLayoutParams(lp);
                             heading1.setTextColor(Color.WHITE);
                             linearLayout1.addView(heading1);
                             LinearLayout linearLayoutH = new LinearLayout(getActivity());
@@ -281,7 +284,8 @@ public class Movies extends Fragment {
                         TextView heading2 = new TextView(getContext());
                         heading2.setText("\nMovies from your collection\n");
                         heading2.setTextColor(Color.WHITE);
-                        heading2.setGravity(Gravity.CENTER);
+                        //heading2.setGravity(Gravity.CENTER);
+                        heading2.setLayoutParams(lp);
                         heading2.setTextSize(18f);
                         linearLayout1.addView(heading2);
                         for(int i = 0; i < cards.length(); i++)

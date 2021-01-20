@@ -5,7 +5,9 @@
     <item
         android:id="@+id/profile"
         android:title="Profiles"
-        app:showAsAction="never" />
+        app:showAsAction="never">
+
+    </item>
     <item
         android:id="@+id/contactUs"
         android:title="Contact Us"

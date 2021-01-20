@@ -145,7 +145,7 @@ public class Description extends AppCompatActivity {
 
             if(resumeFlag.equals("0")) // start over
             {
-                String videoUrl = handleUrl(card.getString("playable_file_path"));
+                String videoUrl = handleUrl(card.getString("url"));
                 Button playBtn = findViewById(R.id.playBtn);
                 playBtn.setOnClickListener(new View.OnClickListener() {
                     @Override

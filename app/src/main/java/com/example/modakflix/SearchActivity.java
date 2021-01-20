@@ -140,7 +140,7 @@ public class SearchActivity extends AppCompatActivity {
                                         if(card.has("position"))
                                                 resumeFlag = "1";
                                         else
-                                                resumeFlag = "1";
+                                                resumeFlag = "0";
                                         intent.putExtra("resumeFlag", resumeFlag);
                                         SearchActivity.this.startActivityForResult(intent, 1);
                                     }

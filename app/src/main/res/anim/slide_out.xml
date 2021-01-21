@@ -4,5 +4,5 @@
     android:duration="1700"
     android:startOffset="3500"
     android:fromYDelta="-50%"
-    android:toYDelta="-500%" />
+    android:toYDelta="-480%" />
 

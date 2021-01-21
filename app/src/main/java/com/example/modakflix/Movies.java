@@ -55,6 +55,7 @@ public class Movies extends Fragment {
     public static String get_movies_list = domain_name+"get_movies_list_json.php";
     public static String reload_shows_watched = domain_name+"reload_shows_watched.php";
     public static String search_shows = domain_name+"search_show.php";
+    public static String get_profiles = domain_name+"get_profiles.php";
 
 
     @SuppressLint("ClickableViewAccessibility")

@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,10 +52,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
 class MKPlayer extends MKPlayerActivity{
+
 
     @Override
     public void onBackPressed() {
@@ -63,6 +66,26 @@ class MKPlayer extends MKPlayerActivity{
     }
 }
 public class Description extends AppCompatActivity {
+
+    static boolean active = false;
+    static String resumeFlag = "0";
+    int durFromMx = 0, posFromMx = 0;
+    String showname = "";
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!resumeFlag.equals("0"))
+            active = true;
+        else
+            active = false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active = false;
+    }
 
     @Override
     public void onBackPressed() {
@@ -75,8 +98,12 @@ public class Description extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        refreshData();
+        if(active)
+        {
+            refreshData("");
+        }
+        else
+            refreshData(showname);
     }
 
     @Override
@@ -89,7 +116,7 @@ public class Description extends AppCompatActivity {
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshData();
+                refreshData("");
                 pullToRefresh.setRefreshing(false);
             }
         });
@@ -97,12 +124,40 @@ public class Description extends AppCompatActivity {
     }
 
     @SuppressLint("WrongConstant")
-    public void refreshData()
+    public void refreshData(String showname)
+    {
+        JSONObject card = null;
+        if(showname.isEmpty())
+        {
+            try {
+                card = new JSONObject(getIntent().getStringExtra("description"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            processCards(card);
+        }
+        else
+        {
+            ReloadDescription rd = new ReloadDescription();
+            try {
+                card = rd.execute(Movies.reload_description, "admin", showname).get();
+                processCards(card);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    @SuppressLint("WrongConstant")
+    public void processCards(JSONObject card)
     {
         try {
             //JSONObject card = reload.execute(Movies.get_shows_watched_path);
-            JSONObject card = new JSONObject(getIntent().getStringExtra("description"));
-            String resumeFlag = getIntent().getStringExtra("resumeFlag");
+
+          //  String resumeFlag = getIntent().getStringExtra("resumeFlag");
 
             ImageView imageView = (ImageView) findViewById(R.id.image);
 
@@ -145,6 +200,7 @@ public class Description extends AppCompatActivity {
 
             if(resumeFlag.equals("0")) // start over
             {
+                resumeFlag = "1";
                 String videoUrl = handleUrl(card.getString("url"));
                 Button playBtn = findViewById(R.id.playBtn);
                 playBtn.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +219,7 @@ public class Description extends AppCompatActivity {
                     public void onClick(View v) {
                         String appPackageName = "com.mxtech.videoplayer.ad";
                         try {
+                            active = false;
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setPackage("com.mxtech.videoplayer.ad");
                             intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
@@ -190,7 +247,19 @@ public class Description extends AppCompatActivity {
             {
                 String videoUrl = handleUrl(card.getString("url"));
                 Button openWith = findViewById(R.id.playWithBtn);
-                int dur = Integer.parseInt(card.getString("duration")), pos = Integer.parseInt(card.getString("position"));
+                int dur = 0, pos = 0;
+                if(durFromMx!=0 && posFromMx!=0)
+                //if(card.has("duration") && card.has("position"))
+                {
+                    dur = durFromMx;
+                    pos = posFromMx;
+
+                }
+                else
+                {
+                    dur = Integer.parseInt(card.getString("duration"));
+                    pos = Integer.parseInt(card.getString("position"));
+                }
                 int rem = dur - pos;
                 rem /= 1000;
                 int mins = rem/60;
@@ -204,19 +273,20 @@ public class Description extends AppCompatActivity {
                 {
                     openWith.setText("Resume "+mins+" min(s) left");
                 }
-
+                final int pos1 = pos;
                 openWith.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String appPackageName = "com.mxtech.videoplayer.ad";
                         try {
+                            active = false;
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setPackage("com.mxtech.videoplayer.ad");
                             intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
                             Uri videoUri = Uri.parse(videoUrl);
                             intent.setDataAndType(videoUri, "application/x-mpegURL");
                             intent.setPackage("com.mxtech.videoplayer.ad"); // com.mxtech.videoplayer.pro
-                            intent.putExtra("position", pos);
+                            intent.putExtra("position", pos1);
                             byte decoder = 2;
                             intent.putExtra("decode_mode", decoder);
                             intent.putExtra("fast_mode", true);
@@ -299,6 +369,9 @@ public class Description extends AppCompatActivity {
         String temp = URL.split(output)[1];
         temp = temp.replace("/", "forwardslash");
         temp = temp.replace(" ", "spacebarspace");
+        temp = temp.replace("?", "questionmarkquestion");
+        temp = temp.replace("&", "emparsandemparsand");
+        temp = temp.replace("=", "equaltoequal");
         try {
             temp= URLEncoder.encode(temp, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -306,6 +379,10 @@ public class Description extends AppCompatActivity {
         }
         temp = temp.replace("forwardslash", "/");
         temp = temp.replace("spacebarspace", "%20");
+        temp = temp.replace("questionmarkquestion", "?");
+        temp = temp.replace("emparsandemparsand", "&");
+        temp = temp.replace("equaltoequal", "=");
+
         output += temp;
         return output;
     }
@@ -316,8 +393,11 @@ public class Description extends AppCompatActivity {
         String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
         Uri uri = data.getData();
         String name = "";
+        durFromMx = dur;
+        posFromMx = pos;
         try {
             name = URLDecoder.decode(uri.toString().split("/")[uri.toString().split("/").length - 2], "UTF-8");
+            showname = name;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -326,7 +406,10 @@ public class Description extends AppCompatActivity {
             rem = dur - pos;
             rem = (rem/dur)*100;
             if (rem >= 5)
+            {
                 pingDataServer(Movies.record_position_path+"?username=admin&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
+            }
+
             else
                 pingDataServer(Movies.delete_position_path+"?username=admin&show="+name);
         } catch (UnsupportedEncodingException e) {
@@ -374,12 +457,7 @@ public class Description extends AppCompatActivity {
     private class PostProcess extends AsyncTask<Intent, Void, Integer> {
         protected Integer doInBackground(Intent... data) {
             doPostProcess(data[0]);
-            /*runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
 
-                }
-            });*/
             return 0;
         }
 
@@ -388,6 +466,38 @@ public class Description extends AppCompatActivity {
             super.onPreExecute();
 
         }
+
+    }
+
+    private class ReloadDescription extends AsyncTask<String, Void, JSONObject> {
+        public JSONObject doInBackground(String... urls) {
+            JSONObject resumeData = null;
+            String username = null, showname = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                username = urls[1];
+                showname = urls[2];
+                Log.e("yy",""+handleUrl(urls[0]+"?username="+username+"&show="+showname));
+                resumeData = Movies.getDataFromServer(handleUrl(urls[0]+"?username="+username+"&show="+showname));
+            }
+            JSONObject finalresumeData = resumeData;
+
+            if (finalresumeData!=null) // Resume
+            {
+                try {
+                    JSONArray show = finalresumeData.getJSONArray("cards");
+                    JSONObject card = show.getJSONObject(0);
+                    return card;
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+
+
+
 
     }
 

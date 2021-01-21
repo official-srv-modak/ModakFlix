@@ -56,6 +56,7 @@ public class Movies extends Fragment {
     public static String reload_shows_watched = domain_name+"reload_shows_watched.php";
     public static String search_shows = domain_name+"search_show.php";
     public static String get_profiles = domain_name+"get_profiles.php";
+    public static String reload_description = domain_name+"reload_description.php";
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -206,7 +207,7 @@ public class Movies extends Fragment {
             JSONObject jsonData = null, resumeData = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 jsonData = getDataFromServer(urls[0]);
-                resumeData = getDataFromServer(urls[1]); //**************
+                resumeData = getDataFromServer(urls[1]);
                 if(urls.length > 2)
                     pingDataServer(urls[2]);
             }

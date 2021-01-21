@@ -67,7 +67,7 @@ class MKPlayer extends MKPlayerActivity{
 }
 public class Description extends AppCompatActivity {
 
-    static boolean active = false;
+    boolean active = false;
     static String resumeFlag = "0";
     int durFromMx = 0, posFromMx = 0;
     String showname = "";
@@ -78,13 +78,23 @@ public class Description extends AppCompatActivity {
         if(!resumeFlag.equals("0"))
             active = true;
         else
+        {
             active = false;
+            resumeFlag = "0";
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        active = false;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         active = false;
+        //
     }
 
     @Override
@@ -255,10 +265,16 @@ public class Description extends AppCompatActivity {
                     pos = posFromMx;
 
                 }
-                else
+                else if(card.has("duration") && card.has("position"))
                 {
                     dur = Integer.parseInt(card.getString("duration"));
                     pos = Integer.parseInt(card.getString("position"));
+                }
+                else
+                {
+                    resumeFlag = "0";
+                    processCards(card);
+                    return;
                 }
                 int rem = dur - pos;
                 rem /= 1000;

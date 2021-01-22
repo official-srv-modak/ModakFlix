@@ -411,7 +411,6 @@ public class Description extends AppCompatActivity {
             progressDialog.setIndeterminate(false);
             progressDialog.setCancelable(true);
             progressDialog.show();
-            int temp = 0;
         }
 
         @Override

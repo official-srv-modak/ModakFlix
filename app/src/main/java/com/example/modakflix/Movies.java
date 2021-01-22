@@ -1,6 +1,7 @@
 package com.example.modakflix;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -59,21 +60,23 @@ public class Movies extends Fragment {
     public static String reload_description = domain_name+"reload_description.php";
     public static String get_description = domain_name+"get_description.php";
 
+    SwipeRefreshLayout pullToRefresh;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final SwipeRefreshLayout pullToRefresh = getView().findViewById(R.id.swipeRefresh);
         refreshData();
 
+        pullToRefresh = getView().findViewById(R.id.swipeRefresh);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
 
         /*Boolean flag = pullToRefresh.canChildScrollUp();
         Toast.makeText(getActivity(), flag.toString() , Toast.LENGTH_LONG).show();*/
+
 
         ScrollView cc = getView().findViewById(R.id.scrollView1);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -155,6 +158,7 @@ public class Movies extends Fragment {
 
     public void refreshData()
     {
+        pullToRefresh = getView().findViewById(R.id.swipeRefresh);
         LoadCard ld = new LoadCard();
         ld.execute(get_movies_list, get_shows_watched_path, reload_shows_watched);
     }
@@ -342,10 +346,29 @@ public class Movies extends Fragment {
             return 0;
         }
 
+        ProgressDialog progressDialog = new ProgressDialog(getContext());;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
+            if(!pullToRefresh.isRefreshing())
+            {
+                progressDialog.setMessage("Loading...");
+                progressDialog.setIndeterminate(false);
+                progressDialog.setCancelable(true);
+                progressDialog.show();
+            }
+
+            int temp = 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            if(!pullToRefresh.isRefreshing()) {
+                progressDialog.dismiss();
+            }
         }
 
     }

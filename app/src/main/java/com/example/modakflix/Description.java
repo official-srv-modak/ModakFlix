@@ -2,6 +2,7 @@ package com.example.modakflix;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -401,13 +402,23 @@ public class Description extends AppCompatActivity {
             return 0;
         }
 
+        ProgressDialog progressDialog = new ProgressDialog(Description.this);
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
+            int temp = 0;
         }
 
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            progressDialog.dismiss();
+        }
     }
 }
 

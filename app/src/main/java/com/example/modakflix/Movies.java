@@ -49,7 +49,7 @@ import java.util.Set;
 
 public class Movies extends Fragment {
 
-    public static String domain_name = "http://192.168.0.4/OTTServer/ModakFlix/";
+    public static String domain_name = "http://192.168.0.103/OTTServer/ModakFlix/";
     public static String record_position_path = domain_name+"record_position.php";
     public static String delete_position_path = domain_name+"delete_from_shows_watched.php";
     public static String get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";
@@ -352,13 +352,13 @@ public class Movies extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            if(!pullToRefresh.isRefreshing())
+            /*if(!pullToRefresh.isRefreshing())
             {
                 progressDialog.setMessage("Loading...");
                 progressDialog.setIndeterminate(false);
                 progressDialog.setCancelable(true);
                 progressDialog.show();
-            }
+            }*/
 
             int temp = 0;
         }

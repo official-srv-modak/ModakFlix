@@ -346,7 +346,7 @@ public class Movies extends Fragment {
             return 0;
         }
 
-        ProgressDialog progressDialog = new ProgressDialog(getContext());;
+        /*ProgressDialog progressDialog = new ProgressDialog(getContext());;
 
         @Override
         protected void onPreExecute() {
@@ -369,7 +369,7 @@ public class Movies extends Fragment {
             if(!pullToRefresh.isRefreshing()) {
                 progressDialog.dismiss();
             }
-        }
+        }*/
 
     }
     @Override

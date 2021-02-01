@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
@@ -391,17 +392,6 @@ public class Description extends AppCompatActivity {
 
             return null;
         }
-    }
-
-
-
-    private class PostProcess extends AsyncTask<Intent, Void, Integer> {
-        protected Integer doInBackground(Intent... data) {
-            doPostProcess(data[0]);
-
-            return 0;
-        }
-
         ProgressDialog progressDialog = new ProgressDialog(Description.this);
         @Override
         protected void onPreExecute() {
@@ -418,6 +408,33 @@ public class Description extends AppCompatActivity {
             super.onPostExecute(integer);
             progressDialog.dismiss();
         }
+    }
+
+
+
+    private class PostProcess extends AsyncTask<Intent, Void, Integer> {
+        protected Integer doInBackground(Intent... data) {
+            doPostProcess(data[0]);
+
+            return 0;
+        }
+
+        /*ProgressDialog progressDialog = new ProgressDialog(Description.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            progressDialog.dismiss();
+        }*/
     }
 }
 

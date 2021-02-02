@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -108,6 +109,27 @@ public class Profiles extends AppCompatActivity {
             });
 
             return null;
+        }
+        ProgressDialog progressDialog = new ProgressDialog(Profiles.this);;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
+
+
+            int temp = 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+                progressDialog.dismiss();
         }
 
     }

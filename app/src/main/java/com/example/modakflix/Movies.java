@@ -104,8 +104,8 @@ public class Movies extends Fragment {
                 if( y == 0){
                     pullToRefresh.setEnabled(true);
                 }
-                else if(perc < 40)
-                    pullToRefresh.setEnabled(true);
+                /*else if(perc < 40)
+                    pullToRefresh.setEnabled(true);*/
 
                 else {
 

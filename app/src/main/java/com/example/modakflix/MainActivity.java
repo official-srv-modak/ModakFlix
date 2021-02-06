@@ -26,6 +26,7 @@ import com.example.modakflix.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static String username = "admin";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_bar);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        username = getIntent().getStringExtra("username");
     }
 
     @Override

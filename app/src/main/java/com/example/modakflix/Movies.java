@@ -49,6 +49,7 @@ import java.util.Set;
 
 public class Movies extends Fragment {
 
+    private static String username = "";
     public static String domain_name = "http://192.168.0.4/OTTServer/ModakFlix/";
     public static String record_position_path = domain_name+"record_position.php";
     public static String delete_position_path = domain_name+"delete_from_shows_watched.php";
@@ -68,6 +69,7 @@ public class Movies extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        username = getArguments().getString("username");
         refreshData(0);
 
         pullToRefresh = getView().findViewById(R.id.swipeRefresh);
@@ -77,7 +79,6 @@ public class Movies extends Fragment {
 
         /*Boolean flag = pullToRefresh.canChildScrollUp();
         Toast.makeText(getActivity(), flag.toString() , Toast.LENGTH_LONG).show();*/
-
 
         ScrollView cc = getView().findViewById(R.id.scrollView1);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -159,6 +160,7 @@ public class Movies extends Fragment {
 
     public void refreshData(int actResumeFlag)
     {
+        get_shows_watched_path = domain_name+"get_shows_watched.php?username="+username;
         if(actResumeFlag == 1)
         {
             pullToRefresh = getView().findViewById(R.id.swipeRefresh);
@@ -284,6 +286,7 @@ public class Movies extends Fragment {
                                     public void onClick(View v) {
                                         Intent intent = new Intent(getContext(), Description.class);
                                         intent.putExtra("description", card.toString());
+                                        intent.putExtra("username", username);
                                         //intent.putExtra("url", get_shows_watched_path);
                                         intent.putExtra("resumeFlag", "1");
                                         getActivity().startActivity(intent);
@@ -336,6 +339,7 @@ public class Movies extends Fragment {
                                     public void onClick(View v) {
                                         Intent intent = new Intent(getContext(), Description.class);
                                         intent.putExtra("description", card.toString());
+                                        intent.putExtra("username", username);
                                         //intent.putExtra("url", get_shows_watched_path);
                                         intent.putExtra("resumeFlag", "0");
                                         Movies.this.startActivityForResult(intent, 1);
@@ -451,6 +455,7 @@ public class Movies extends Fragment {
                                     public void onClick(View v) {
                                         Intent intent = new Intent(getContext(), Description.class);
                                         intent.putExtra("description", card.toString());
+                                        intent.putExtra("username", username);
                                         //intent.putExtra("url", get_shows_watched_path);
                                         intent.putExtra("resumeFlag", "1");
                                         getActivity().startActivity(intent);
@@ -503,6 +508,7 @@ public class Movies extends Fragment {
                                     public void onClick(View v) {
                                         Intent intent = new Intent(getContext(), Description.class);
                                         intent.putExtra("description", card.toString());
+                                        intent.putExtra("username", username);
                                         //intent.putExtra("url", get_shows_watched_path);
                                         intent.putExtra("resumeFlag", "0");
                                         Movies.this.startActivityForResult(intent, 1);

@@ -62,7 +62,6 @@ public class Profiles extends AppCompatActivity {
                     }
                     LinearLayout c = findViewById(R.id.linearLayout2);
 
-
                     for (int i = 0; i < show.length(); ) {
                         LinearLayout linearLayout2 = new LinearLayout(Profiles.this);
 
@@ -92,17 +91,21 @@ public class Profiles extends AppCompatActivity {
                             }
                             linearLayout2.addView(view);
 
+
                             view.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     overridePendingTransition(0, R.anim.fade_out);
                                     Intent intent = new Intent(Profiles.this, MainActivity.class);
+                                    intent.putExtra("username", tv.getText());
                                     startActivity(intent);
                                     finish();
                                 }
                             });
                         }
-
+                        TextView loading = findViewById(R.id.loading);
+                        loading.setVisibility(View.INVISIBLE);
+                       // c.removeView(loading);
                         c.addView(linearLayout2);
                     }
                 }
@@ -112,7 +115,7 @@ public class Profiles extends AppCompatActivity {
         }
         ProgressDialog progressDialog = new ProgressDialog(Profiles.this);;
 
-        @Override
+        /*@Override
         protected void onPreExecute() {
             super.onPreExecute();
 
@@ -130,7 +133,7 @@ public class Profiles extends AppCompatActivity {
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
                 progressDialog.dismiss();
-        }
+        }*/
 
     }
 }

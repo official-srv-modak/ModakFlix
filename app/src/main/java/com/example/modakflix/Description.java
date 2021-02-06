@@ -67,7 +67,7 @@ public class Description extends AppCompatActivity {
     static  int durFromMx=0, posFromMx=0;
     static JSONObject card;
     static String resumeFlag = null, name = null;
-
+    private static String username = "";
 
 
 
@@ -127,11 +127,11 @@ public class Description extends AppCompatActivity {
                 rem = (rem/dur)*100;
                 if (rem >= 5)
                 {
-                    Movies.pingDataServer(Movies.record_position_path+"?username=admin&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
+                    Movies.pingDataServer(Movies.record_position_path+"?username="+username+"&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
                 }
 
                 else
-                    Movies.pingDataServer(Movies.delete_position_path+"?username=admin&show="+name);
+                    Movies.pingDataServer(Movies.delete_position_path+"?username="+username+"&show="+name);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -158,7 +158,7 @@ public class Description extends AppCompatActivity {
         setContentView(R.layout.activity_description);
 
         final SwipeRefreshLayout pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshDesc);
-
+        username = getIntent().getStringExtra("username");
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -360,7 +360,6 @@ public class Description extends AppCompatActivity {
             String showname = params[0];
             String url = params[1];
             String resumeFlag = params[2];
-            String username = "admin";
             JSONObject cards = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 cards = Movies.getDataFromServer(handleUrl(url+"?username="+username+"&show="+showname+"&resumeflag="+resumeFlag));

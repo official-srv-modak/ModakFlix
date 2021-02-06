@@ -1,6 +1,7 @@
 package com.example.modakflix.ui.main;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -32,7 +33,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position)
         {
             case 0 :
+                Bundle bundle = new Bundle();
+                bundle.putString("username", MainActivity.username);
                 fragment = new Movies();
+                fragment.setArguments(bundle);
                 break;
             case 1 :
                 fragment = new TvShows();

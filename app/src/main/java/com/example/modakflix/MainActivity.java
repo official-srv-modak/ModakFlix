@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,11 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.modakflix.ui.main.SectionsPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity{
 
     public static String username = "admin";
     @Override
@@ -41,10 +43,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView menu = findViewById(R.id.menu);
         username = getIntent().getStringExtra("username");
 
+        DrawerLayout drawerLayout = findViewById(R.id.drawerlayout);
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrawerLayout drawerLayout = findViewById(R.id.drawerlayout);
+
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
@@ -61,23 +64,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         NavigationView navigationView = findViewById(R.id.nav_bar);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+
+                    case R.id.profiles: {
+                        overridePendingTransition(0, R.anim.fade_out);
+                        Intent intent = new Intent(MainActivity.this, Profiles.class);
+                        intent.putExtra("startFlag", "1");
+                        startActivity(intent);
+                        finish();
+                        break;
+                    }
+                    case R.id.contactUs: {
+                        break;
+                    }
+                }
+
+
+
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerlayout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
     }
+
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.profile:
-                Toast.makeText(MainActivity.this, "Item 1 Selected", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.contactUs:
-                Toast.makeText(MainActivity.this, "Item 2 Selected", Toast.LENGTH_LONG).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerlayout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
-
     }
+
 }

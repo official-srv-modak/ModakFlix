@@ -28,7 +28,15 @@ public class Profiles extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        overridePendingTransition(0, 0);
+        String startFlag = "0";
+        if(getIntent().hasExtra("startFlag"))
+        {
+            startFlag = getIntent().getStringExtra("startFlag");
+        }
+        if(startFlag.equals("0"))
+            overridePendingTransition(0, 0);
+        else
+            overridePendingTransition(R.anim.fade_in, 0);
 
         try
         {

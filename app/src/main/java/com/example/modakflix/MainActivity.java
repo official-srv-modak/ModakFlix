@@ -1,5 +1,6 @@
 package com.example.modakflix;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -79,17 +81,18 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     }
                     case R.id.contactUs: {
+                        showDialog("Developer - Sourav Modak\nContact Number - +91 9500166574\nE-Mail - official.srv.modak@gmail.com");
                         break;
                     }
                 }
-
-
-
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerlayout);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.profileName);
+        navUsername.setText(username);
     }
 
 
@@ -102,5 +105,15 @@ public class MainActivity extends AppCompatActivity{
             super.onBackPressed();
         }
     }
-
+    public void showDialog(String Message)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(Message);
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+    }
 }

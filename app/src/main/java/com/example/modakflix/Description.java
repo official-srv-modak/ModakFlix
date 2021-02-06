@@ -158,7 +158,8 @@ public class Description extends AppCompatActivity {
         setContentView(R.layout.activity_description);
 
         final SwipeRefreshLayout pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshDesc);
-        username = getIntent().getStringExtra("username");
+        if(getIntent().hasExtra("username"))
+            username = getIntent().getStringExtra("username");
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -194,26 +195,39 @@ public class Description extends AppCompatActivity {
 
     public static String handleUrl(String URL)
     {
-        String output = "http:";
-        String temp = URL.split(output)[1];
-        temp = temp.replace("/", "forwardslash");
-        temp = temp.replace(" ", "spacebarspace");
-        temp = temp.replace("?", "questionmarkquestion");
-        temp = temp.replace("&", "emparsandemparsand");
-        temp = temp.replace("=", "equaltoequal");
-        try {
-            temp= URLEncoder.encode(temp, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        temp = temp.replace("forwardslash", "/");
-        temp = temp.replace("spacebarspace", "%20");
-        temp = temp.replace("questionmarkquestion", "?");
-        temp = temp.replace("emparsandemparsand", "&");
-        temp = temp.replace("equaltoequal", "=");
+        if(!URL.isEmpty())
+        {
+            String output = "http:";
+            //Log.e("YY", URL);
+            String [] splitList = URL.split(output);
+            if(splitList.length>1)
+            {
+                String temp = splitList[1];
+                temp = temp.replace("/", "forwardslash");
+                temp = temp.replace(" ", "spacebarspace");
+                temp = temp.replace("?", "questionmarkquestion");
+                temp = temp.replace("&", "emparsandemparsand");
+                temp = temp.replace("=", "equaltoequal");
+                try {
+                    temp= URLEncoder.encode(temp, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                temp = temp.replace("forwardslash", "/");
+                temp = temp.replace("spacebarspace", "%20");
+                temp = temp.replace("questionmarkquestion", "?");
+                temp = temp.replace("emparsandemparsand", "&");
+                temp = temp.replace("equaltoequal", "=");
 
-        output += temp;
-        return output;
+                output += temp;
+                return output;
+            }
+            else
+                return URL;
+        }
+        else
+            return URL;
+
     }
 
     @SuppressLint("WrongConstant")

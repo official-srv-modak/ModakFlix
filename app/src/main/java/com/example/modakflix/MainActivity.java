@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabs.setupWithViewPager(viewPager);
 
         ImageView menu = findViewById(R.id.menu);
+        username = getIntent().getStringExtra("username");
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,14 +55,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+                searchIntent.putExtra("username", username);
                 startActivity(searchIntent);
             }
         });
 
         NavigationView navigationView = findViewById(R.id.nav_bar);
         navigationView.setNavigationItemSelectedListener(this);
-
-        username = getIntent().getStringExtra("username");
     }
 
     @Override

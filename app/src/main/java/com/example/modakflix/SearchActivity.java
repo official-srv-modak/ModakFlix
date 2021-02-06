@@ -32,6 +32,7 @@ import static com.example.modakflix.Movies.getDataFromServer;
 
 public class SearchActivity extends AppCompatActivity {
 
+    private static String username = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +40,7 @@ public class SearchActivity extends AppCompatActivity {
 
         ImageButton backBtn = findViewById(R.id.backBtn);
 
+        username = getIntent().getStringExtra("username");
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
                     if(!searchTextBox.getText().toString().isEmpty())
                     {
                         LoadCard ld = new LoadCard();
-                        ld.execute(Movies.search_shows+"?query="+searchTextBox.getText());
+                        ld.execute(Movies.search_shows+"?query="+searchTextBox.getText()+"&username="+username);
                     }
                     else
                     {
@@ -134,6 +136,7 @@ public class SearchActivity extends AppCompatActivity {
                                     public void onClick(View v) {
                                         Intent intent = new Intent(SearchActivity.this, Description.class);
                                         intent.putExtra("description", card.toString());
+                                        intent.putExtra("username", username);
                                         //intent.putExtra("url", get_shows_watched_path);
                                         int pos = 0;
                                         String resumeFlag = "0";

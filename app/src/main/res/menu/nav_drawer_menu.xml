@@ -8,11 +8,15 @@
             android:id="@+id/profiles"
             android:title="Profiles"
             android:checked="false"/>
-
+        <item
+            android:id="@+id/resetProfile"
+            android:title="Reset profile"
+            android:checked="false"/>
         <item
             android:id="@+id/contactUs"
             android:title="Contact Us"
             android:checked="false"/>
+
 
     </group>
 

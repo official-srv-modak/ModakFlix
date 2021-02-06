@@ -1,7 +1,12 @@
 package com.example.modakflix;
 
+import android.annotation.SuppressLint;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -78,6 +83,10 @@ public class MainActivity extends AppCompatActivity{
                         startActivity(intent);
                         break;
                     }
+                    case R.id.resetProfile: {
+                        resetProfile("Do you really want to reset all you watching history?");
+                        break;
+                    }
                     case R.id.contactUs: {
                         showContactUs("Developer - Sourav Modak\nContact Number - +91 9500166574\nE-Mail - official.srv.modak@gmail.com");
                         break;
@@ -115,5 +124,53 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         alertDialogBuilder.show();
+    }
+    public void resetProfile(String Message)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(Message);
+
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ResetProfile resetProfile = new ResetProfile();
+                resetProfile.execute(Movies.reset_profile);
+
+            }
+        });
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alertDialogBuilder.show();
+    }
+
+    private class ResetProfile extends AsyncTask<String, Void, Integer> {
+
+        @SuppressLint("ResourceType")
+        @Override
+        protected Integer doInBackground(String... url) {
+            Movies.pingDataServer(Description.handleUrl(url[0]));
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+            return null;
+        }
+
+        ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+                progressDialog.setMessage("Loading...");
+                progressDialog.setIndeterminate(false);
+                progressDialog.setCancelable(true);
+                progressDialog.show();
+
+
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,7 +38,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -50,7 +57,8 @@ import java.util.Set;
 public class Movies extends Fragment {
 
     private static String username = "";
-    public static String domain_name = "http://192.168.0.4/OTTServer/ModakFlix/";
+
+    public static String domain_name = "http://"+Profiles.ip+"/OTTServer/ModakFlix/";
     public static String record_position_path = domain_name+"record_position.php";
     public static String delete_position_path = domain_name+"delete_from_shows_watched.php";
     public static String get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";
@@ -64,6 +72,7 @@ public class Movies extends Fragment {
     private static int actResume = 0;
 
     SwipeRefreshLayout pullToRefresh;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -369,7 +378,7 @@ public class Movies extends Fragment {
 
             if(!pullToRefresh.isRefreshing())
             {
-                progressDialog.setMessage("Loading...");
+                progressDialog.setMessage("Welcome "+username+"\nLoading...");
                 progressDialog.setIndeterminate(false);
                 progressDialog.setCancelable(true);
                 progressDialog.show();

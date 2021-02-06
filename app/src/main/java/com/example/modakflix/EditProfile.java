@@ -43,7 +43,7 @@ public class EditProfile extends AppCompatActivity {
 
         try {
             jsonData = new JSONObject(getIntent().getStringExtra("profileData"));
-            oldData = jsonData;
+            oldData = new JSONObject(getIntent().getStringExtra("profileData"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -155,9 +155,14 @@ public class EditProfile extends AppCompatActivity {
     }
     public void deleteProfileFuntion(View view, JSONObject data)
     {
+        try {
+            oldData = new JSONObject(data.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         TextView profile = view.findViewById(R.id.accountName);
         String name = profile.getText().toString().trim();
-        oldData = data;
+
         jsonData = removeJsonObject(data, name);
     }
     public void saveProfile(JSONObject data)

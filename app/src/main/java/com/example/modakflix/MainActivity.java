@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        overridePendingTransition(R.anim.fade_in, 0);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
@@ -73,15 +73,13 @@ public class MainActivity extends AppCompatActivity{
                 switch (item.getItemId()) {
 
                     case R.id.profiles: {
-                        overridePendingTransition(0, R.anim.fade_out);
                         Intent intent = new Intent(MainActivity.this, Profiles.class);
                         intent.putExtra("startFlag", "1");
                         startActivity(intent);
-                        finish();
                         break;
                     }
                     case R.id.contactUs: {
-                        showDialog("Developer - Sourav Modak\nContact Number - +91 9500166574\nE-Mail - official.srv.modak@gmail.com");
+                        showContactUs("Developer - Sourav Modak\nContact Number - +91 9500166574\nE-Mail - official.srv.modak@gmail.com");
                         break;
                     }
                 }
@@ -105,15 +103,17 @@ public class MainActivity extends AppCompatActivity{
             super.onBackPressed();
         }
     }
-    public void showDialog(String Message)
+    public void showContactUs(String Message)
     {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(Message);
+
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
+
             }
         });
+        alertDialogBuilder.show();
     }
 }

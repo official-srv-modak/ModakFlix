@@ -607,5 +607,45 @@ public class Movies extends Fragment {
         }
     }
 
+    public static String pingDataServerPost(String URL, String post)
+    {
+        String output = "";
+        try{
+            java.net.URL url = new URL(URL);
+            Map params = new LinkedHashMap<>();
+            params.put("data", post);
+            StringBuilder postData = new StringBuilder();
+            Set<Map.Entry> s = params.entrySet();
+            for (Map.Entry param : s) {
+                if (postData.length() != 0) postData.append('&');
+                postData.append(URLEncoder.encode((String) param.getKey(), "UTF-8"));
+                postData.append('=');
+                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+            }
+            byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+            conn.setDoOutput(true);
+            conn.getOutputStream().write(postDataBytes);
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                {
+                    output += inputLine;
+                }
+            }
+            in.close();
+            //JSONObject jsonObj = new JSONObject(output);
+            return output;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

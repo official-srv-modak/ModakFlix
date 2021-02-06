@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity{
                         Intent intent = new Intent(MainActivity.this, Profiles.class);
                         intent.putExtra("startFlag", "1");
                         startActivity(intent);
+                        finish();
                         break;
                     }
                     case R.id.resetProfile: {

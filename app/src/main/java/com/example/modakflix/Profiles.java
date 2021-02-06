@@ -47,6 +47,7 @@ public class Profiles extends AppCompatActivity {
     public static String get_profiles = domain_name+"get_profiles.php";
     public static String reload_description = domain_name+"reload_description.php";
     public static String get_description = domain_name+"get_description.php";
+    public static String add_profile = domain_name+"add_profile.php";
     private static int actResume = 0;
 
     public static String fetchIpDataFromFile(String ipInfoFilePath)
@@ -104,6 +105,7 @@ public class Profiles extends AppCompatActivity {
         get_profiles = domain_name+"get_profiles.php";
         reload_description = domain_name+"reload_description.php";
         get_description = domain_name+"get_description.php";
+        add_profile = domain_name+"add_profile.php";
         actResume = 0;
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -131,6 +133,7 @@ public class Profiles extends AppCompatActivity {
 
     public void showServerDialog(String Message)
     {
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(Message);
 
@@ -166,6 +169,7 @@ public class Profiles extends AppCompatActivity {
             }
         });
         alertDialogBuilder.show();
+
     }
 
     private class LoadCard extends AsyncTask<String, Void, Integer> {
@@ -175,12 +179,10 @@ public class Profiles extends AppCompatActivity {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 jsonData = Movies.getDataFromServer(urls[0]);
             }
-            JSONObject finalJsonData = jsonData;
+            final JSONObject finalJsonData = jsonData;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-
                     JSONArray show = null;
                     try {
                         show = finalJsonData.getJSONArray("cards");
@@ -233,12 +235,28 @@ public class Profiles extends AppCompatActivity {
                                     }
                                 });
                             }
-                            TextView loading = findViewById(R.id.loading);
-                            loading.setVisibility(View.INVISIBLE);
                             // c.removeView(loading);
                             c.addView(linearLayout2);
                         }
                     }
+                    View view = LayoutInflater.from(Profiles.this).inflate(R.layout.profiles, null);
+                    @SuppressLint({"NewApi", "LocalSuppress"}) int uniqueId = View.generateViewId();
+                    view.setId(uniqueId);
+                    TextView tv = view.findViewById(R.id.accountName);
+                    tv.setText("Edit Profiles");
+
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            overridePendingTransition(0, R.anim.fade_out);
+                            Intent intent = new Intent(Profiles.this, EditProfile.class);
+                            intent.putExtra("profileData", finalJsonData.toString());
+                            startActivity(intent);
+                        }
+                    });
+                    c.addView(view);
+                    TextView loading = findViewById(R.id.loading);
+                    loading.setVisibility(View.INVISIBLE);
                 }
             });
 

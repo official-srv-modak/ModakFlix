@@ -127,11 +127,11 @@ public class Description extends AppCompatActivity {
                 rem = (rem/dur)*100;
                 if (rem >= 5)
                 {
-                    Movies.pingDataServer(Movies.record_position_path+"?username="+username+"&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
+                    Movies.pingDataServer(Profiles.record_position_path+"?username="+username+"&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
                 }
 
                 else
-                    Movies.pingDataServer(Movies.delete_position_path+"?username="+username+"&show="+name);
+                    Movies.pingDataServer(Profiles.delete_position_path+"?username="+username+"&show="+name);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -183,7 +183,7 @@ public class Description extends AppCompatActivity {
         try {
 
             BackgroundProcess bp = new BackgroundProcess();
-            bp.execute(name, Movies.get_description, resumeFlag);
+            bp.execute(name, Profiles.get_description, resumeFlag);
 
 
 

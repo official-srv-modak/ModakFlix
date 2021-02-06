@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,22 +55,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.example.modakflix.Profiles.domain_name;
+import static com.example.modakflix.Profiles.get_movies_list;
+import static com.example.modakflix.Profiles.get_shows_watched_path;
+import static com.example.modakflix.Profiles.reload_shows_watched;
+import static com.example.modakflix.Profiles.reset_profile;
+
 public class Movies extends Fragment {
 
     private static String username = "";
 
-    public static String domain_name = "http://"+Profiles.ip+"/OTTServer/ModakFlix/";
-    public static String record_position_path = domain_name+"record_position.php";
-    public static String delete_position_path = domain_name+"delete_from_shows_watched.php";
-    public static String get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";
-    public static String reset_profile = domain_name+"reset_profile.php?username=admin";
-    public static String get_movies_list = domain_name+"get_movies_list_json.php";
-    public static String reload_shows_watched = domain_name+"reload_shows_watched.php";
-    public static String search_shows = domain_name+"search_show.php";
-    public static String get_profiles = domain_name+"get_profiles.php";
-    public static String reload_description = domain_name+"reload_description.php";
-    public static String get_description = domain_name+"get_description.php";
-    private static int actResume = 0;
 
     SwipeRefreshLayout pullToRefresh;
 
@@ -192,6 +187,7 @@ public class Movies extends Fragment {
     public static JSONObject getDataFromServer(String URL)
     {
         String output = "";
+        Log.e("URL", URL);
         try{
             java.net.URL url = new URL(URL);
             Map params = new LinkedHashMap<>();
@@ -224,6 +220,7 @@ public class Movies extends Fragment {
         catch(Exception e)
         {
             e.printStackTrace();
+            Log.e("URL", URL);
             return null;
         }
     }

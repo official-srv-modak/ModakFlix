@@ -36,6 +36,19 @@ public class Profiles extends AppCompatActivity {
 
     public static String ip = "", ipInfoFilePath = "";
 
+    public static String domain_name = "http://"+ip+"/OTTServer/ModakFlix/";
+    public static String record_position_path = domain_name+"record_position.php";
+    public static String delete_position_path = domain_name+"delete_from_shows_watched.php";
+    public static String get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";
+    public static String reset_profile = domain_name+"reset_profile.php?username=admin";
+    public static String get_movies_list = domain_name+"get_movies_list_json.php";
+    public static String reload_shows_watched = domain_name+"reload_shows_watched.php";
+    public static String search_shows = domain_name+"search_show.php";
+    public static String get_profiles = domain_name+"get_profiles.php";
+    public static String reload_description = domain_name+"reload_description.php";
+    public static String get_description = domain_name+"get_description.php";
+    private static int actResume = 0;
+
     public static String fetchIpDataFromFile(String ipInfoFilePath)
     {
         File file = null;
@@ -80,6 +93,19 @@ public class Profiles extends AppCompatActivity {
         ipInfoFilePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/ipInfo.dat";
         ip = fetchIpDataFromFile(ipInfoFilePath);
 
+        domain_name = "http://"+ip+"/OTTServer/ModakFlix/";
+        record_position_path = domain_name+"record_position.php";
+        delete_position_path = domain_name+"delete_from_shows_watched.php";
+        get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";
+        reset_profile = domain_name+"reset_profile.php?username=admin";
+        get_movies_list = domain_name+"get_movies_list_json.php";
+        reload_shows_watched = domain_name+"reload_shows_watched.php";
+        search_shows = domain_name+"search_show.php";
+        get_profiles = domain_name+"get_profiles.php";
+        reload_description = domain_name+"reload_description.php";
+        get_description = domain_name+"get_description.php";
+        actResume = 0;
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         String startFlag = "0";
@@ -100,12 +126,13 @@ public class Profiles extends AppCompatActivity {
 
 
         LoadCard ld = new LoadCard();
-        ld.execute(Movies.get_profiles);
+        ld.execute(get_profiles);
     }
-    public void showServerDialog()
+
+    public void showServerDialog(String Message)
     {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Server not found! Want to input local IP?");
+        alertDialogBuilder.setMessage(Message);
 
         alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
@@ -159,7 +186,7 @@ public class Profiles extends AppCompatActivity {
                         show = finalJsonData.getJSONArray("cards");
                     } catch (Exception e) {
                         e.printStackTrace();
-                        showServerDialog();
+                        showServerDialog("Server not found! Want to input local IP?");
                     }
                     LinearLayout c = findViewById(R.id.linearLayout2);
                     if(show!=null)
@@ -200,6 +227,7 @@ public class Profiles extends AppCompatActivity {
                                         overridePendingTransition(0, R.anim.fade_out);
                                         Intent intent = new Intent(Profiles.this, MainActivity.class);
                                         intent.putExtra("username", tv.getText());
+                                        intent.putExtra("ip", ip);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -210,10 +238,6 @@ public class Profiles extends AppCompatActivity {
                             // c.removeView(loading);
                             c.addView(linearLayout2);
                         }
-                    }
-                    else
-                    {
-                        showServerDialog();
                     }
                 }
             });

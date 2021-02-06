@@ -35,6 +35,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 0 :
                 Bundle bundle = new Bundle();
                 bundle.putString("username", MainActivity.username);
+                bundle.putString("ip", MainActivity.ip);
                 fragment = new Movies();
                 fragment.setArguments(bundle);
                 break;

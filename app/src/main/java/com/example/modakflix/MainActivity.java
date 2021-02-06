@@ -23,9 +23,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,9 +35,13 @@ import android.widget.Toast;
 
 import com.example.modakflix.ui.main.SectionsPagerAdapter;
 
+import static com.example.modakflix.Profiles.ipInfoFilePath;
+import static com.example.modakflix.Profiles.ip;
+
 public class MainActivity extends AppCompatActivity{
 
     public static String username = "admin";
+    public static String ip = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity{
 
         ImageView menu = findViewById(R.id.menu);
         username = getIntent().getStringExtra("username");
+        ip = getIntent().getStringExtra("ip");
 
         DrawerLayout drawerLayout = findViewById(R.id.drawerlayout);
         menu.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +96,10 @@ public class MainActivity extends AppCompatActivity{
                     }
                     case R.id.contactUs: {
                         showContactUs("Developer - Sourav Modak\nContact Number - +91 9500166574\nE-Mail - official.srv.modak@gmail.com");
+                        break;
+                    }
+                    case R.id.resetIp: {
+                        showServerDialog("Do you really want to reset IP? It can crash app if false IP is set");
                         break;
                     }
                 }
@@ -134,7 +145,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ResetProfile resetProfile = new ResetProfile();
-                resetProfile.execute(Movies.reset_profile);
+                resetProfile.execute(Profiles.reset_profile);
 
             }
         });
@@ -172,5 +183,44 @@ public class MainActivity extends AppCompatActivity{
 
 
         }
+    }
+
+    public void showServerDialog(String Message)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(Message);
+
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Movies.writeIpData("192.168.0.4");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Enter Server's Local IP Address");
+                final EditText input = new EditText(MainActivity.this);
+                input.setHint("IP Address");
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Profiles.writeIpData(ipInfoFilePath, input.getText().toString().trim());
+                        ip = input.getText().toString().trim();
+                        Intent intent = new Intent(MainActivity.this, SplashScreen.class);
+                        finish();
+                        startActivity(intent);
+                    }
+                });
+                builder.show();
+            }
+        });
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        alertDialogBuilder.show();
     }
 }

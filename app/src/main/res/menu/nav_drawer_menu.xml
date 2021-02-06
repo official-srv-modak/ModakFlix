@@ -13,9 +13,14 @@
             android:title="Reset profile"
             android:checked="false"/>
         <item
+            android:id="@+id/resetIp"
+            android:title="Reset IP"
+            android:checked="false"/>
+        <item
             android:id="@+id/contactUs"
             android:title="Contact Us"
             android:checked="false"/>
+
 
 
     </group>

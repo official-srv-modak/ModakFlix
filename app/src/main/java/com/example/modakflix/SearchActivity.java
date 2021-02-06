@@ -61,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
                     if(!searchTextBox.getText().toString().isEmpty())
                     {
                         LoadCard ld = new LoadCard();
-                        ld.execute(Movies.search_shows+"?query="+searchTextBox.getText()+"&username="+username);
+                        ld.execute(Profiles.search_shows+"?query="+searchTextBox.getText()+"&username="+username);
                     }
                     else
                     {

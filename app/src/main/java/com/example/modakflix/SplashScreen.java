@@ -27,8 +27,6 @@ public class SplashScreen extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash_screen);
 
-        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

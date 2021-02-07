@@ -65,7 +65,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/modakflix" />
+                    android:scaleX="4"
+                    android:scaleY="4"
+                    app:srcCompat="@mipmap/modakflix_logo" />
 
                 <ImageButton
                     android:id="@+id/searchBtn"
@@ -85,7 +87,9 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/black" />
+                android:background="@color/black"
+                app:tabTextColor="@color/white"
+                app:tabSelectedTextColor="#F44336"/>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.viewpager.widget.ViewPager

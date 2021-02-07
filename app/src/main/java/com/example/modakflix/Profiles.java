@@ -96,7 +96,7 @@ public class Profiles extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profiles);
 
-        overridePendingTransition(0,0);
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
         ipInfoFilePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/ipInfo.dat";
         ip = fetchIpDataFromFile(ipInfoFilePath);
 

@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/black"
                 app:tabTextColor="@color/white"
-                app:tabSelectedTextColor="#F44336"/>
+                app:tabSelectedTextColor="#673AB7"/>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.viewpager.widget.ViewPager

@@ -2,9 +2,11 @@ package com.example.modakflix;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 public class SplashScreen extends AppCompatActivity {
 
+    ImageView logo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,4 +59,18 @@ public class SplashScreen extends AppCompatActivity {
         }, 3500);
 
     }
+    boolean hasAnimationStarted;
+
+    /*public void onWindowFocusChanged(boolean hasFocus) {
+        logo = findViewById(R.id.logo);
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && !hasAnimationStarted) {
+            hasAnimationStarted=true;
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            ObjectAnimator translationY = ObjectAnimator.ofFloat(logo, "y", metrics.heightPixels / 2 - (metrics.heightPixels / 2) - (int)(0.19*(metrics.heightPixels / 2))); // metrics.heightPixels or root.getHeight()
+            translationY.setDuration(1700);
+            translationY.setStartDelay(3500);
+            translationY.start();
+        }
+    }*/
 }

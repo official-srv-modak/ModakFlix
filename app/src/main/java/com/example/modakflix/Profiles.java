@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -11,14 +12,18 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.material.appbar.AppBarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -127,10 +132,29 @@ public class Profiles extends AppCompatActivity {
         }
         catch (NullPointerException e){}
 
+        /*LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 27, 0, 0);
+        AppBarLayout ap = findViewById(R.id.appBarLayout);
+        ap.setLayoutParams(lp);
 
         LoadCard ld = new LoadCard();
-        ld.execute(get_profiles);
+        ld.execute(get_profiles);*/
+
     }
+
+    /*boolean hasAnimationStarted;
+    AppBarLayout logo;
+    public void onWindowFocusChanged(boolean hasFocus) {
+        logo = findViewById(R.id.appBarLayout);
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && !hasAnimationStarted) {
+            hasAnimationStarted=true;
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            ObjectAnimator translationY = ObjectAnimator.ofFloat(logo, "y", metrics.heightPixels / 2 - (metrics.heightPixels / 2)); // metrics.heightPixels or root.getHeight()
+            translationY.setDuration(1);
+            translationY.start();
+        }
+    }*/
 
     public void showServerDialog(String Message)
     {

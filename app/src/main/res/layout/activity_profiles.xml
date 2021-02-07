@@ -31,6 +31,7 @@
             android:layout_gravity="center"
             android:scaleX="4"
             android:scaleY="4"
+            android:layout_marginRight="1dp"
             app:srcCompat="@mipmap/modakflix_logo"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -22,12 +22,25 @@
         app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.077"/>
+        app:layout_constraintVertical_bias="0.077">
+
+        <TextView
+            android:id="@+id/heading"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="Profiles"
+            android:layout_marginHorizontal="20pt"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20pt">
+        android:layout_marginTop="40dp"
+        >
 
         <LinearLayout
             android:id="@+id/linearLayout2"

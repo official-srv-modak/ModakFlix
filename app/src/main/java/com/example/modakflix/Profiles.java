@@ -135,10 +135,10 @@ public class Profiles extends AppCompatActivity {
         /*LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0, 27, 0, 0);
         AppBarLayout ap = findViewById(R.id.appBarLayout);
-        ap.setLayoutParams(lp);
+        ap.setLayoutParams(lp);*/
 
         LoadCard ld = new LoadCard();
-        ld.execute(get_profiles);*/
+        ld.execute(get_profiles);
 
     }
 

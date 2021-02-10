@@ -2,5 +2,5 @@
  An android app like netflix to host OTT local server, compatible with OTTServer repo
 
 
-![Alt Text](https://drive.google.com/file/d/1Qai51XQeSjCUR-pzs05DSfoPqsI9AX6F/view?usp=sharing)
+<div style="width:100%;height:0;padding-bottom:182%;position:relative;"><iframe src="https://giphy.com/embed/5oe6mK2NEV28fqwofi" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/5oe6mK2NEV28fqwofi">via GIPHY</a></p>
 

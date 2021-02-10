@@ -11,7 +11,7 @@ ModakFlix App in action
 
 Website in Action
 
- ![ModakFlix website demo](demo/Website.gif)
+ ![ModakFlix website demo](demo/WebSite.gif)
  
  
 Mobile Website in Action

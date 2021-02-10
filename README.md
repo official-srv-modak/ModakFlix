@@ -2,7 +2,7 @@
  An android app like netflix to host OTT local server, compatible with OTTServer repo
 
 
-!![Farmers Market Finder Demo](demo/demo.gif)
+![ModakFlix app demo](demo/demo.gif)
 
 
 

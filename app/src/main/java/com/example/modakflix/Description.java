@@ -475,6 +475,11 @@ public class Description extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        activityResume = "1";
+    }
 
     private class PostProcess extends AsyncTask<Intent, Void, Integer> {
         protected Integer doInBackground(Intent... data) {

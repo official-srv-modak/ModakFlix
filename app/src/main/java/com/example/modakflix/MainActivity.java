@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     }
                     case R.id.resetIp: {
-                        showServerDialog("Do you really want to reset IP? It can crash app if false IP is set");
+                        showServerDialogNoExit("Do you really want to reset IP? It can crash app if false IP is set");
                         break;
                     }
                 }
@@ -220,6 +220,44 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
+            }
+        });
+        alertDialogBuilder.show();
+    }
+    public void showServerDialogNoExit(String Message)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(Message);
+
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Movies.writeIpData("192.168.0.4");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Enter Server's Local IP Address");
+                final EditText input = new EditText(MainActivity.this);
+                input.setHint("IP Address");
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Profiles.writeIpData(ipInfoFilePath, input.getText().toString().trim());
+                        ip = input.getText().toString().trim();
+                        Intent intent = new Intent(MainActivity.this, SplashScreen.class);
+                        finish();
+                        startActivity(intent);
+                    }
+                });
+                builder.show();
+            }
+        });
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
         });
         alertDialogBuilder.show();

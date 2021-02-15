@@ -67,6 +67,7 @@ public class Description extends AppCompatActivity {
     static  int durFromMx=0, posFromMx=0;
     static JSONObject card;
     static String resumeFlag = null, name = null;
+    static String activityResume = "0";
     private static String username = "";
 
 
@@ -167,6 +168,7 @@ public class Description extends AppCompatActivity {
                 pullToRefresh.setRefreshing(false);
             }
         });
+        activityResume = "0";
         try {
             card = new JSONObject(getIntent().getStringExtra("description"));
             resumeFlag = getIntent().getStringExtra("resumeFlag");
@@ -182,8 +184,16 @@ public class Description extends AppCompatActivity {
 
         try {
 
-            BackgroundProcess bp = new BackgroundProcess();
-            bp.execute(name, Profiles.get_description, resumeFlag);
+            if(activityResume.equals("0"))
+            {
+                BackgroundProcess bp = new BackgroundProcess();
+                bp.execute(name, Profiles.get_description, resumeFlag);
+            }
+            else
+            {
+                BackgroundProcessResume bp = new BackgroundProcessResume();
+                bp.execute(name, Profiles.get_description, resumeFlag);
+            }
 
 
 
@@ -237,7 +247,7 @@ public class Description extends AppCompatActivity {
 
         String album_art_path = card.getString("album_art_path");
         if(!album_art_path.isEmpty())
-            Glide.with(this).load(album_art_path).into(imageView);
+            Glide.with(getApplicationContext()).load(album_art_path).into(imageView);
         TextView showName = findViewById(R.id.showName);
         String name = card.getString("name");
         showName.setText(name);
@@ -299,6 +309,7 @@ public class Description extends AppCompatActivity {
                     String appPackageName = "com.mxtech.videoplayer.ad";
                     try {
                         resumeFlag = "1";
+                        activityResume = "1";
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setPackage("com.mxtech.videoplayer.ad");
                         intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
@@ -342,6 +353,7 @@ public class Description extends AppCompatActivity {
                     String appPackageName = "com.mxtech.videoplayer.ad";
                     try {
                         resumeFlag = "1";
+                        activityResume = "1";
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setPackage("com.mxtech.videoplayer.ad");
                         intent.setClassName("com.mxtech.videoplayer.ad", "com.mxtech.videoplayer.ad.ActivityScreen");
@@ -423,6 +435,45 @@ public class Description extends AppCompatActivity {
         }
     }
 
+    private class BackgroundProcessResume extends AsyncTask<String, Void, Integer> {
+        protected Integer doInBackground(String... params) {
+
+            String showname = params[0];
+            String url = params[1];
+            String resumeFlag = params[2];
+            JSONObject cards = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                cards = Movies.getDataFromServer(handleUrl(url+"?username="+username+"&show="+showname+"&resumeflag="+resumeFlag));
+
+            }
+
+            if(cards != null)
+            {
+                JSONArray cardArr = null;
+                try {
+                    cardArr = cards.getJSONArray("cards");
+                    JSONObject card = cardArr.getJSONObject(0);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                processCards(card, username);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            return null;
+        }
+
+    }
 
 
     private class PostProcess extends AsyncTask<Intent, Void, Integer> {

@@ -82,6 +82,10 @@ public class Profiles extends AppCompatActivity {
     public static void writeIpData(String ipInfoFilePath, String ipData)
     {
         File file = new File(ipInfoFilePath);
+        if(ipData.contains("http://"))
+            ipData = ipData.split("http://")[1];
+        else if(ipData.contains("https://"))
+            ipData = ipData.split("https://")[1];
         try {
             ObjectOutputStream objOut = new ObjectOutputStream(new FileOutputStream(file));
             objOut.writeObject(ipData);

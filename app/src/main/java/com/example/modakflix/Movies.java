@@ -48,6 +48,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -181,6 +182,27 @@ public class Movies extends Fragment {
 
     }
 
+    private static String getDataFromServerGet(String theUrl)
+    {
+        StringBuilder content = new StringBuilder();
+        try
+        {
+            URL url = new URL(theUrl);
+            URLConnection urlConnection = url.openConnection();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            String line;
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                content.append(line + "\n");
+            }
+            bufferedReader.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return content.toString();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("WrongConstant")

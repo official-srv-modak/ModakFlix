@@ -340,8 +340,9 @@ public class Description extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    MKPlayer m = new MKPlayer();
-                    m.configPlayer(Description.this).play(videoUrl);
+                    Intent modakFlixPlayer = new Intent(Description.this, ModakFlixPlayer.class);
+                    modakFlixPlayer.putExtra("url", videoUrl);
+                    startActivity(modakFlixPlayer);
 
                 }
             });

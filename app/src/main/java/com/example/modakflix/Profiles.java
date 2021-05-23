@@ -39,9 +39,9 @@ import java.nio.file.Files;
 
 public class Profiles extends AppCompatActivity {
 
-    public static String ip = "", ipInfoFilePath = "";
+    public static String ip = "modakflix.com", ipInfoFilePath = "";
 
-    public static String domain_name = "http://"+ip+"/OTTServer/ModakFlix/";
+    public static String domain_name = "http://"+ip+"/";
     public static String record_position_path = domain_name+"record_position.php";
     public static String delete_position_path = domain_name+"delete_from_shows_watched.php";
     public static String get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";
@@ -58,7 +58,7 @@ public class Profiles extends AppCompatActivity {
     public static String fetchIpDataFromFile(String ipInfoFilePath)
     {
         File file = null;
-        String ipFromFile = "00";
+        String ipFromFile = "modakflix.com";
         if(!ipInfoFilePath.isEmpty())
         {
             file = new File(ipInfoFilePath);
@@ -104,7 +104,7 @@ public class Profiles extends AppCompatActivity {
         ipInfoFilePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/ipInfo.dat";
         ip = fetchIpDataFromFile(ipInfoFilePath);
 
-        domain_name = "http://"+ip+"/OTTServer/ModakFlix/";
+        domain_name = "http://"+ip+"/";
         record_position_path = domain_name+"record_position.php";
         delete_position_path = domain_name+"delete_from_shows_watched.php";
         get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";

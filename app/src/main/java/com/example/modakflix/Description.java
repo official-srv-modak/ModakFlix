@@ -103,6 +103,12 @@ public class Description extends AppCompatActivity {
                 PostProcess p = new PostProcess();
                 p.execute(data);
             }
+            else if (data.getAction().equals("modakflix_player_current_pos")) {
+                //data.getData()
+                PostProcess p = new PostProcess();
+                p.execute(data);
+            }
+
     }
 
     private void doPostProcess(Intent data)
@@ -330,7 +336,18 @@ public class Description extends AppCompatActivity {
                 }
             });
             Button playBtn = findViewById(R.id.playBtn);
-            playBtn.setVisibility(View.INVISIBLE);
+
+            playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
+            playBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
+                    modakFlixPlayer.putExtra("url", videoUrl);
+                    modakFlixPlayer.putExtra("resume_pos", pos1);
+                    startActivityForResult(modakFlixPlayer, 1);
+
+                }
+            });
         }
         else    // Not coming to resume
         {
@@ -340,9 +357,9 @@ public class Description extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Intent modakFlixPlayer = new Intent(Description.this, ModakFlixPlayer.class);
+                    Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
                     modakFlixPlayer.putExtra("url", videoUrl);
-                    startActivity(modakFlixPlayer);
+                    startActivityForResult(modakFlixPlayer, 1);
 
                 }
             });

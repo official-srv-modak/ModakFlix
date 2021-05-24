@@ -6,7 +6,7 @@ Had to upload gif because github doesn't support video, so pardon the frame drop
 
 ModakFlix App in action.
 
-modakflix.com
+www.modakflix.com
 
 ![ModakFlix app demo](demo/demo.gif)
 

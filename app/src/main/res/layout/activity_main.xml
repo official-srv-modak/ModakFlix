@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:openDrawer="start">
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
@@ -58,7 +58,7 @@
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="10pt"
                     app:layout_constraintBottom_toBottomOf="parent"

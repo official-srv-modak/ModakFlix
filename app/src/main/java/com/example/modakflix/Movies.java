@@ -268,10 +268,9 @@ public class Movies extends Fragment {
                     lp.setMargins(50, 0, 0, 0);
                     List<Integer> idList = new ArrayList<Integer>();
                     try {
-                        if (finalresumeData!=null) // Resume
+                        JSONArray show = finalresumeData.getJSONArray("cards");
+                        if (finalresumeData!=null && show.length() > 0) // Resume
                         {
-                            JSONArray show = finalresumeData.getJSONArray("cards");
-
                             TextView heading1 = new TextView(getContext());
                             heading1.setText("\nResume watching the shows\n");
                             //heading1.setGravity(Gravity.CENTER);
@@ -436,10 +435,9 @@ public class Movies extends Fragment {
                     lp.setMargins(50, 0, 0, 0);
                     List<Integer> idList = new ArrayList<Integer>();
                     try {
-                        if (finalresumeData!=null) // Resume
+                        JSONArray show = finalresumeData.getJSONArray("cards");
+                        if (finalresumeData!=null && show.length() > 0) // Resume
                         {
-                            JSONArray show = finalresumeData.getJSONArray("cards");
-
                             TextView heading1 = new TextView(getContext());
                             heading1.setText("\nResume watching the shows\n");
                             //heading1.setGravity(Gravity.CENTER);

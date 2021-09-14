@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 public class SplashScreen extends AppCompatActivity {
 
     ImageView logo;
+    SharedPreferences prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,36 @@ public class SplashScreen extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash_screen);
 
+        setRandomnAnimation();
+    }
+
+    void setRandomnAnimation()
+    {
+        int max = 10, min = 1;
+        int randomNumber = (int)(Math.random()*(max-min+1)+min);
+
+        prefs = getSharedPreferences("com.example.modakflix", MODE_PRIVATE);
+        if(randomNumber == 5 || randomNumber == 7 || prefs.getBoolean("firstrun", true))
+            startAnimation();
+        else
+            noAnimation();
+    }
+
+    void noAnimation()
+    {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(SplashScreen.this, Profiles.class);
+                startActivity(intent);
+                finish();
+            }
+        }, 2000);
+    }
+
+    void startAnimation()
+    {
+        prefs.edit().putBoolean("firstrun", false).commit();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -57,7 +89,6 @@ public class SplashScreen extends AppCompatActivity {
                 tv.setAnimation(slideRt);
             }
         }, 3500);
-
     }
     boolean hasAnimationStarted;
 

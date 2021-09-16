@@ -290,6 +290,10 @@ public class Description extends AppCompatActivity {
         {
             String videoUrl = handleUrl(card.getString("url"));
             Button openWith = findViewById(R.id.playWithBtn);
+            ImageView resetShowBtn = findViewById(R.id.resetShowBtn);
+
+            resetShowBtn.setVisibility(View.VISIBLE);
+
             int dur = 0, pos = 0;
 
             dur = Integer.parseInt(card.getString("duration"));
@@ -346,6 +350,18 @@ public class Description extends AppCompatActivity {
                     modakFlixPlayer.putExtra("resume_pos", pos1);
                     startActivityForResult(modakFlixPlayer, 1);
 
+                }
+            });
+
+            resetShowBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = Profiles.reset_show+"?username="+username+"&showname="+name;
+
+                    PingUrl pu = new PingUrl();
+                    pu.execute(Description.handleUrl(url));
+                    Toast.makeText(Description.this, "Show : "+name+" marked as completed", Toast.LENGTH_LONG).show();
+                    finish();
                 }
             });
         }
@@ -522,6 +538,13 @@ public class Description extends AppCompatActivity {
             super.onPostExecute(integer);
             progressDialog.dismiss();
         }*/
+    }
+
+    private class PingUrl extends AsyncTask<String, Void, Integer> {
+        protected Integer doInBackground(String... data) {
+            Movies.pingDataServer(data[0]);
+            return 0;
+        }
     }
 }
 

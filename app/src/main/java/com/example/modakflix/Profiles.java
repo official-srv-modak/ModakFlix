@@ -53,6 +53,7 @@ public class Profiles extends AppCompatActivity {
     public static String reload_description = domain_name+"reload_description.php";
     public static String get_description = domain_name+"get_description.php";
     public static String add_profile = domain_name+"add_profile.php";
+    public static String reset_show = domain_name+"reset_show.php";
     private static int actResume = 0;
 
     public static String fetchIpDataFromFile(String ipInfoFilePath)
@@ -116,6 +117,7 @@ public class Profiles extends AppCompatActivity {
         reload_description = domain_name+"reload_description.php";
         get_description = domain_name+"get_description.php";
         add_profile = domain_name+"add_profile.php";
+        reset_show = domain_name+"reset_show.php";
         actResume = 0;
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

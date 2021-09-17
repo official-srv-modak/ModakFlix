@@ -329,7 +329,7 @@ public class Description extends AppCompatActivity {
                         intent.putExtra("position", pos1);
                         byte decoder = 2;
                         //intent.putExtra("decode_mode", decoder);
-                        intent.putExtra("fast_mode", true);
+                        //intent.putExtra("fast_mode", true);
                         intent.putExtra("return_result", true);
                         startActivityForResult(intent, 1);
 
@@ -400,7 +400,7 @@ public class Description extends AppCompatActivity {
                         intent.putExtra("position", pos);
                         byte decoder = 2;
                         //intent.putExtra("decode_mode", decoder);
-                        intent.putExtra("fast_mode", true);
+                        //intent.putExtra("fast_mode", true);
                         intent.putExtra("return_result", true);
                         startActivityForResult(intent, 1);
 

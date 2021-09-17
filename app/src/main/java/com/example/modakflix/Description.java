@@ -521,23 +521,6 @@ public class Description extends AppCompatActivity {
 
             return 0;
         }
-
-        /*ProgressDialog progressDialog = new ProgressDialog(Description.this);
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            progressDialog.setMessage("Loading...");
-            progressDialog.setIndeterminate(false);
-            progressDialog.setCancelable(true);
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
-            progressDialog.dismiss();
-        }*/
     }
 
     private class PingUrl extends AsyncTask<String, Void, Integer> {

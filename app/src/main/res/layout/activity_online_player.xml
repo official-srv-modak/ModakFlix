@@ -6,7 +6,7 @@
     xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto"    android:orientation="vertical"
     android:id="@+id/ll_parent_container"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@color/black"
     tools:context=".OnlinePlayerActivity">
 
 

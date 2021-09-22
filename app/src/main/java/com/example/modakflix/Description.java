@@ -177,7 +177,7 @@ public class Description extends AppCompatActivity {
         activityResume = "0";
         try {
             card = new JSONObject(getIntent().getStringExtra("description"));
-            resumeFlag = getIntent().getStringExtra("resumeFlag");
+            resumeFlag = getIntent().getStringExtra(" resumeFlag");
             name = card.getString("name");
         } catch (JSONException e) {
             e.printStackTrace();

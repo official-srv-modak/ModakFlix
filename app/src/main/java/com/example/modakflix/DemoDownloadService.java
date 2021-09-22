@@ -63,7 +63,7 @@ public class DemoDownloadService extends DownloadService implements DownloadTrac
     protected DownloadManager getDownloadManager() {
         // This will only happen once, because getDownloadManager is guaranteed to be called only once
         // in the life cycle of the process.
-        AdaptiveExoplayer application = (AdaptiveExoplayer) getApplication();
+        ModakflixAdaptivePlayer application = (ModakflixAdaptivePlayer) getApplication();
         DownloadManager downloadManager = application.getDownloadManager();
         DownloadNotificationHelper downloadNotificationHelper = application.getDownloadNotificationHelper();
 
@@ -97,7 +97,7 @@ public class DemoDownloadService extends DownloadService implements DownloadTrac
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
 
-        AdaptiveExoplayer application = (AdaptiveExoplayer) getApplication();
+        ModakflixAdaptivePlayer application = (ModakflixAdaptivePlayer) getApplication();
         downloadManager = application.getDownloadManager();
         downloadTracker = application.getDownloadTracker();
 
@@ -108,16 +108,16 @@ public class DemoDownloadService extends DownloadService implements DownloadTrac
             Uri uri = intent.getData();
             switch (Objects.requireNonNull(intent.getAction())){
                 case AppConstant.EXO_DOWNLOAD_ACTION_PAUSE:
-                    ((AdaptiveExoplayer) getApplication()).getDownloadManager().addDownload(downloadTracker.getDownloadRequest(uri), Download.STATE_STOPPED);
+                    ((ModakflixAdaptivePlayer) getApplication()).getDownloadManager().addDownload(downloadTracker.getDownloadRequest(uri), Download.STATE_STOPPED);
 
                     break;
                 case AppConstant.EXO_DOWNLOAD_ACTION_START:
-                    ((AdaptiveExoplayer) getApplication()).getDownloadManager().addDownload(downloadTracker.getDownloadRequest(uri), Download.STOP_REASON_NONE);
+                    ((ModakflixAdaptivePlayer) getApplication()).getDownloadManager().addDownload(downloadTracker.getDownloadRequest(uri), Download.STOP_REASON_NONE);
 
                     break;
 
                 case AppConstant.EXO_DOWNLOAD_ACTION_CANCEL:
-                    ((AdaptiveExoplayer) getApplication()).getDownloadManager().removeDownload(downloadTracker.getDownloadRequest(uri).id);
+                    ((ModakflixAdaptivePlayer) getApplication()).getDownloadManager().removeDownload(downloadTracker.getDownloadRequest(uri).id);
 
                     break;
             }

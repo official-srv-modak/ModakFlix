@@ -126,9 +126,9 @@
             <ImageView
                 android:id="@+id/imageOnlineIv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10pt"
-                android:layout_marginLeft="10sp"
+                android:layout_height="273dp"
+                android:layout_margin="20dp"
+                android:visibility="visible"
                 tools:srcCompat="@drawable/placeholder" />
         </LinearLayout>
     </ScrollView>

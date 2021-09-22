@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".AdaptiveExoplayer"
+        android:name=".ModakflixAdaptivePlayer"
         android:theme="@style/Theme.ModakFlix"
         android:usesCleartextTraffic="true">
         <activity android:name=".EditProfile"

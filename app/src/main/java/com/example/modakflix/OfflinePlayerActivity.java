@@ -230,7 +230,7 @@ public class OfflinePlayerActivity extends AppCompatActivity implements View.OnC
 
 
 
-        DownloadRequest downloadRequest = AdaptiveExoplayer.getInstance().getDownloadTracker().getDownloadRequest(Uri.parse(offlineVideoLink));
+        DownloadRequest downloadRequest = ModakflixAdaptivePlayer.getInstance().getDownloadTracker().getDownloadRequest(Uri.parse(offlineVideoLink));
         MediaSource mediaSource = DownloadHelper.createMediaSource(downloadRequest,dataSourceFactory);
 
 //         mediaSource = buildMediaSource(Uri.parse(offlineVideoLink));
@@ -637,7 +637,7 @@ public class OfflinePlayerActivity extends AppCompatActivity implements View.OnC
     }
 
     private DataSource.Factory buildDataSourceFactory() {
-        return ((AdaptiveExoplayer) getApplication()).buildDataSourceFactory();
+        return ((ModakflixAdaptivePlayer) getApplication()).buildDataSourceFactory();
     }
 
     private MediaSource buildMediaSource(Uri uri) {

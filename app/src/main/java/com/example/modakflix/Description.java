@@ -426,7 +426,7 @@ public class Description extends AppCompatActivity {
         bundle.putString("video_name", videoInfo[1]);
         bundle.putString("video_url", videoInfo[2]);
         bundle.putString("description", videoInfo[3]);
-        bundle.putString("image_url", videoInfo[3]);
+        bundle.putString("image_url", videoInfo[4]);
         bundle.putLong("video_duration", Long.parseLong(videoInfo[0]));
 
 

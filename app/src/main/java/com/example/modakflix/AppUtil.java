@@ -21,7 +21,7 @@ public class AppUtil {
 
     public static VideoModel getVideoDetail(String videoUri){
         VideoModel videoModel = null;
-        for (VideoModel videoModels : AdaptiveExoplayer.getInstance().videoModels) {
+        for (VideoModel videoModels : ModakflixAdaptivePlayer.getInstance().videoModels) {
             if(videoModels.getVideoUrl().equalsIgnoreCase(videoUri.toString())){
                 videoModel = videoModels;
                 break;

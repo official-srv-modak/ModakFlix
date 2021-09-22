@@ -1,10 +1,7 @@
 package com.example.modakflix;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.RenderersFactory;
@@ -35,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AdaptiveExoplayer extends Application {
+public class ModakflixAdaptivePlayer extends Application {
 
     private static final String TAG = "DemoApplication";
     private static final String DOWNLOAD_ACTION_FILE = "actions";
@@ -49,7 +46,7 @@ public class AdaptiveExoplayer extends Application {
     private DownloadManager downloadManager;
     private DownloadTracker downloadTracker;
     private DownloadNotificationHelper downloadNotificationHelper;
-    private static AdaptiveExoplayer mInstance;
+    private static ModakflixAdaptivePlayer mInstance;
     public  List<VideoModel> videoModels = new ArrayList<>();
 
 
@@ -65,13 +62,13 @@ public class AdaptiveExoplayer extends Application {
 
 
         mInstance = this;
-        userAgent = Util.getUserAgent(this, "AdaptiveExoplayer");
+        userAgent = Util.getUserAgent(this, "ModakflixAdaptivePlayer");
 
 
 
     }
 
-    public static synchronized AdaptiveExoplayer getInstance() {
+    public static synchronized ModakflixAdaptivePlayer getInstance() {
         return mInstance;
     }
 
@@ -91,7 +88,7 @@ public class AdaptiveExoplayer extends Application {
 
     /** Returns a {@link DataSource.Factory}. */
     public DataSource.Factory buildDataSourceFactory() {
-        DefaultDataSourceFactory upstreamFactory = new DefaultDataSourceFactory(AdaptiveExoplayer.this, buildHttpDataSourceFactory());
+        DefaultDataSourceFactory upstreamFactory = new DefaultDataSourceFactory(ModakflixAdaptivePlayer.this, buildHttpDataSourceFactory());
         return buildReadOnlyCacheDataSource(upstreamFactory, getDownloadCache());
     }
 

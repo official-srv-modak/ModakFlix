@@ -55,7 +55,7 @@ public class DownloadActivity extends AppCompatActivity {
             @Override
             public void run() {
                 List<Download> exoVideoList = new ArrayList<>();
-                for(Map.Entry<Uri, Download> entry : AdaptiveExoplayer.getInstance().getDownloadTracker().downloads.entrySet()) {
+                for(Map.Entry<Uri, Download> entry : ModakflixAdaptivePlayer.getInstance().getDownloadTracker().downloads.entrySet()) {
                     Uri keyUri = entry.getKey();
                     Download download = entry.getValue();
                     exoVideoList.add(download);
@@ -73,7 +73,7 @@ public class DownloadActivity extends AppCompatActivity {
     private void loadVideos() {
         downloadedVideoList = new ArrayList<>();
 
-        for(Map.Entry<Uri, Download> entry : AdaptiveExoplayer.getInstance().getDownloadTracker().downloads.entrySet()) {
+        for(Map.Entry<Uri, Download> entry : ModakflixAdaptivePlayer.getInstance().getDownloadTracker().downloads.entrySet()) {
             Uri keyUri = entry.getKey();
             Download download = entry.getValue();
             downloadedVideoList.add(download);
@@ -128,14 +128,14 @@ public class DownloadActivity extends AppCompatActivity {
         llDownloadStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdaptiveExoplayer.getInstance().getDownloadManager().addDownload(download.request);
+                ModakflixAdaptivePlayer.getInstance().getDownloadManager().addDownload(download.request);
                 dialog.dismiss();
             }
         });
         llDownloadResume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdaptiveExoplayer.getInstance().getDownloadManager().addDownload(download.request,Download.STOP_REASON_NONE);
+                ModakflixAdaptivePlayer.getInstance().getDownloadManager().addDownload(download.request,Download.STOP_REASON_NONE);
 
                 dialog.dismiss();
             }
@@ -144,7 +144,7 @@ public class DownloadActivity extends AppCompatActivity {
         llDownloadPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdaptiveExoplayer.getInstance().getDownloadManager().addDownload(download.request,Download.STATE_STOPPED);
+                ModakflixAdaptivePlayer.getInstance().getDownloadManager().addDownload(download.request,Download.STATE_STOPPED);
                 dialog.dismiss();
             }
         });
@@ -152,7 +152,7 @@ public class DownloadActivity extends AppCompatActivity {
         llDownloadDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdaptiveExoplayer.getInstance().getDownloadManager().removeDownload(download.request.id);
+                ModakflixAdaptivePlayer.getInstance().getDownloadManager().removeDownload(download.request.id);
 
 
                 dialog.dismiss();

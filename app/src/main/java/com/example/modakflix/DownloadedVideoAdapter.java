@@ -96,7 +96,7 @@ public class DownloadedVideoAdapter extends RecyclerView.Adapter<DownloadedVideo
                     }
 
 
-                    DownloadRequest downloadRequest = AdaptiveExoplayer.getInstance().getDownloadTracker().getDownloadRequest(download.request.uri);
+                    DownloadRequest downloadRequest = ModakflixAdaptivePlayer.getInstance().getDownloadTracker().getDownloadRequest(download.request.uri);
 
                     if (download.state == Download.STATE_COMPLETED) {
                         holder.progressBarPercentage.setVisibility(View.GONE);

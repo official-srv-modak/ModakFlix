@@ -15,7 +15,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -82,9 +85,8 @@ import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.Util;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -249,7 +251,7 @@ DefaultTrackSelector.Parameters qualityParams;
             clearStartPosition();
         }
 
-        AdaptiveExoplayer application = (AdaptiveExoplayer) getApplication();
+        ModakflixAdaptivePlayer application = (ModakflixAdaptivePlayer) getApplication();
         downloadTracker = application.getDownloadTracker();
         downloadManager = application.getDownloadManager();
 
@@ -294,10 +296,34 @@ DefaultTrackSelector.Parameters qualityParams;
         descriptionTV.setText(description);
 
         ImageView iv = findViewById(R.id.imageOnlineIv);
-        Glide.with(getApplicationContext()).load(imageUrl).into(iv);
+        LoadImageTask lit = new LoadImageTask(iv);
+        lit.execute(imageUrl);
     }
 
+    private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
 
+        public LoadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
     private void observerVideoStatus() {
                                       if (downloadManager.getCurrentDownloads().size() > 0) {
                                           for (int i = 0; i < downloadManager.getCurrentDownloads().size(); i++) {
@@ -919,7 +945,7 @@ DefaultTrackSelector.Parameters qualityParams;
         TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
 
     //    DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(this, null, DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-        RenderersFactory renderersFactory =  ((AdaptiveExoplayer) getApplication()).buildRenderersFactory(true)  ;
+        RenderersFactory renderersFactory =  ((ModakflixAdaptivePlayer) getApplication()).buildRenderersFactory(true)  ;
 
         trackSelector = new DefaultTrackSelector(trackSelectionFactory);
         trackSelector.setParameters(trackSelectorParameters);
@@ -991,7 +1017,7 @@ DefaultTrackSelector.Parameters qualityParams;
      * Returns a new DataSource factory.
      */
     private DataSource.Factory buildDataSourceFactory() {
-        return ((AdaptiveExoplayer) getApplication()).buildDataSourceFactory();
+        return ((ModakflixAdaptivePlayer) getApplication()).buildDataSourceFactory();
     }
 
 

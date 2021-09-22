@@ -1,4 +1,4 @@
-package com.example.modakflix.exoplayer;
+package com.example.modakflix;
 
 import android.os.Bundle;
 import android.util.Log;

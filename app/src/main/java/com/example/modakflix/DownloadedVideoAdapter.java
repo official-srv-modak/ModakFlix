@@ -1,4 +1,4 @@
-package com.example.modakflix.exoplayer;
+package com.example.modakflix;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.modakflix.R;
 import com.google.android.exoplayer2.offline.Download;
 import com.google.android.exoplayer2.offline.DownloadRequest;
 

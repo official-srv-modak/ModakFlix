@@ -1,4 +1,4 @@
-package com.example.modakflix.exoplayer;
+package com.example.modakflix;
 
 
 /**

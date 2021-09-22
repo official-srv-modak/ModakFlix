@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.modakflix">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
@@ -41,19 +45,57 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
-            android:name=".Description"
+            android:name="com.example.modakflix.Description"
             android:label="@string/title_activity_description"
             android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.modakflix.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan"/>
+
+
+        <activity
+            android:name="com.example.modakflix.DownloadActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            tools:ignore="LockedOrientationActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+
+        <activity
+            android:name="com.example.modakflix.OnlinePlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:configChanges="orientation|screenSize|layoutDirection"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            tools:ignore="LockedOrientationActivity"/>
+
+        <activity
+            android:name="com.example.modakflix.OfflinePlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:configChanges="orientation|screenSize|layoutDirection"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            tools:ignore="LockedOrientationActivity"/>
+
+
+
+        <service android:name="com.example.modakflix.DemoDownloadService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.exoplayer.downloadService.action.RESTART"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
+        <service android:name="com.google.android.exoplayer2.scheduler.PlatformScheduler$PlatformSchedulerService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
     </application>
 
 </manifest>

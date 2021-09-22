@@ -7,6 +7,8 @@
         <entry key="app/src/main/res/layout/activity_description.xml" value="0.48130841121495327" />
         <entry key="app/src/main/res/layout/activity_download.xml" value="0.153125" />
         <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.19882246376811594" />
+        <entry key="app/src/main/res/layout/activity_offline_player.xml" value="0.18070652173913043" />
+        <entry key="app/src/main/res/layout/activity_online_player.xml" value="0.18070652173913043" />
         <entry key="app/src/main/res/layout/activity_profiles.xml" value="0.2033514492753623" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.22010869565217392" />

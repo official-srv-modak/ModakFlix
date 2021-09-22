@@ -1,4 +1,4 @@
-package com.example.modakflix.exoplayer;
+package com.example.modakflix;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -24,7 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.modakflix.R;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;

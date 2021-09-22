@@ -1,4 +1,4 @@
-package com.example.modakflix.exoplayer;
+package com.example.modakflix;
 
 import static android.net.Uri.parse;
 import static com.google.android.exoplayer2.offline.Download.STATE_COMPLETED;
@@ -40,7 +40,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.modakflix.R;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -976,7 +975,7 @@ DefaultTrackSelector.Parameters qualityParams;
      * Returns a new DataSource factory.
      */
     private DataSource.Factory buildDataSourceFactory() {
-        return ((AdaptiveExoplayer) getApplication()).buildDataSourceFactory();
+        return ((AdaptiveExoplayer) getApplicationContext()).buildDataSourceFactory();
     }
 
 

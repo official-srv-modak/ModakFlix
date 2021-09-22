@@ -1,4 +1,4 @@
-package com.example.modakflix.exoplayer;
+package com.example.modakflix;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import com.example.modakflix.R;
 import com.google.android.exoplayer2.offline.Download;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 

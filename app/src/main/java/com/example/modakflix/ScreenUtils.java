@@ -1,4 +1,4 @@
-package com.example.modakflix.exoplayer;
+package com.example.modakflix;
 
 /**
  * Created by Mayur Solanki (mayursolanki120@gmail.com) on 04/03/19, 6:18 PM.

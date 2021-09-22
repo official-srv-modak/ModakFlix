@@ -342,6 +342,7 @@ public class Description extends AppCompatActivity {
             Button playBtn = findViewById(R.id.playBtn);
 
             playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
+            int finalDur = dur;
             playBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -349,7 +350,7 @@ public class Description extends AppCompatActivity {
                     modakFlixPlayer.putExtra("url", videoUrl);
                     modakFlixPlayer.putExtra("resume_pos", pos1);
                     startActivityForResult(modakFlixPlayer, 1);*/
-
+                    startModakFlixPlayer("0", name, videoUrl, String.valueOf(finalDur));
                 }
             });
 
@@ -376,7 +377,7 @@ public class Description extends AppCompatActivity {
                     /*Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
                     modakFlixPlayer.putExtra("url", videoUrl);
                     startActivityForResult(modakFlixPlayer, 1);*/
-
+                    startModakFlixPlayer("0", name, videoUrl);
                 }
             });
 
@@ -412,6 +413,19 @@ public class Description extends AppCompatActivity {
             });
         }
 
+    }
+
+    private void startModakFlixPlayer(String... videoInfo)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putString("video_id", videoInfo[0]);
+        bundle.putString("video_name", videoInfo[1]);
+        bundle.putString("video_url", videoInfo[2]);
+        //bundle.putLong("video_duration", Long.parseLong(videoInfo[3]));
+
+        Intent intent = new Intent(Description.this, OnlinePlayerActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private class BackgroundProcess extends AsyncTask<String, Void, Integer> {

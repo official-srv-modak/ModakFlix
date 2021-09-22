@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.modakflix.exoplayer;
+package com.example.modakflix;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -33,7 +33,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.modakflix.R;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.modakflix.exoplayer;
+package com.example.modakflix;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,7 +23,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.modakflix.R;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.offline.Download;

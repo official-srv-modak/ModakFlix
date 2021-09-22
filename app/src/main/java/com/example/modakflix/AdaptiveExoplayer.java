@@ -1,5 +1,6 @@
 package com.example.modakflix;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -94,7 +95,7 @@ public class AdaptiveExoplayer extends Application {
 
     /** Returns a {@link DataSource.Factory}. */
     public DataSource.Factory buildDataSourceFactory() {
-        DefaultDataSourceFactory upstreamFactory = new DefaultDataSourceFactory(this, buildHttpDataSourceFactory());
+        DefaultDataSourceFactory upstreamFactory = new DefaultDataSourceFactory(AdaptiveExoplayer.this, buildHttpDataSourceFactory());
         return buildReadOnlyCacheDataSource(upstreamFactory, getDownloadCache());
     }
 

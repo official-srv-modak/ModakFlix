@@ -421,7 +421,7 @@ public class Description extends AppCompatActivity {
         bundle.putString("video_id", videoInfo[0]);
         bundle.putString("video_name", videoInfo[1]);
         bundle.putString("video_url", videoInfo[2]);
-        //bundle.putLong("video_duration", Long.parseLong(videoInfo[3]));
+        bundle.putLong("video_duration", Long.parseLong(videoInfo[0]));
 
         Intent intent = new Intent(Description.this, OnlinePlayerActivity.class);
         intent.putExtras(bundle);

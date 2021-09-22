@@ -975,7 +975,7 @@ DefaultTrackSelector.Parameters qualityParams;
      * Returns a new DataSource factory.
      */
     private DataSource.Factory buildDataSourceFactory() {
-        return ((AdaptiveExoplayer) getApplicationContext()).buildDataSourceFactory();
+        return ((AdaptiveExoplayer) getApplication()).buildDataSourceFactory();
     }
 
 

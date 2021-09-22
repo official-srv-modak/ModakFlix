@@ -15,9 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ModakFlix"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".ModakFlixPlayer"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity android:name=".EditProfile"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

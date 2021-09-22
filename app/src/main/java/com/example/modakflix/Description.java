@@ -345,10 +345,10 @@ public class Description extends AppCompatActivity {
             playBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
+                    /*Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
                     modakFlixPlayer.putExtra("url", videoUrl);
                     modakFlixPlayer.putExtra("resume_pos", pos1);
-                    startActivityForResult(modakFlixPlayer, 1);
+                    startActivityForResult(modakFlixPlayer, 1);*/
 
                 }
             });
@@ -373,9 +373,9 @@ public class Description extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
+                    /*Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
                     modakFlixPlayer.putExtra("url", videoUrl);
-                    startActivityForResult(modakFlixPlayer, 1);
+                    startActivityForResult(modakFlixPlayer, 1);*/
 
                 }
             });

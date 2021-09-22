@@ -69,8 +69,8 @@ public class Description extends AppCompatActivity {
     static String resumeFlag = null, name = null;
     static String activityResume = "0";
     private static String username = "";
-
-
+    private static String descriptionStr = "";
+    private static String imageUrl = "";
 
     class MKPlayer extends MKPlayerActivity{
 
@@ -253,7 +253,10 @@ public class Description extends AppCompatActivity {
 
         String album_art_path = card.getString("album_art_path");
         if(!album_art_path.isEmpty())
+        {
             Glide.with(getApplicationContext()).load(album_art_path).into(imageView);
+            imageUrl = album_art_path;
+        }
         TextView showName = findViewById(R.id.showName);
         String name = card.getString("name");
         showName.setText(name);
@@ -272,6 +275,7 @@ public class Description extends AppCompatActivity {
             TextView restOfThings = findViewById(R.id.rest);
             restOfThings.setText(rest);
 
+            descriptionStr = description.getText().toString()+"\n\n"+restOfThings.getText().toString();
         }
 
 
@@ -350,7 +354,7 @@ public class Description extends AppCompatActivity {
                     modakFlixPlayer.putExtra("url", videoUrl);
                     modakFlixPlayer.putExtra("resume_pos", pos1);
                     startActivityForResult(modakFlixPlayer, 1);*/
-                    startModakFlixPlayer("0", name, videoUrl, String.valueOf(finalDur));
+                    startModakFlixPlayer("0", name, videoUrl, String.valueOf(finalDur), descriptionStr, imageUrl);
                 }
             });
 
@@ -377,7 +381,7 @@ public class Description extends AppCompatActivity {
                     /*Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
                     modakFlixPlayer.putExtra("url", videoUrl);
                     startActivityForResult(modakFlixPlayer, 1);*/
-                    startModakFlixPlayer("0", name, videoUrl);
+                    startModakFlixPlayer("0", name, videoUrl, descriptionStr, imageUrl);
                 }
             });
 
@@ -421,7 +425,10 @@ public class Description extends AppCompatActivity {
         bundle.putString("video_id", videoInfo[0]);
         bundle.putString("video_name", videoInfo[1]);
         bundle.putString("video_url", videoInfo[2]);
+        bundle.putString("description", videoInfo[3]);
+        bundle.putString("image_url", videoInfo[3]);
         bundle.putLong("video_duration", Long.parseLong(videoInfo[0]));
+
 
         Intent intent = new Intent(Description.this, OnlinePlayerActivity.class);
         intent.putExtras(bundle);

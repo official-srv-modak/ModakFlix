@@ -6,7 +6,7 @@
     xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto"    android:orientation="vertical"
     android:id="@+id/ll_parent_container"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@android:color/black"
     tools:context=".OnlinePlayerActivity">
 
 
@@ -25,7 +25,8 @@
                 android:id="@+id/player_view"
                 app:controller_layout_id="@layout/online_player_custom_control"
                 app:hide_on_touch="true"
-                app:resize_mode="fill"
+                app:resize_mode="fit"
+                android:background="@color/black"
                 app:keep_content_on_player_reset="false"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"/>
@@ -60,6 +61,7 @@
             <LinearLayout
                 android:layout_centerInParent="true"
                 android:id="@+id/ll_download_video"
+                android:visibility="gone"
                 android:gravity="center"
                 android:background="@drawable/button_round"
                 android:layout_width="@dimen/_120sdp"
@@ -102,7 +104,34 @@
 
         </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/descriptionOnlineTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10pt"
+                android:layout_marginTop="18sp"
+                android:textAlignment="textStart"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/imageOnlineIv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10pt"
+                android:layout_marginLeft="10sp"
+                tools:srcCompat="@drawable/placeholder" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

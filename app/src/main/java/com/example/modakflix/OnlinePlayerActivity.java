@@ -40,6 +40,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -80,6 +81,8 @@ import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.Util;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.CookieHandler;
@@ -188,6 +191,7 @@ DefaultTrackSelector.Parameters qualityParams;
     private long videoDurationInSeconds;
     private Runnable runnableCode;
     private Handler handler;
+    private String description, imageUrl;
 
 
     private static boolean isBehindLiveWindow(ExoPlaybackException e) {
@@ -229,7 +233,11 @@ DefaultTrackSelector.Parameters qualityParams;
             videoName = bundle.getString("video_name");
             videoUrl = bundle.getString("video_url");
             videoDurationInSeconds =bundle.getLong("video_duration");
+            description = bundle.getString("description");
+            imageUrl = bundle.getString("image_url");
         }
+
+        setDescription();
 
         if (savedInstanceState != null) {
             trackSelectorParameters = savedInstanceState.getParcelable(KEY_TRACK_SELECTOR_PARAMETERS);
@@ -279,6 +287,14 @@ DefaultTrackSelector.Parameters qualityParams;
 
         handler.post(runnableCode);
 
+    }
+
+    private void setDescription() {
+        TextView descriptionTV = findViewById(R.id.descriptionOnlineTv);
+        descriptionTV.setText(description);
+
+        ImageView iv = findViewById(R.id.imageOnlineIv);
+        Glide.with(getApplicationContext()).load(imageUrl).into(iv);
     }
 
 

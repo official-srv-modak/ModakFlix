@@ -72,7 +72,8 @@
         <activity
             android:name="com.example.modakflix.OnlinePlayerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="LockedOrientationActivity"/>
@@ -80,7 +81,8 @@
         <activity
             android:name="com.example.modakflix.OfflinePlayerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="LockedOrientationActivity"/>

@@ -34,12 +34,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 21/06/20, 7:38 PM.
- */
-public class AdaptiveExoplayer extends Application {
 
-//    public static final String DOWNLOAD_NOTIFICATION_CHANNEL_ID = "lakhya_online_download_channel";
+public class AdaptiveExoplayer extends Application {
 
     private static final String TAG = "DemoApplication";
     private static final String DOWNLOAD_ACTION_FILE = "actions";

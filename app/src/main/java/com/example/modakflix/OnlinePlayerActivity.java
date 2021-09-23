@@ -1,6 +1,7 @@
 package com.example.modakflix;
 
 import static android.net.Uri.parse;
+import static com.example.modakflix.Description.modakflixPlayerAction;
 import static com.google.android.exoplayer2.offline.Download.STATE_COMPLETED;
 import static com.google.android.exoplayer2.offline.Download.STATE_DOWNLOADING;
 import static com.google.android.exoplayer2.offline.Download.STATE_FAILED;
@@ -10,6 +11,7 @@ import static com.google.android.exoplayer2.offline.Download.STATE_RESTARTING;
 import static com.google.android.exoplayer2.offline.Download.STATE_STOPPED;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -95,9 +97,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 22/03/19, 1:20 PM.
- */
+
 public class OnlinePlayerActivity extends AppCompatActivity implements View.OnClickListener, PlaybackPreparer, PlayerControlView.VisibilityListener, DownloadTracker.Listener {
 
     private static final int playerHeight = 250;
@@ -111,6 +111,7 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
     private static final String KEY_WINDOW = "window";
     private static final String KEY_POSITION = "position";
     private static final String KEY_AUTO_PLAY = "auto_play";
+    boolean closeFlag = true;
 
     static {
         DEFAULT_COOKIE_MANAGER = new CookieManager();
@@ -190,7 +191,7 @@ DefaultTrackSelector.Parameters qualityParams;
     private TextView tvDownloadState;
     private ProgressBar progressBarPercentage;
     private String videoId,videoUrl,videoName;
-    private long videoDurationInSeconds;
+    private long videoDurationInSeconds, videoDurationInMilliSeconds;
     private Runnable runnableCode;
     private Handler handler;
     private String description, imageUrl;
@@ -234,7 +235,8 @@ DefaultTrackSelector.Parameters qualityParams;
             videoId = bundle.getString("video_id");
             videoName = bundle.getString("video_name");
             videoUrl = bundle.getString("video_url");
-            videoDurationInSeconds =bundle.getLong("video_duration");
+            videoDurationInMilliSeconds = bundle.getLong("video_duration");
+            videoDurationInSeconds = videoDurationInMilliSeconds/1000;
             description = bundle.getString("description");
             imageUrl = bundle.getString("image_url");
         }
@@ -476,7 +478,8 @@ DefaultTrackSelector.Parameters qualityParams;
             videoId = bundle.getString("video_id");
             videoName = bundle.getString("video_name");
             videoUrl = bundle.getString("video_url");
-            videoDurationInSeconds =bundle.getLong("video_duration");
+            videoDurationInMilliSeconds = bundle.getLong("video_duration");
+            videoDurationInSeconds = videoDurationInMilliSeconds/1000;
         }
 
 
@@ -511,6 +514,7 @@ DefaultTrackSelector.Parameters qualityParams;
         }
 
         FullScreencall();
+        closeFlag = true;
     }
 
     @Override
@@ -524,7 +528,6 @@ DefaultTrackSelector.Parameters qualityParams;
 
 
         }
-
     }
 
     @Override
@@ -545,11 +548,24 @@ DefaultTrackSelector.Parameters qualityParams;
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
 
+    private void finishResultAction() {
+        if(closeFlag)
+        {
+            updateStartPosition();
+            closeFlag = false;
+            Intent intent = new Intent();
+            intent.setAction(modakflixPlayerAction);
+            intent.putExtra("position", startPosition);
+            intent.putExtra("duration", videoDurationInMilliSeconds);
+            this.setResult(RESULT_OK, intent);
+            OnlinePlayerActivity.this.finish();
+        }
     }
 
 
-// OnClickListener methods
+    // OnClickListener methods
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -1203,17 +1219,15 @@ DefaultTrackSelector.Parameters qualityParams;
         startWindow = savedInstanceState.getInt(KEY_WINDOW);
         savedInstanceState.getString("");
 
+
     }
-
-
-
-
 
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
 
+        finishResultAction();
         if (isScreenLandscape) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -1232,12 +1246,10 @@ DefaultTrackSelector.Parameters qualityParams;
             isScreenLandscape = false;
             hide();
 
-
         } else {
              OnlinePlayerActivity.this.finish();
-            super.onBackPressed();
+            //super.onBackPressed();
         }
-
     }
 
     @Override
@@ -1326,6 +1338,7 @@ DefaultTrackSelector.Parameters qualityParams;
             startAutoPlay = player.getPlayWhenReady();
             startWindow = player.getCurrentWindowIndex();
             startPosition = Math.max(0, player.getContentPosition());
+            videoDurationInMilliSeconds = player.getDuration();
         }
     }
 

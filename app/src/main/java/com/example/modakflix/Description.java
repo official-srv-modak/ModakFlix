@@ -119,103 +119,132 @@ public class Description extends AppCompatActivity {
 
     private void doPostProcess(Intent data)
     {
-                if(data.getAction().equals(modakflixPlayerAction))
-                {
-                    long pos = data.getLongExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
-                    long dur = data.getLongExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
-                    String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
-                    Uri uri = data.getData();
-                    String name = "";
-                    durFromMx = dur;
-                    posFromMx = pos;
-                    if(pos != -1 && dur != -1)
+        if(data.getAction().equals(modakflixPlayerAction))
+        {
+            long pos = data.getLongExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
+            long dur = data.getLongExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
+            String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
+            Uri uri = data.getData();
+            String name = "";
+            durFromMx = dur;
+            posFromMx = pos;
+            if(pos != -1 && dur != -1)
+            {
+                try {
+                    name = URLDecoder.decode(uri.toString().split("/")[uri.toString().split("/").length - 2], "UTF-8");
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    double rem = 0;
+                    rem = dur - pos;
+                    rem = (rem/dur)*100;
+                    if (rem >= 5)
                     {
-                        try {
-                            name = URLDecoder.decode(uri.toString().split("/")[uri.toString().split("/").length - 2], "UTF-8");
-
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            double rem = 0;
-                            rem = dur - pos;
-                            rem = (rem/dur)*100;
-                            if (rem >= 5)
-                            {
-                                Movies.pingDataServer(Profiles.record_position_path+"?username="+username+"&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
-                            }
-
-                            else
-                                Movies.pingDataServer(Profiles.delete_position_path+"?username="+username+"&show="+name);
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        Button openWith = findViewById(R.id.playWithBtn);
-                        Button playBtn = findViewById(R.id.playBtn);
-                        long rem = dur - pos;
-                        rem /= 1000;
-                        long mins = rem/60;
-                        long hrs = mins/60;
-                        if(hrs > 0)
-                        {
-                            mins = mins%60;
-                            openWith.setText("Resume "+(int)hrs+" hour "+(int)mins+" min(s) left");
-                            playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
-                        }
-                        else
-                        {
-                            openWith.setText("Resume "+(int)mins+" min(s) left");
-                            playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
-                        }
+                        Movies.pingDataServer(Profiles.record_position_path+"?username="+username+"&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
                     }
+
+                    else
+                        Movies.pingDataServer(Profiles.delete_position_path+"?username="+username+"&show="+name);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Button openWith = findViewById(R.id.playWithBtn);
+                long rem = dur - pos;
+                rem /= 1000;
+                long mins = rem/60;
+                long hrs = mins/60;
+                if(hrs > 0)
+                {
+                    mins = mins%60;
+                    openWith.setText("Resume "+(int)hrs+" hour "+(int)mins+" min(s) left");
+                    long finalMins = mins;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Button playBtn = findViewById(R.id.playBtn);
+                            playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins +" min(s) left");
+                        }
+                    });
                 }
                 else
                 {
-                    int pos = data.getIntExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
-                    int dur = data.getIntExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
-                    String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
-                    Uri uri = data.getData();
-                    String name = "";
-                    durFromMx = dur;
-                    posFromMx = pos;
-                    if(pos != -1 && dur != -1)
-                    {
-                        try {
-                            name = URLDecoder.decode(uri.toString().split("/")[uri.toString().split("/").length - 2], "UTF-8");
-
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                    openWith.setText("Resume "+(int)mins+" min(s) left");
+                    long finalMins1 = mins;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Button playBtn = findViewById(R.id.playBtn);
+                            playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins1 +" min(s) left");
                         }
-                        try {
-                            double rem = 0;
-                            rem = dur - pos;
-                            rem = (rem/dur)*100;
-                            if (rem >= 5)
-                            {
-                                Movies.pingDataServer(Profiles.record_position_path+"?username="+username+"&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
-                            }
-
-                            else
-                                Movies.pingDataServer(Profiles.delete_position_path+"?username="+username+"&show="+name);
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        Button openWith = findViewById(R.id.playWithBtn);
-                        int rem = dur - pos;
-                        rem /= 1000;
-                        int mins = rem/60;
-                        int hrs = mins/60;
-                        if(hrs > 0)
-                        {
-                            mins = mins%60;
-                            openWith.setText("Resume "+hrs+" hour "+mins+" min(s) left");
-                        }
-                        else
-                        {
-                            openWith.setText("Resume "+mins+" min(s) left");
-                        }
-                    }
+                    });
                 }
+            }
+        }
+        else
+        {
+            int pos = data.getIntExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
+            int dur = data.getIntExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
+            String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
+            Uri uri = data.getData();
+            String name = "";
+            durFromMx = dur;
+            posFromMx = pos;
+            if(pos != -1 && dur != -1)
+            {
+                try {
+                    name = URLDecoder.decode(uri.toString().split("/")[uri.toString().split("/").length - 2], "UTF-8");
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    double rem = 0;
+                    rem = dur - pos;
+                    rem = (rem/dur)*100;
+                    if (rem >= 5)
+                    {
+                        Movies.pingDataServer(Profiles.record_position_path+"?username="+username+"&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
+                    }
+
+                    else
+                        Movies.pingDataServer(Profiles.delete_position_path+"?username="+username+"&show="+name);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Button openWith = findViewById(R.id.playWithBtn);
+                int rem = dur - pos;
+                rem /= 1000;
+                int mins = rem/60;
+                int hrs = mins/60;
+                if(hrs > 0)
+                {
+                    mins = mins%60;
+                    openWith.setText("Resume "+hrs+" hour "+mins+" min(s) left");
+                    int finalMins = mins;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Button playBtn = findViewById(R.id.playBtn);
+                            playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins +" min(s) left");
+                        }
+                    });
+                }
+                else
+                {
+                    openWith.setText("Resume "+mins+" min(s) left");
+                    int finalMins1 = mins;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Button playBtn = findViewById(R.id.playBtn);
+                            playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins1 +" min(s) left");
+                        }
+                    });
+                }
+            }
+        }
     }
 
     @Override

@@ -39,7 +39,8 @@ import java.nio.file.Files;
 
 public class Profiles extends AppCompatActivity {
 
-    public static String ip = "3.108.236.185", ipInfoFilePath = "";
+    //public static String ip = "3.108.236.185", ipInfoFilePath = "";
+    public static String ip = "modakflix.com", ipInfoFilePath = "";
 
     public static String domain_name = "http://"+ip+"/";
     public static String record_position_path = domain_name+"record_position.php";

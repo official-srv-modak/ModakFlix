@@ -591,6 +591,7 @@ public class Movies extends Fragment {
     public static String pingDataServer(String URL)
     {
         String output = "";
+        Log.e("URL", URL+"\n");
         try{
             java.net.URL url = new URL(URL);
             Map params = new LinkedHashMap<>();

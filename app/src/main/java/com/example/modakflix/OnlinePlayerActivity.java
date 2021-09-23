@@ -112,6 +112,7 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
     private static final String KEY_POSITION = "position";
     private static final String KEY_AUTO_PLAY = "auto_play";
     boolean closeFlag = true;
+    boolean finishFlag = false;
 
     static {
         DEFAULT_COOKIE_MANAGER = new CookieManager();
@@ -239,6 +240,7 @@ DefaultTrackSelector.Parameters qualityParams;
             videoDurationInSeconds = videoDurationInMilliSeconds/1000;
             description = bundle.getString("description");
             imageUrl = bundle.getString("image_url");
+            startPosition = Long.parseLong(bundle.getString("position"));
         }
 
         setDescription();
@@ -300,6 +302,9 @@ DefaultTrackSelector.Parameters qualityParams;
         ImageView iv = findViewById(R.id.imageOnlineIv);
         LoadImageTask lit = new LoadImageTask(iv);
         lit.execute(imageUrl);
+
+        TextView headingView = findViewById(R.id.showNameOnlinePlayer);
+        headingView.setText(videoName);
     }
 
     private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -504,17 +509,21 @@ DefaultTrackSelector.Parameters qualityParams;
     @Override
     public void onResume() {
         super.onResume();
-        if (Util.SDK_INT <= 23 || player == null) {
-            initializePlayer();
-            setProgress();
+        if(!finishFlag)
+        {
+            if (Util.SDK_INT <= 23 || player == null) {
+                initializePlayer();
+                setProgress();
 
-            if (playerView != null) {
-                playerView.onResume();
+                if (playerView != null) {
+                    playerView.onResume();
+                }
             }
+
+            FullScreencall();
+            closeFlag = true;
         }
 
-        FullScreencall();
-        closeFlag = true;
     }
 
     @Override
@@ -551,16 +560,21 @@ DefaultTrackSelector.Parameters qualityParams;
     }
 
     private void finishResultAction() {
+
         if(closeFlag)
         {
+            releasePlayer();
+            releaseInstance();
             updateStartPosition();
             closeFlag = false;
+
             Intent intent = new Intent();
             intent.setAction(modakflixPlayerAction);
+            intent.setData(Uri.parse(videoUrl));
             intent.putExtra("position", startPosition);
             intent.putExtra("duration", videoDurationInMilliSeconds);
             this.setResult(RESULT_OK, intent);
-            OnlinePlayerActivity.this.finish();
+            finish();
         }
     }
 
@@ -1228,7 +1242,7 @@ DefaultTrackSelector.Parameters qualityParams;
     public void onBackPressed() {
 
         finishResultAction();
-        if (isScreenLandscape) {
+        /*if (isScreenLandscape) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             playerView.setLayoutParams(
@@ -1249,7 +1263,7 @@ DefaultTrackSelector.Parameters qualityParams;
         } else {
              OnlinePlayerActivity.this.finish();
             //super.onBackPressed();
-        }
+        }*/
     }
 
     @Override
@@ -1345,7 +1359,7 @@ DefaultTrackSelector.Parameters qualityParams;
     private void clearStartPosition() {
         startAutoPlay = true;
         startWindow = C.INDEX_UNSET;
-        startPosition = C.TIME_UNSET;
+        //startPosition = C.TIME_UNSET;
     }
 
 

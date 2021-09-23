@@ -251,7 +251,11 @@ DefaultTrackSelector.Parameters qualityParams;
             startWindow = savedInstanceState.getInt(KEY_WINDOW);
             startPosition = savedInstanceState.getLong(KEY_POSITION);
         } else {
+            updateTrackSelectorParameters();
+
+
             trackSelectorParameters = new DefaultTrackSelector.ParametersBuilder().build();
+
             clearStartPosition();
         }
 
@@ -287,7 +291,7 @@ DefaultTrackSelector.Parameters qualityParams;
             @Override
             public void run() {
                 observerVideoStatus();
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 100);
             }
         };
 
@@ -300,8 +304,9 @@ DefaultTrackSelector.Parameters qualityParams;
         descriptionTV.setText(description);
 
         ImageView iv = findViewById(R.id.imageOnlineIv);
-        LoadImageTask lit = new LoadImageTask(iv);
-        lit.execute(imageUrl);
+        Glide.with(this).load(imageUrl).into(iv);
+        /*LoadImageTask lit = new LoadImageTask(iv);
+        lit.execute(imageUrl);*/
 
         TextView headingView = findViewById(R.id.showNameOnlinePlayer);
         headingView.setText(videoName);
@@ -996,6 +1001,7 @@ DefaultTrackSelector.Parameters qualityParams;
         player.addListener(new PlayerEventListener());
         player.setPlayWhenReady(startAutoPlay);
         player.addAnalyticsListener(new EventLogger(trackSelector));
+        player.seekTo(startPosition);
         playerView.setPlayer(player);
         playerView.setPlaybackPreparer(this);
 
@@ -1226,7 +1232,13 @@ DefaultTrackSelector.Parameters qualityParams;
         // This bundle has also been passed to onCreate.
 
         videoId = savedInstanceState.getString("video_id");
+        videoName = savedInstanceState.getString("video_name");
         videoUrl = savedInstanceState.getString("video_url");
+        description = savedInstanceState.getString("description");
+        imageUrl = savedInstanceState.getString("image_url");
+        startPosition = Long.parseLong(savedInstanceState.getString("position"));
+        videoDurationInMilliSeconds = Long.parseLong(savedInstanceState.getString("video_duration"));
+
         startPosition = savedInstanceState.getInt(KEY_POSITION);
         trackSelectorParameters = savedInstanceState.getParcelable(KEY_TRACK_SELECTOR_PARAMETERS);
         startAutoPlay = savedInstanceState.getBoolean(KEY_AUTO_PLAY);
@@ -1242,7 +1254,16 @@ DefaultTrackSelector.Parameters qualityParams;
     public void onBackPressed() {
 
         finishResultAction();
-        /*if (isScreenLandscape) {
+        Bundle bundle = new Bundle();
+        bundle.putString("video_id","0");
+        bundle.putString("video_name", videoName);
+        bundle.putString("video_url", videoUrl);
+        bundle.putString("description", description);
+        bundle.putString("image_url", imageUrl);
+        bundle.putString("position", String.valueOf(startPosition));
+        bundle.putLong("video_duration", videoDurationInMilliSeconds);
+        //onSaveInstanceState(bundle);
+        if (isScreenLandscape) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             playerView.setLayoutParams(
@@ -1263,7 +1284,7 @@ DefaultTrackSelector.Parameters qualityParams;
         } else {
              OnlinePlayerActivity.this.finish();
             //super.onBackPressed();
-        }*/
+        }
     }
 
     @Override

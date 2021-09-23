@@ -58,7 +58,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import android.os.Process.*;
 
+import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
+import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
+import static android.os.Process.THREAD_PRIORITY_URGENT_AUDIO;
+import static android.os.Process.THREAD_PRIORITY_URGENT_DISPLAY;
 import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
 
@@ -594,6 +599,8 @@ public class Description extends AppCompatActivity {
         ProgressDialog progressDialog = new ProgressDialog(Description.this);;
 
         protected Integer doInBackground(Intent... data) {
+            android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND + THREAD_PRIORITY_MORE_FAVORABLE);
+
             doPostProcess(data[0]);
 
             return 0;
@@ -602,16 +609,16 @@ public class Description extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.setMessage("Loading...");
+            /*progressDialog.setMessage("Loading...");
             progressDialog.setIndeterminate(false);
             progressDialog.setCancelable(true);
-            progressDialog.show();
+            progressDialog.show();*/
         }
 
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            progressDialog.dismiss();
+            /*progressDialog.dismiss();*/
         }
     }
 

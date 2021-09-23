@@ -151,6 +151,7 @@ public class Description extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         Button openWith = findViewById(R.id.playWithBtn);
+                        Button playBtn = findViewById(R.id.playBtn);
                         long rem = dur - pos;
                         rem /= 1000;
                         long mins = rem/60;
@@ -159,10 +160,12 @@ public class Description extends AppCompatActivity {
                         {
                             mins = mins%60;
                             openWith.setText("Resume "+(int)hrs+" hour "+(int)mins+" min(s) left");
+                            playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
                         }
                         else
                         {
                             openWith.setText("Resume "+(int)mins+" min(s) left");
+                            playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
                         }
                     }
                 }
@@ -402,7 +405,16 @@ public class Description extends AppCompatActivity {
             });
             Button playBtn = findViewById(R.id.playBtn);
 
-            playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
+            if(hrs > 0)
+            {
+                mins = mins%60;
+                playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
+            }
+            else
+            {
+                playBtn.setText("Resume with internal player : "+mins+" min(s) left");
+            }
+            //playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
             int finalDur = dur;
             int finalPos = pos;
             playBtn.setOnClickListener(new View.OnClickListener() {

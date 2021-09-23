@@ -355,7 +355,7 @@ public class Description extends AppCompatActivity {
                     modakFlixPlayer.putExtra("url", videoUrl);
                     modakFlixPlayer.putExtra("resume_pos", pos1);
                     startActivityForResult(modakFlixPlayer, 1);*/
-                    startModakFlixPlayer("0", name, videoUrl, String.valueOf(finalDur), descriptionStr, imageUrl);
+                    startModakFlixPlayer("0", name, videoUrl, descriptionStr, imageUrl);
                 }
             });
 

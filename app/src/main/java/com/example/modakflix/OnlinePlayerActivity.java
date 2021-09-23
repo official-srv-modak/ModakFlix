@@ -1037,13 +1037,13 @@ DefaultTrackSelector.Parameters qualityParams;
                 int label;
                 switch (player.getRendererType(i)) {
                     case C.TRACK_TYPE_AUDIO:
-                        label = R.string.exo_track_selection_title_audio;
+                        label = R.string.video_player_audio;
                         break;
                     case C.TRACK_TYPE_VIDEO:
-                        label = R.string.exo_track_selection_title_video;
+                        label = R.string.video_player_video;
                         break;
                     case C.TRACK_TYPE_TEXT:
-                        label = R.string.exo_track_selection_title_text;
+                        label = R.string.video_player_subs;
                         break;
                     default:
                         continue;

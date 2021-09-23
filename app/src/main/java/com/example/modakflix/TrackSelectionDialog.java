@@ -276,11 +276,11 @@ public final class TrackSelectionDialog extends DialogFragment {
   private static String getTrackTypeString(Resources resources, int trackType) {
     switch (trackType) {
       case C.TRACK_TYPE_VIDEO:
-        return resources.getString(R.string.exo_track_selection_title_video);
+        return resources.getString(R.string.video_player_video);
       case C.TRACK_TYPE_AUDIO:
-        return resources.getString(R.string.exo_track_selection_title_audio);
+        return resources.getString(R.string.video_player_audio);
       case C.TRACK_TYPE_TEXT:
-        return resources.getString(R.string.exo_track_selection_title_text);
+        return resources.getString(R.string.video_player_subs);
       default:
         throw new IllegalArgumentException();
     }

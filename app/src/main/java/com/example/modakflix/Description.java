@@ -94,6 +94,7 @@ public class Description extends AppCompatActivity {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+        this.overridePendingTransition(R.anim.nothing,R.anim.activity_slide_down);
     }
 
     @Override
@@ -153,30 +154,66 @@ public class Description extends AppCompatActivity {
                 Button openWith = findViewById(R.id.playWithBtn);
                 long rem = dur - pos;
                 rem /= 1000;
-                long mins = rem/60;
-                long hrs = mins/60;
+                final long[] mins = {rem / 60};
+                long hrs = mins[0] /60;
                 if(hrs > 0)
                 {
-                    mins = mins%60;
-                    openWith.setText("Resume "+(int)hrs+" hour "+(int)mins+" min(s) left");
-                    long finalMins = mins;
+                    mins[0] = mins[0] %60;
+                    if(hrs > 0)
+                    {
+                        mins[0] = mins[0] %60;
+                        openWith.setText("Resume "+hrs+" hour "+ mins[0] +" min(s) left");
+                    }
+                    else
+                    {
+                        openWith.setText("Resume "+ mins[0] +" min(s) left");
+                    }
+                    //openWith.setText("Resume "+(int)hrs+" hour "+(int)mins+" min(s) left");
+                    long finalMins = mins[0];
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Button playBtn = findViewById(R.id.playBtn);
-                            playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins +" min(s) left");
+                            if(hrs > 0)
+                            {
+                                mins[0] = mins[0] %60;
+                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
+                            }
+                            else
+                            {
+                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
+                            }
+                           // playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins +" min(s) left");
                         }
                     });
                 }
                 else
                 {
-                    openWith.setText("Resume "+(int)mins+" min(s) left");
-                    long finalMins1 = mins;
+                    if(hrs > 0)
+                    {
+                        mins[0] = mins[0] %60;
+                        openWith.setText("Resume "+hrs+" hour "+ mins[0] +" min(s) left");
+                    }
+                    else
+                    {
+                        openWith.setText("Resume "+ mins[0] +" min(s) left");
+                    }
+                    //openWith.setText("Resume "+(int) mins[0] +" min(s) left");
+                    long finalMins1 = mins[0];
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Button playBtn = findViewById(R.id.playBtn);
-                            playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins1 +" min(s) left");
+                            if(hrs > 0)
+                            {
+                                mins[0] = mins[0] %60;
+                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
+                            }
+                            else
+                            {
+                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
+                            }
+                            //playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins1 +" min(s) left");
                         }
                     });
                 }
@@ -216,30 +253,66 @@ public class Description extends AppCompatActivity {
                 Button openWith = findViewById(R.id.playWithBtn);
                 int rem = dur - pos;
                 rem /= 1000;
-                int mins = rem/60;
-                int hrs = mins/60;
+                final int[] mins = {rem / 60};
+                int hrs = mins[0] /60;
                 if(hrs > 0)
                 {
-                    mins = mins%60;
-                    openWith.setText("Resume "+hrs+" hour "+mins+" min(s) left");
-                    int finalMins = mins;
+                    mins[0] = mins[0] %60;
+                    if(hrs > 0)
+                    {
+                        mins[0] = mins[0] %60;
+                        openWith.setText("Resume "+hrs+" hour "+ mins[0] +" min(s) left");
+                    }
+                    else
+                    {
+                        openWith.setText("Resume "+ mins[0] +" min(s) left");
+                    }
+                    //openWith.setText("Resume "+hrs+" hour "+mins+" min(s) left");
+                    int finalMins = mins[0];
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Button playBtn = findViewById(R.id.playBtn);
-                            playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins +" min(s) left");
+                            if(hrs > 0)
+                            {
+                                mins[0] = mins[0] %60;
+                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
+                            }
+                            else
+                            {
+                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
+                            }
+                            //playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins +" min(s) left");
                         }
                     });
                 }
                 else
                 {
-                    openWith.setText("Resume "+mins+" min(s) left");
-                    int finalMins1 = mins;
+                    if(hrs > 0)
+                    {
+                        mins[0] = mins[0] %60;
+                        openWith.setText("Resume "+hrs+" hour "+ mins[0] +" min(s) left");
+                    }
+                    else
+                    {
+                        openWith.setText("Resume "+ mins[0] +" min(s) left");
+                    }
+                    //openWith.setText("Resume "+ mins[0] +" min(s) left");
+                    int finalMins1 = mins[0];
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Button playBtn = findViewById(R.id.playBtn);
-                            playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins1 +" min(s) left");
+                            if(hrs > 0)
+                            {
+                                mins[0] = mins[0] %60;
+                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
+                            }
+                            else
+                            {
+                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
+                            }
+                            //playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins1 +" min(s) left");
                         }
                     });
                 }
@@ -255,6 +328,7 @@ public class Description extends AppCompatActivity {
         final SwipeRefreshLayout pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshDesc);
         if(getIntent().hasExtra("username"))
             username = getIntent().getStringExtra("username");
+
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -376,6 +450,7 @@ public class Description extends AppCompatActivity {
                 Intent returnIntent = new Intent();
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
+                overridePendingTransition(R.anim.nothing,R.anim.activity_slide_down);
             }
         });
 
@@ -466,6 +541,7 @@ public class Description extends AppCompatActivity {
                     pu.execute(Description.handleUrl(url));
                     Toast.makeText(Description.this, "Show : "+name+" marked as completed", Toast.LENGTH_LONG).show();
                     finish();
+                    overridePendingTransition(R.anim.nothing,R.anim.activity_slide_down);
                 }
             });
         }

@@ -11,7 +11,6 @@ import static com.google.android.exoplayer2.offline.Download.STATE_RESTARTING;
 import static com.google.android.exoplayer2.offline.Download.STATE_STOPPED;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -221,6 +220,7 @@ DefaultTrackSelector.Parameters qualityParams;
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        overridePendingTransition(R.anim.activity_slide_from_right, R.anim.nothing);
 
         dataSourceFactory = buildDataSourceFactory();
         if (CookieHandler.getDefault() != DEFAULT_COOKIE_MANAGER) {
@@ -568,6 +568,8 @@ DefaultTrackSelector.Parameters qualityParams;
 
         if(closeFlag)
         {
+            //overridePendingTransition(R.anim.activity_slide_to_right, R.anim.activity_slide_from_left);
+
             releasePlayer();
             releaseInstance();
             updateStartPosition();
@@ -580,6 +582,7 @@ DefaultTrackSelector.Parameters qualityParams;
             intent.putExtra("duration", videoDurationInMilliSeconds);
             this.setResult(RESULT_OK, intent);
             finish();
+            this.overridePendingTransition(R.anim.nothing,R.anim.activity_slide_to_right);
         }
     }
 

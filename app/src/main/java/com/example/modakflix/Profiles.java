@@ -120,6 +120,7 @@ public class Profiles extends AppCompatActivity {
         add_profile = domain_name+"add_profile.php";
         reset_show = domain_name+"reset_show.php";
         actResume = 0;
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 

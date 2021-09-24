@@ -113,14 +113,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <Button
-                android:id="@+id/subtitles"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_margin="10dp"
-                android:text="Subtitle" />
-
             <TextView
                 android:id="@+id/showNameOnlinePlayer"
                 android:layout_width="match_parent"

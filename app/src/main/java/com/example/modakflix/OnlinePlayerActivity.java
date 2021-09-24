@@ -323,15 +323,6 @@ DefaultTrackSelector.Parameters qualityParams;
 
         TextView headingView = findViewById(R.id.showNameOnlinePlayer);
         headingView.setText(videoName);
-
-        Button subs = findViewById(R.id.subtitles);
-        subs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LoadSubs ls = new LoadSubs();
-                ls.execute();
-            }
-        });
     }
 
     private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -1549,54 +1540,5 @@ DefaultTrackSelector.Parameters qualityParams;
                 break;
         }
 
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public Uri getSubtitle(String showName)
-    {
-        Uri subtitleUri = Uri.parse("");
-
-        // connect to opensubtitle.org
-        List<SubtitleInfo> subsList = searchSubtitle(showName);
-        SubtitleInfo subSelected = subsList.get(0); ///////
-
-        Log.e("Subs", subsList.toString());
-        Toast.makeText(this, "Subtitle found : "+subSelected.getSubFileName(), Toast.LENGTH_LONG).show();
-
-        return subtitleUri;
-
-    }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public List<SubtitleInfo> searchSubtitle(String showName)
-    {
-        List<SubtitleInfo> output = new ArrayList<>();
-        try {
-            OpenSubtitle openSubtitle=new OpenSubtitle();
-            openSubtitle.login();
-
-//  openSubtitle.ServerInfo();
-//  openSubtitle.getSubLanguages();
-
-            output = openSubtitle.getMovieSubsByName(showName,"1","eng");
-
-//  openSubtitle.getTvSeriesSubs("game of thrones","1","1","10","eng");
-//  openSubtitle.Search("/home/sachin/Vuze Downloads/Minions.2015.720p.BRRip.850MB.MkvCage.mkv");
-
-            openSubtitle.logOut();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return output;
-
-    }
-    private class LoadSubs extends AsyncTask<String, Void, Integer> {
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        protected Integer doInBackground(String... urls) {
-
-            getSubtitle(videoName);
-            return 0;
-        }
     }
 }

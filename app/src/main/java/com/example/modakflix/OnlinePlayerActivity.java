@@ -324,14 +324,14 @@ DefaultTrackSelector.Parameters qualityParams;
         TextView headingView = findViewById(R.id.showNameOnlinePlayer);
         headingView.setText(videoName);
 
-        /*Button subs = findViewById(R.id.subtitles);
+        Button subs = findViewById(R.id.subtitles);
         subs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LoadSubs ls = new LoadSubs();
                 ls.execute();
             }
-        });*/
+        });
     }
 
     private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {

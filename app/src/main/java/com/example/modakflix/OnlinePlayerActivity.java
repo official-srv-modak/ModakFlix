@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -86,15 +88,24 @@ import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.Util;
 
+import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+
+import Opensubs.OpenSubtitle;
+import Opensubs.SubtitleInfo;
 
 
 public class OnlinePlayerActivity extends AppCompatActivity implements View.OnClickListener, PlaybackPreparer, PlayerControlView.VisibilityListener, DownloadTracker.Listener {
@@ -211,6 +222,7 @@ DefaultTrackSelector.Parameters qualityParams;
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("WrongViewCast")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -299,6 +311,7 @@ DefaultTrackSelector.Parameters qualityParams;
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setDescription() {
         TextView descriptionTV = findViewById(R.id.descriptionOnlineTv);
         descriptionTV.setText(description);
@@ -310,6 +323,15 @@ DefaultTrackSelector.Parameters qualityParams;
 
         TextView headingView = findViewById(R.id.showNameOnlinePlayer);
         headingView.setText(videoName);
+
+        /*Button subs = findViewById(R.id.subtitles);
+        subs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoadSubs ls = new LoadSubs();
+                ls.execute();
+            }
+        });*/
     }
 
     private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -1529,5 +1551,52 @@ DefaultTrackSelector.Parameters qualityParams;
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public Uri getSubtitle(String showName)
+    {
+        Uri subtitleUri = Uri.parse("");
 
+        // connect to opensubtitle.org
+        List<SubtitleInfo> subsList = searchSubtitle(showName);
+        SubtitleInfo subSelected = subsList.get(0); ///////
+
+        Log.e("Subs", subsList.toString());
+        Toast.makeText(this, "Subtitle found : "+subSelected.getSubFileName(), Toast.LENGTH_LONG).show();
+
+        return subtitleUri;
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public List<SubtitleInfo> searchSubtitle(String showName)
+    {
+        List<SubtitleInfo> output = new ArrayList<>();
+        try {
+            OpenSubtitle openSubtitle=new OpenSubtitle();
+            openSubtitle.login();
+
+//  openSubtitle.ServerInfo();
+//  openSubtitle.getSubLanguages();
+
+            output = openSubtitle.getMovieSubsByName(showName,"1","eng");
+
+//  openSubtitle.getTvSeriesSubs("game of thrones","1","1","10","eng");
+//  openSubtitle.Search("/home/sachin/Vuze Downloads/Minions.2015.720p.BRRip.850MB.MkvCage.mkv");
+
+            openSubtitle.logOut();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return output;
+
+    }
+    private class LoadSubs extends AsyncTask<String, Void, Integer> {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        protected Integer doInBackground(String... urls) {
+
+            getSubtitle(videoName);
+            return 0;
+        }
+    }
 }

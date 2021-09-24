@@ -12,11 +12,9 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -38,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.khizar1556.mkvideoplayer.MKPlayer;
 import com.khizar1556.mkvideoplayer.MKPlayerActivity;
 
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +54,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -65,6 +65,9 @@ import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
 import static android.os.Process.THREAD_PRIORITY_URGENT_AUDIO;
 import static android.os.Process.THREAD_PRIORITY_URGENT_DISPLAY;
 import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
+
+import Opensubs.OpenSubtitle;
+import Opensubs.SubtitleInfo;
 
 
 public class Description extends AppCompatActivity {

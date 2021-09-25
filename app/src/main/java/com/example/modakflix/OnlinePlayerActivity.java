@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
@@ -63,6 +64,8 @@ import com.google.android.exoplayer2.PlaybackPreparer;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer;
 import com.google.android.exoplayer2.mediacodec.MediaCodecUtil;
 import com.google.android.exoplayer2.offline.Download;
@@ -73,6 +76,8 @@ import com.google.android.exoplayer2.offline.DownloadService;
 import com.google.android.exoplayer2.source.BehindLiveWindowException;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
+import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.ads.AdsLoader;
@@ -89,8 +94,10 @@ import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
+import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 
 import org.json.JSONArray;
@@ -118,6 +125,7 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 2000;
     private static final int UI_ANIMATION_DELAY = 300;
+    static Uri subtitleUri = Uri.parse("");
     // Saved instance state keys.
     private static final String KEY_TRACK_SELECTOR_PARAMETERS = "track_selector_parameters";
     private static final String KEY_WINDOW = "window";
@@ -335,7 +343,7 @@ DefaultTrackSelector.Parameters qualityParams;
 
               //  while(!PermissionClass.permissionCompletedFlag);
 
-                openImagePreview();
+                openSubtitleSelector();
             }
         });
     }
@@ -1565,7 +1573,7 @@ DefaultTrackSelector.Parameters qualityParams;
         if(subsList!=null && subsList.size()>0)
         {
             SubtitleInfo subSelected = subsList.get(0); ///////
-
+            subtitleUri = Uri.parse(subSelected.getSubDownloadLink());
             Log.e("Subs", subSelected.toString());
             runOnUiThread(new Runnable() {
                 @Override
@@ -1611,12 +1619,18 @@ DefaultTrackSelector.Parameters qualityParams;
         protected Integer doInBackground(String... urls) {
 
 
-            getSubtitle(videoName);
+            subtitleUri = getSubtitle(videoName);
+
             return 0;
         }
 
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            addSubtitle(subtitleUri);
+        }
     }
-    private void openImagePreview()
+    private void openSubtitleSelector()
     {
         try {
             androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(this);
@@ -1647,7 +1661,7 @@ DefaultTrackSelector.Parameters qualityParams;
                     }
                     else
                     {
-
+                        selectFromExternalStorage();
                     }
                 }
             });
@@ -1669,6 +1683,7 @@ DefaultTrackSelector.Parameters qualityParams;
                     {
                         LoadSubs ls =  new LoadSubs();
                         ls.execute();
+
                     }
                 }
             });
@@ -1705,14 +1720,15 @@ DefaultTrackSelector.Parameters qualityParams;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-            // There are no request codes
+
             if(!Environment.isExternalStorageManager())
             {
                 Toast.makeText(OnlinePlayerActivity.this, "Cannot continue without write permission.", Toast.LENGTH_LONG).show();
                 System.exit(0);
             }
-            PermissionClass.permission(1);
-           // PermissionClass.permissionCompletedFlag = true;
+            PermissionClass p = new PermissionClass(OnlinePlayerActivity.this, OnlinePlayerActivity.this, REQEST_CODE);
+            p.permission(1);
+            // PermissionClass.permissionCompletedFlag = true;
 
             switch (REQEST_CODE)
             {
@@ -1726,5 +1742,50 @@ DefaultTrackSelector.Parameters qualityParams;
                     Toast.makeText(this, "Invalid Request made.", Toast.LENGTH_LONG).show();
             }
 
+            if (requestCode == SELECT_ITEM) {
+                Uri selectedImageUri = data.getData();
+               // addSubtitle(selectedImageUri);
+                try {
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+    }
+
+    private static final int SELECT_ITEM = 1;
+    private String selectedImagePath;
+    private void selectFromExternalStorage()
+    {
+        Intent intent = new Intent();
+        intent.setType("*/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,
+                "Select subtitles"), SELECT_ITEM);
+    }
+
+    private void addSubtitle(Uri subtitleUri)
+    {
+        Uri videoURI = Uri.parse(videoUrl);
+        DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("exoplayer_video");
+
+        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
+
+        // Build the subtitle MediaSource.
+        Format subtitleFormat = Format.createTextSampleFormat("", MimeTypes.APPLICATION_SUBRIP,Format.NO_VALUE, "en");
+
+
+        MediaSource subtitleSource =new SingleSampleMediaSource(subtitleUri, dataSourceFactory, subtitleFormat, C.TIME_UNSET);
+
+        MergingMediaSource mergedSource =
+                new MergingMediaSource(mediaSource, subtitleSource);
+
+        playerView.setPlayer(player);
+        player.prepare(mergedSource);
+        player.setPlayWhenReady(true);
     }
 }

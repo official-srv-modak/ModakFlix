@@ -765,9 +765,9 @@ public class Description extends AppCompatActivity {
 
         // connect to opensubtitle.org
         List<SubtitleInfo> subsList = searchSubtitle(showName);
-        //SubtitleInfo subSelected = subsList.get(0); ///////
+        SubtitleInfo subSelected = subsList.get(0); ///////
 
-        Log.e("Subs", subsList.toString());
+        Log.e("Subs", subSelected.toString());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -789,7 +789,7 @@ public class Description extends AppCompatActivity {
 //  openSubtitle.ServerInfo();
 //  openSubtitle.getSubLanguages();
 
-            output = openSubtitle.getMovieSubsByName("now you see me","20","eng");
+            output = openSubtitle.getMovieSubsByName("now you see me","1","eng");
 
 //  openSubtitle.getTvSeriesSubs("game of thrones","1","1","10","eng");
 //  openSubtitle.Search("/home/sachin/Vuze Downloads/Minions.2015.720p.BRRip.850MB.MkvCage.mkv");

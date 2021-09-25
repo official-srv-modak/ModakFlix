@@ -23,7 +23,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Display;
@@ -1620,9 +1622,11 @@ DefaultTrackSelector.Parameters qualityParams;
             // Set open from storage button
             Button openStgBtn = layoutView.findViewById(R.id.openFromInternal);
             openStgBtn.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.R)
                 @Override
                 public void onClick(View v) {
-
+                    PermissionClass p = new PermissionClass(OnlinePlayerActivity.this, OnlinePlayerActivity.this);
+                    p.getPermission();
                 }
             });
 
@@ -1644,4 +1648,5 @@ DefaultTrackSelector.Parameters qualityParams;
         }
 
     }
+
 }

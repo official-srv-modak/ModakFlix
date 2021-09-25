@@ -11,6 +11,7 @@ import static com.google.android.exoplayer2.offline.Download.STATE_RESTARTING;
 import static com.google.android.exoplayer2.offline.Download.STATE_STOPPED;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -1549,27 +1550,31 @@ DefaultTrackSelector.Parameters qualityParams;
                 break;
         }
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public Uri getSubtitle(String showName)
     {
         Uri subtitleUri = Uri.parse("");
 
         // connect to opensubtitle.org
         List<SubtitleInfo> subsList = searchSubtitle(showName);
-        SubtitleInfo subSelected = subsList.get(0); ///////
+        if(subsList!=null && subsList.size()>0)
+        {
+            SubtitleInfo subSelected = subsList.get(0); ///////
 
-        Log.e("Subs", subSelected.toString());
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(OnlinePlayerActivity.this, "Subtitle found : "+subsList.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
+            Log.e("Subs", subSelected.toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(OnlinePlayerActivity.this, "Subtitle found : "+subsList.toString(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
 
         return subtitleUri;
 
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public List<SubtitleInfo> searchSubtitle(String showName)
     {
         List<SubtitleInfo> output = new ArrayList<>();
@@ -1580,26 +1585,32 @@ DefaultTrackSelector.Parameters qualityParams;
 //  openSubtitle.ServerInfo();
 //  openSubtitle.getSubLanguages();
 
-            output = openSubtitle.getMovieSubsByName("now you see me","1","eng");
+            output = openSubtitle.getMovieSubsByName(showName,"1","eng");
 
 //  openSubtitle.getTvSeriesSubs("game of thrones","1","1","10","eng");
 //  openSubtitle.Search("/home/Downloads/Minions.2015.720p.BRRip.850MB.MkvCage.mkv");
 
             openSubtitle.logOut();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (NullPointerException e)
+            {
+                e.printStackTrace();
+                showDialog(getString(R.string.server_no_response));
+            }
+        catch (Exception e1) {
+            e1.printStackTrace();
         }
 
         return output;
 
     }
     private class LoadSubs extends AsyncTask<String, Void, Integer> {
-        @RequiresApi(api = Build.VERSION_CODES.N)
+        @RequiresApi(api = Build.VERSION_CODES.R)
         protected Integer doInBackground(String... urls) {
 
 
-            //getSubtitle(videoName);
+            getSubtitle(videoName);
             return 0;
         }
     }
@@ -1635,7 +1646,8 @@ DefaultTrackSelector.Parameters qualityParams;
             downloadSubtitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    LoadSubs ls = new LoadSubs();
+                    ls.execute();
                 }
             });
 
@@ -1648,5 +1660,16 @@ DefaultTrackSelector.Parameters qualityParams;
         }
 
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void showDialog(String message)
+    {
+        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alertDialogBuilder.show();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.modakflix;
 
 import static android.net.Uri.parse;
+import static android.net.wifi.WifiConfiguration.Status.strings;
 import static com.example.modakflix.Description.modakflixPlayerAction;
 import static com.google.android.exoplayer2.offline.Download.STATE_COMPLETED;
 import static com.google.android.exoplayer2.offline.Download.STATE_DOWNLOADING;
@@ -10,11 +11,14 @@ import static com.google.android.exoplayer2.offline.Download.STATE_REMOVING;
 import static com.google.android.exoplayer2.offline.Download.STATE_RESTARTING;
 import static com.google.android.exoplayer2.offline.Download.STATE_STOPPED;
 
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -26,8 +30,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Display;
@@ -43,7 +45,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -100,18 +104,26 @@ import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import Opensubs.OpenSubtitle;
 import Opensubs.SubtitleInfo;
@@ -125,7 +137,7 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 2000;
     private static final int UI_ANIMATION_DELAY = 300;
-    static Uri subtitleUri = Uri.parse("");
+    static Uri subtitleUri = Uri.parse("http://modakflix.com/resources/friends_reunion.gz");
     // Saved instance state keys.
     private static final String KEY_TRACK_SELECTOR_PARAMETERS = "track_selector_parameters";
     private static final String KEY_WINDOW = "window";
@@ -1566,7 +1578,6 @@ DefaultTrackSelector.Parameters qualityParams;
     @RequiresApi(api = Build.VERSION_CODES.R)
     public Uri getSubtitle(String showName)
     {
-        Uri subtitleUri = Uri.parse("");
 
         // connect to opensubtitle.org
         List<SubtitleInfo> subsList = searchSubtitle(showName);
@@ -1615,21 +1626,120 @@ DefaultTrackSelector.Parameters qualityParams;
 
     }
     private class LoadSubs extends AsyncTask<String, Void, Integer> {
+        String zipPath;
         @RequiresApi(api = Build.VERSION_CODES.R)
         protected Integer doInBackground(String... urls) {
-
-
             subtitleUri = getSubtitle(videoName);
-
+            zipPath = downloadZip(subtitleUri);
             return 0;
         }
 
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            addSubtitle(subtitleUri);
+            if(subtitleUri!= null && !subtitleUri.toString().isEmpty())
+            {
+                try {
+                    subtitleUri = unzip(new File(zipPath), new File(zipPath.split(".gz")[0]));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(subtitleUri!=null && !subtitleUri.toString().isEmpty())
+                    addSubtitle(subtitleUri);
+            }
         }
     }
+
+
+    private String downloadZip(Uri uri) {
+        File sdCardRoot = new File("");
+
+        HttpURLConnection urlConnection = null;
+        try {
+            strings[0] = uri.toString();
+            URL url = new URL(uri.toString());
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoOutput(true);
+            urlConnection.connect();
+
+
+            sdCardRoot = new File(Environment.getExternalStorageDirectory(), "ModakFlix");
+
+            if (!sdCardRoot.exists()) {
+                sdCardRoot.mkdirs();
+            }
+
+            Log.e("check_path", "" + sdCardRoot.getAbsolutePath());
+
+            String fileName =
+                    strings[0].substring(strings[0].lastIndexOf('/') + 1, strings[0].length());
+            Log.e("dfsdsjhgdjh", "" + fileName);
+            File imgFile =
+                    new File(sdCardRoot, fileName);
+            if (!sdCardRoot.exists()) {
+                imgFile.createNewFile();
+            }
+            InputStream inputStream = urlConnection.getInputStream();
+            int totalSize = urlConnection.getContentLength();
+            FileOutputStream outPut = new FileOutputStream(imgFile);
+            int downloadedSize = 0;
+            byte[] buffer = new byte[2024];
+            int bufferLength = 0;
+            while ((bufferLength = inputStream.read(buffer)) > 0) {
+                outPut.write(buffer, 0, bufferLength);
+                downloadedSize += bufferLength;
+                Log.e("Progress:", "downloadedSize:" + Math.abs(downloadedSize * 100 / totalSize));
+            }
+            Log.e("Progress:", "imgFile.getAbsolutePath():" + imgFile.getAbsolutePath());
+
+            Log.e("TAG", "check image path 2" + imgFile.getAbsolutePath());
+
+            outPut.close();
+            return imgFile.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("checkException:-", "" + e);
+            return null;
+        }
+    }
+
+    public static Uri unzip(File zipFile, File targetDirectory) throws IOException {
+        ZipArchiveInputStream zis = new ZipArchiveInputStream(
+                new BufferedInputStream(new FileInputStream(zipFile)));
+        File file = new File("");
+        try {
+            ZipEntry ze;
+            int count;
+            byte[] buffer = new byte[8192];
+            while ((ze = zis.getNextZipEntry()) != null) {
+                file = new File(targetDirectory, ze.getName());
+                File dir = ze.isDirectory() ? file : file.getParentFile();
+                if (!dir.isDirectory() && !dir.mkdirs())
+                    throw new FileNotFoundException("Failed to ensure directory: " +
+                            dir.getAbsolutePath());
+                if (ze.isDirectory())
+                    continue;
+                FileOutputStream fout = new FileOutputStream(file);
+                try {
+                    while ((count = zis.read(buffer)) != -1)
+                        fout.write(buffer, 0, count);
+                } finally {
+                    fout.close();
+                }
+            /* if time should be restored as well
+            long time = ze.getTime();
+            if (time > 0)
+                file.setLastModified(time);
+            */
+            }
+        } finally {
+            zis.close();
+        }
+
+        return Uri.fromFile(file);
+    }
+
     private void openSubtitleSelector()
     {
         try {
@@ -1663,6 +1773,7 @@ DefaultTrackSelector.Parameters qualityParams;
                     {
                         selectFromExternalStorage();
                     }
+                    settingsDialog.dismiss();
                 }
             });
 
@@ -1685,6 +1796,7 @@ DefaultTrackSelector.Parameters qualityParams;
                         ls.execute();
 
                     }
+                    settingsDialog.dismiss();
                 }
             });
 
@@ -1744,7 +1856,9 @@ DefaultTrackSelector.Parameters qualityParams;
 
             if (requestCode == SELECT_ITEM) {
                 Uri selectedImageUri = data.getData();
-               // addSubtitle(selectedImageUri);
+                onResume();
+                addSubtitle(selectedImageUri);
+
                 try {
 
                 } catch (Exception e) {
@@ -1769,6 +1883,7 @@ DefaultTrackSelector.Parameters qualityParams;
 
     private void addSubtitle(Uri subtitleUri)
     {
+
         startPosition = Math.max(0, player.getContentPosition());
         Uri videoURI = Uri.parse(videoUrl);
         DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("exoplayer_video");
@@ -1777,7 +1892,7 @@ DefaultTrackSelector.Parameters qualityParams;
         MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
 
         // Build the subtitle MediaSource.
-        Format subtitleFormat = Format.createTextSampleFormat("", MimeTypes.APPLICATION_SUBRIP,C.TRACK_TYPE_TEXT, "en");
+        Format subtitleFormat = Format.createTextSampleFormat("", MimeTypes.APPLICATION_SUBRIP,Format.NO_VALUE, "en");
 
 
         MediaSource subtitleSource =new SingleSampleMediaSource(subtitleUri, dataSourceFactory, subtitleFormat, C.TIME_UNSET);
@@ -1791,4 +1906,5 @@ DefaultTrackSelector.Parameters qualityParams;
 
         player.seekTo(startPosition);
     }
+
 }

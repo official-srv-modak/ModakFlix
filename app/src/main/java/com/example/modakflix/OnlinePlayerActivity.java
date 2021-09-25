@@ -328,8 +328,10 @@ DefaultTrackSelector.Parameters qualityParams;
 
         Button subs = findViewById(R.id.subtitles);
         subs.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View view) {
+
                 openImagePreview();
             }
         });
@@ -1613,6 +1615,7 @@ DefaultTrackSelector.Parameters qualityParams;
             getSubtitle(videoName);
             return 0;
         }
+
     }
     private void openImagePreview()
     {
@@ -1644,8 +1647,10 @@ DefaultTrackSelector.Parameters qualityParams;
             // Set download subtitle button
             Button downloadSubtitle = layoutView.findViewById(R.id.downloadSubtitle);
             downloadSubtitle.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.R)
                 @Override
                 public void onClick(View v) {
+
                     LoadSubs ls = new LoadSubs();
                     ls.execute();
                 }
@@ -1671,5 +1676,22 @@ DefaultTrackSelector.Parameters qualityParams;
             }
         });
         alertDialogBuilder.show();
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 123) {
+            // There are no request codes
+            if(!Environment.isExternalStorageManager())
+            {
+                Toast.makeText(OnlinePlayerActivity.this, "Cannot continue without write permission.", Toast.LENGTH_LONG).show();
+                System.exit(0);
+            }
+            PermissionClass.permission(1);
+
+        }
     }
 }

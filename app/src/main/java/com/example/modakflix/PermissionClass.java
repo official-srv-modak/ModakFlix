@@ -25,6 +25,7 @@ import java.util.List;
 
 public class PermissionClass extends AppCompatActivity {
 
+    static boolean permissionCompletedFlag = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +63,7 @@ public class PermissionClass extends AppCompatActivity {
                                 PermissionClass.permissionFlag = true;
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
+                                permissionCompletedFlag = true;
                                 break;
                         }
                     }
@@ -212,7 +214,7 @@ public class PermissionClass extends AppCompatActivity {
             intent.addCategory("android.intent.category.DEFAULT");
             Uri uri = Uri.fromParts("package", act.getPackageName(), null);
             intent.setData(uri);
-            act.startActivity(intent);
+            act.startActivityForResult(intent, 123);
         }
     }
 

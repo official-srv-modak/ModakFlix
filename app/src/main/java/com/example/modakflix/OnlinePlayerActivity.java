@@ -1769,6 +1769,7 @@ DefaultTrackSelector.Parameters qualityParams;
 
     private void addSubtitle(Uri subtitleUri)
     {
+        startPosition = Math.max(0, player.getContentPosition());
         Uri videoURI = Uri.parse(videoUrl);
         DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("exoplayer_video");
 
@@ -1776,7 +1777,7 @@ DefaultTrackSelector.Parameters qualityParams;
         MediaSource mediaSource = new ExtractorMediaSource(videoURI, dataSourceFactory, extractorsFactory, null, null);
 
         // Build the subtitle MediaSource.
-        Format subtitleFormat = Format.createTextSampleFormat("", MimeTypes.APPLICATION_SUBRIP,Format.NO_VALUE, "en");
+        Format subtitleFormat = Format.createTextSampleFormat("", MimeTypes.APPLICATION_SUBRIP,C.TRACK_TYPE_TEXT, "en");
 
 
         MediaSource subtitleSource =new SingleSampleMediaSource(subtitleUri, dataSourceFactory, subtitleFormat, C.TIME_UNSET);
@@ -1786,6 +1787,8 @@ DefaultTrackSelector.Parameters qualityParams;
 
         playerView.setPlayer(player);
         player.prepare(mergedSource);
-        player.setPlayWhenReady(true);
+        player.setPlayWhenReady(startAutoPlay);
+
+        player.seekTo(startPosition);
     }
 }

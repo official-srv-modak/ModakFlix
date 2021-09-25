@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 25/02/19, 5:48 PM.
+ * Created by Sourav Modak on 25/02/19, 5:48 PM.
  */
 public class DownloadedVideoAdapter extends RecyclerView.Adapter<DownloadedVideoAdapter.MyViewHolder> { //implements Filterable
 

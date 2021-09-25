@@ -66,7 +66,7 @@ import java.util.Locale;
 
 
 /**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 22/03/19, 1:20 PM.
+ * Created by Sourav Modak on 22/03/19, 1:20 PM.
  */
 public class OfflinePlayerActivity extends AppCompatActivity implements View.OnClickListener, VideoRendererEventListener, PlaybackPreparer, PlayerControlView.VisibilityListener {
 

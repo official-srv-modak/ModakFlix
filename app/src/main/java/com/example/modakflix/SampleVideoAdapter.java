@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 25/02/19, 5:48 PM.
+ * Created by Sourav Modak on 25/02/19, 5:48 PM.
  */
 public class SampleVideoAdapter extends RecyclerView.Adapter<SampleVideoAdapter.MyViewHolder> { //implements Filterable
 

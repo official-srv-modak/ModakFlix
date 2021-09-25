@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 05/06/20, 7:23 PM.
+ * Created by Sourav Modak on 05/06/20, 7:23 PM.
  */
 public class MyDiffUtilCallback extends DiffUtil.Callback {
     List<Download> newList = new ArrayList<>();

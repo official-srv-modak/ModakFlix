@@ -2,7 +2,7 @@ package com.example.modakflix;
 
 
 /**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 19/05/20, 5:53 PM.
+ * Created by Sourav Modak on 19/05/20, 5:53 PM.
  */
 public class AppConstant {
 

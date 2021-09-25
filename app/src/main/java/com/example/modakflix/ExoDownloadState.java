@@ -1,7 +1,7 @@
 package com.example.modakflix;
 
 /**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 30/05/20, 12:25 PM.
+ * Created by Sourav Modak on 30/05/20, 12:25 PM.
  */
 public enum ExoDownloadState {
 

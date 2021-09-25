@@ -1,7 +1,7 @@
 package com.example.modakflix;
 
 /**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 27/05/20, 2:32 PM.
+ * Created by Sourav Modak on 27/05/20, 2:32 PM.
  */
 
 import com.google.android.exoplayer2.Format;

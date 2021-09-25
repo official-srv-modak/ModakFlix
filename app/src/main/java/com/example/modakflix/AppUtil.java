@@ -10,7 +10,7 @@ import com.google.android.exoplayer2.offline.Download;
 import java.text.DecimalFormat;
 
 /**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 21/06/20, 10:49 PM.
+ * Created by Sourav Modak on 21/06/20, 10:49 PM.
  */
 public class AppUtil {
     //Dash  = https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd

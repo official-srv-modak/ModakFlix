@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Mayur Solanki (mayursolanki120@gmail.com) on 21/06/20, 7:38 PM.
+ * Created by Sourav Modak on 21/06/20, 7:38 PM.
  */
 public class DownloadActivity extends AppCompatActivity {
 

@@ -1,5 +1,6 @@
 package com.example.modakflix;
 
+import static java.net.URL.*;
 import static android.net.Uri.parse;
 import static android.net.wifi.WifiConfiguration.Status.strings;
 import static com.example.modakflix.Description.modakflixPlayerAction;
@@ -12,7 +13,11 @@ import static com.google.android.exoplayer2.offline.Download.STATE_RESTARTING;
 import static com.google.android.exoplayer2.offline.Download.STATE_STOPPED;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -111,16 +116,21 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -137,7 +147,7 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 2000;
     private static final int UI_ANIMATION_DELAY = 300;
-    static Uri subtitleUri = Uri.parse("http://modakflix.com/resources/friends_reunion.gz");
+    static Uri subtitleUri = parse("http://modakflix.com/resources/friends_reunion.gz");
     // Saved instance state keys.
     private static final String KEY_TRACK_SELECTOR_PARAMETERS = "track_selector_parameters";
     private static final String KEY_WINDOW = "window";
@@ -625,7 +635,7 @@ DefaultTrackSelector.Parameters qualityParams;
 
             Intent intent = new Intent();
             intent.setAction(modakflixPlayerAction);
-            intent.setData(Uri.parse(videoUrl));
+            intent.setData(parse(videoUrl));
             intent.putExtra("position", startPosition);
             intent.putExtra("duration", videoDurationInMilliSeconds);
             this.setResult(RESULT_OK, intent);
@@ -781,7 +791,7 @@ DefaultTrackSelector.Parameters qualityParams;
 
             case DOWNLOAD_PAUSE:
 
-                downloadManager.addDownload(downloadTracker.getDownloadRequest(Uri.parse(videoUrl)), Download.STATE_STOPPED);
+                downloadManager.addDownload(downloadTracker.getDownloadRequest(parse(videoUrl)), Download.STATE_STOPPED);
 
 //                DownloadService.sendSetStopReason(
 //                        OnlinePlayerActivity.this,
@@ -794,7 +804,7 @@ DefaultTrackSelector.Parameters qualityParams;
 
             case DOWNLOAD_RESUME:
 
-                downloadManager.addDownload(downloadTracker.getDownloadRequest(Uri.parse(videoUrl)), Download.STOP_REASON_NONE);
+                downloadManager.addDownload(downloadTracker.getDownloadRequest(parse(videoUrl)), Download.STOP_REASON_NONE);
 //                DownloadService.sendSetStopReason(
 //                        OnlinePlayerActivity.this,
 //                        DemoDownloadService.class,
@@ -817,7 +827,7 @@ DefaultTrackSelector.Parameters qualityParams;
 
     private void exoButtonPrepareDecision(){
         if (downloadTracker.downloads.size() > 0) {
-            Download download = downloadTracker.downloads.get(Uri.parse(videoUrl));
+            Download download = downloadTracker.downloads.get(parse(videoUrl));
 
             if (download != null) {
                 if (download.getPercentDownloaded() > 99.0) {
@@ -865,7 +875,7 @@ DefaultTrackSelector.Parameters qualityParams;
         }
 
 
-        DownloadHelper downloadHelper = DownloadHelper.forHls(OnlinePlayerActivity.this, Uri.parse(videoUrl), dataSourceFactory, new DefaultRenderersFactory(OnlinePlayerActivity.this));
+        DownloadHelper downloadHelper = DownloadHelper.forHls(OnlinePlayerActivity.this, parse(videoUrl), dataSourceFactory, new DefaultRenderersFactory(OnlinePlayerActivity.this));
 
 
         downloadHelper.prepare(new DownloadHelper.Callback() {
@@ -1056,7 +1066,7 @@ DefaultTrackSelector.Parameters qualityParams;
         playerView.setPlayer(player);
         playerView.setPlaybackPreparer(this);
 
-        mediaSource = buildMediaSource(Uri.parse(videoUrl));
+        mediaSource = buildMediaSource(parse(videoUrl));
         if(player != null){
             player.prepare(mediaSource, false, true);
         }
@@ -1584,7 +1594,7 @@ DefaultTrackSelector.Parameters qualityParams;
         if(subsList!=null && subsList.size()>0)
         {
             SubtitleInfo subSelected = subsList.get(0); ///////
-            subtitleUri = Uri.parse(subSelected.getSubDownloadLink());
+            subtitleUri = parse(subSelected.getSubDownloadLink());
             Log.e("Subs", subSelected.toString());
             runOnUiThread(new Runnable() {
                 @Override
@@ -1602,22 +1612,24 @@ DefaultTrackSelector.Parameters qualityParams;
     public List<SubtitleInfo> searchSubtitle(String showName)
     {
         List<SubtitleInfo> output = new ArrayList<>();
+        OpenSubtitle openSubtitle=new OpenSubtitle();
         try {
-            OpenSubtitle openSubtitle=new OpenSubtitle();
+
             openSubtitle.login();
 
 //  openSubtitle.ServerInfo();
 //  openSubtitle.getSubLanguages();
 
-            output = openSubtitle.getMovieSubsByName(showName,"1","eng");
+            output = openSubtitle.getMovieSubsByName(showName, "1", "en");
 
 //  openSubtitle.getTvSeriesSubs("game of thrones","1","1","10","eng");
 //  openSubtitle.Search("/home/Downloads/Minions.2015.720p.BRRip.850MB.MkvCage.mkv");
 
-            openSubtitle.logOut();
+
 
         }
         catch (Exception e1) {
+            openSubtitle.logOut();
             e1.printStackTrace();
             showDialog(getString(R.string.server_no_response));
         }
@@ -1640,8 +1652,9 @@ DefaultTrackSelector.Parameters qualityParams;
             if(subtitleUri!= null && !subtitleUri.toString().isEmpty())
             {
                 try {
-                    subtitleUri = unzip(new File(zipPath), new File(zipPath.split(".gz")[0]));
-                } catch (IOException e) {
+                   // subtitleUri = unzip(new File(zipPath), new File(zipPath.split(".gz")[0]+".srt"));
+                    subtitleUri = Uri.fromFile(new File(unGunzipFile(zipPath, zipPath.split(".gz")[0]+".srt")));
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 if(subtitleUri!=null && !subtitleUri.toString().isEmpty())
@@ -1704,38 +1717,71 @@ DefaultTrackSelector.Parameters qualityParams;
         }
     }
 
-    public static Uri unzip(File zipFile, File targetDirectory) throws IOException {
-        ZipArchiveInputStream zis = new ZipArchiveInputStream(
-                new BufferedInputStream(new FileInputStream(zipFile)));
-        File file = new File("");
+    public String unGunzipFile(String compressedFile, String decompressedFile) {
+
+        byte[] buffer = new byte[1024];
+
         try {
-            ZipEntry ze;
-            int count;
-            byte[] buffer = new byte[8192];
-            while ((ze = zis.getNextZipEntry()) != null) {
-                file = new File(targetDirectory, ze.getName());
-                File dir = ze.isDirectory() ? file : file.getParentFile();
-                if (!dir.isDirectory() && !dir.mkdirs())
-                    throw new FileNotFoundException("Failed to ensure directory: " +
-                            dir.getAbsolutePath());
-                if (ze.isDirectory())
-                    continue;
-                FileOutputStream fout = new FileOutputStream(file);
-                try {
-                    while ((count = zis.read(buffer)) != -1)
-                        fout.write(buffer, 0, count);
-                } finally {
-                    fout.close();
-                }
-            /* if time should be restored as well
-            long time = ze.getTime();
-            if (time > 0)
-                file.setLastModified(time);
-            */
+
+            FileInputStream fileIn = new FileInputStream(compressedFile);
+
+            GZIPInputStream gZIPInputStream = new GZIPInputStream(fileIn);
+
+            FileOutputStream fileOutputStream = new FileOutputStream(decompressedFile);
+
+            int bytes_read;
+
+            while ((bytes_read = gZIPInputStream.read(buffer)) > 0) {
+
+                fileOutputStream.write(buffer, 0, bytes_read);
             }
-        } finally {
-            zis.close();
+
+            gZIPInputStream.close();
+            fileOutputStream.close();
+
+            System.out.println("The file was decompressed successfully!");
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
+        return decompressedFile;
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static Uri unzip(File zipFile, File targetDirectory) throws IOException {
+
+        File file = new File("");
+        InputStream inputStream = null;
+        try {
+            Path filePath = Paths.get(String.valueOf(zipFile));
+            inputStream = Files.newInputStream(filePath);
+            ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
+            ArchiveInputStream archiveInputStream = archiveStreamFactory.createArchiveInputStream(ArchiveStreamFactory.ZIP, inputStream);
+            ArchiveEntry archiveEntry = null;
+            while((archiveEntry = archiveInputStream.getNextEntry()) != null) {
+                Path path = Paths.get(String.valueOf(targetDirectory), archiveEntry.getName());
+                file = path.toFile();
+                if(archiveEntry.isDirectory()) {
+                    if(!file.isDirectory()) {
+                        file.mkdirs();
+                    }
+                } else {
+                    File parent = file.getParentFile();
+                    if(!parent.isDirectory()) {
+                        parent.mkdirs();
+                    }
+                    try (OutputStream outputStream = Files.newOutputStream(path)) {
+                        IOUtils.copy(archiveInputStream, outputStream);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ArchiveException e) {
+            e.printStackTrace();
+        }
+
 
         return Uri.fromFile(file);
     }
@@ -1885,7 +1931,7 @@ DefaultTrackSelector.Parameters qualityParams;
     {
 
         startPosition = Math.max(0, player.getContentPosition());
-        Uri videoURI = Uri.parse(videoUrl);
+        Uri videoURI = parse(videoUrl);
         DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("exoplayer_video");
 
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();

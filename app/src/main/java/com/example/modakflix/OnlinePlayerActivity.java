@@ -123,6 +123,7 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
     private static final String KEY_WINDOW = "window";
     private static final String KEY_POSITION = "position";
     private static final String KEY_AUTO_PLAY = "auto_play";
+    private static int REQEST_CODE = 0;
     boolean closeFlag = true;
     boolean finishFlag = false;
 
@@ -331,6 +332,8 @@ DefaultTrackSelector.Parameters qualityParams;
             @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View view) {
+
+              //  while(!PermissionClass.permissionCompletedFlag);
 
                 openImagePreview();
             }
@@ -1595,13 +1598,9 @@ DefaultTrackSelector.Parameters qualityParams;
             openSubtitle.logOut();
 
         }
-        catch (NullPointerException e)
-            {
-                e.printStackTrace();
-                showDialog(getString(R.string.server_no_response));
-            }
         catch (Exception e1) {
             e1.printStackTrace();
+            showDialog(getString(R.string.server_no_response));
         }
 
         return output;
@@ -1639,8 +1638,17 @@ DefaultTrackSelector.Parameters qualityParams;
                 @RequiresApi(api = Build.VERSION_CODES.R)
                 @Override
                 public void onClick(View v) {
-                    PermissionClass p = new PermissionClass(OnlinePlayerActivity.this, OnlinePlayerActivity.this);
-                    p.getPermission();
+
+                    if(!PermissionClass.checkRequiredPermission(OnlinePlayerActivity.this))
+                    {
+                        REQEST_CODE = 122;
+                        PermissionClass p = new PermissionClass(OnlinePlayerActivity.this, OnlinePlayerActivity.this, REQEST_CODE);
+                        p.getPermission();
+                    }
+                    else
+                    {
+
+                    }
                 }
             });
 
@@ -1651,8 +1659,17 @@ DefaultTrackSelector.Parameters qualityParams;
                 @Override
                 public void onClick(View v) {
 
-                    LoadSubs ls = new LoadSubs();
-                    ls.execute();
+                    if(!PermissionClass.checkRequiredPermission(OnlinePlayerActivity.this))
+                    {
+                        REQEST_CODE = 123;
+                        PermissionClass p = new PermissionClass(OnlinePlayerActivity.this, OnlinePlayerActivity.this, REQEST_CODE);
+                        p.getPermission();
+                    }
+                    else
+                    {
+                        LoadSubs ls =  new LoadSubs();
+                        ls.execute();
+                    }
                 }
             });
 
@@ -1668,14 +1685,19 @@ DefaultTrackSelector.Parameters qualityParams;
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void showDialog(String message)
     {
-        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(message);
-        alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void run() {
+                androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(OnlinePlayerActivity.this);
+                alertDialogBuilder.setMessage(message);
+                alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                alertDialogBuilder.show();
             }
         });
-        alertDialogBuilder.show();
     }
 
 
@@ -1683,7 +1705,6 @@ DefaultTrackSelector.Parameters qualityParams;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 123) {
             // There are no request codes
             if(!Environment.isExternalStorageManager())
             {
@@ -1691,7 +1712,19 @@ DefaultTrackSelector.Parameters qualityParams;
                 System.exit(0);
             }
             PermissionClass.permission(1);
+           // PermissionClass.permissionCompletedFlag = true;
 
-        }
+            switch (REQEST_CODE)
+            {
+                case 122:
+                    break;
+                case 123:
+                    LoadSubs ls =  new LoadSubs();
+                    ls.execute();
+                    break;
+                default:
+                    Toast.makeText(this, "Invalid Request made.", Toast.LENGTH_LONG).show();
+            }
+
     }
 }

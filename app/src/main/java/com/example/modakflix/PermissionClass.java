@@ -26,6 +26,7 @@ import java.util.List;
 public class PermissionClass extends AppCompatActivity {
 
     static boolean permissionCompletedFlag = false;
+    static int REQUEST_CODE;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,16 +40,17 @@ public class PermissionClass extends AppCompatActivity {
     static boolean flag = false;
 
     public static boolean permissionFlag = false;
-    public PermissionClass(Context context, Activity activity) {
+    public PermissionClass(Context context, Activity activity, int REQUEST_CODE) {
         this.context = context;
         this.activity = activity;
+        this.REQUEST_CODE = REQUEST_CODE;
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     public static void permission(int flag)
     {
-        new PermissionClass(context, activity);
+        new PermissionClass(context, activity, REQUEST_CODE);
         if(!PermissionClass.permissionFlag)
         {
             if(flag == 0)
@@ -80,7 +82,7 @@ public class PermissionClass extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.R)
     public static Boolean checkAndRequestPermissions(Activity activity, Context context)
     {
-        new PermissionClass(context, activity);
+        new PermissionClass(context, activity, REQUEST_CODE);
         int permissionReadStorage = ContextCompat.checkSelfPermission(context,
                 Manifest.permission.READ_EXTERNAL_STORAGE);
 
@@ -156,7 +158,7 @@ public class PermissionClass extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
-    public void getPermission()
+    public boolean getPermission()
     {
         if(!PermissionClass.permissionFlag && Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
         {
@@ -166,7 +168,7 @@ public class PermissionClass extends AppCompatActivity {
         {
             getWritePermissionAndroidR();
         }
-
+        return PermissionClass.permissionFlag;
     }
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void getWritePermissionAndroidR()
@@ -189,6 +191,7 @@ public class PermissionClass extends AppCompatActivity {
                                         case DialogInterface.BUTTON_NEGATIVE:
                                             Toast.makeText(context, "Cannot continue without write permission.", Toast.LENGTH_LONG).show();
                                             //System.exit(0);
+                                            permissionCompletedFlag = true;
                                             break;
                                     }
                                 }
@@ -214,7 +217,7 @@ public class PermissionClass extends AppCompatActivity {
             intent.addCategory("android.intent.category.DEFAULT");
             Uri uri = Uri.fromParts("package", act.getPackageName(), null);
             intent.setData(uri);
-            act.startActivityForResult(intent, 123);
+            act.startActivityForResult(intent, REQUEST_CODE);
         }
     }
 

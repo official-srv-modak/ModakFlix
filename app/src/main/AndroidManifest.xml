@@ -7,28 +7,33 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
+        android:name=".ModakflixAdaptivePlayer"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".ModakflixAdaptivePlayer"
         android:theme="@style/Theme.ModakFlix"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EditProfile"
+        <activity
+            android:name=".PermissionClass"
+            android:exported="true" />
+        <activity
+            android:name=".EditProfile"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
-        <activity android:name=".Profiles"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity
+            android:name=".Profiles"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
-        <activity android:name=".SplashScreen"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity
+            android:name=".SplashScreen"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan">
@@ -41,64 +46,61 @@
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
-            android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
+            android:theme="@style/Theme.ModakFlix.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name="com.example.modakflix.Description"
+            android:name=".Description"
             android:label="@string/title_activity_description"
-            android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
+            android:theme="@style/Theme.ModakFlix.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name="com.example.modakflix.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
-
-
+            android:theme="@style/Theme.ModakFlix.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name="com.example.modakflix.DownloadActivity"
+            android:name=".DownloadActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            tools:ignore="LockedOrientationActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
-        <activity
-            android:name="com.example.modakflix.OnlinePlayerActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.ModakFlix.NoActionBar"
-            android:configChanges="orientation|screenSize|layoutDirection"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            tools:ignore="LockedOrientationActivity"/>
-
+            tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.modakflix.OfflinePlayerActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.ModakFlix.NoActionBar"
+            android:name=".OnlinePlayerActivity"
             android:configChanges="orientation|screenSize|layoutDirection"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            tools:ignore="LockedOrientationActivity"/>
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".OfflinePlayerActivity"
+            android:configChanges="orientation|screenSize|layoutDirection"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.ModakFlix.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            tools:ignore="LockedOrientationActivity" />
 
-
-
-        <service android:name="com.example.modakflix.DemoDownloadService"
+        <service
+            android:name=".DemoDownloadService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.exoplayer.downloadService.action.RESTART"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
-        <service android:name="com.google.android.exoplayer2.scheduler.PlatformScheduler$PlatformSchedulerService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+        <service
+            android:name="com.google.android.exoplayer2.scheduler.PlatformScheduler$PlatformSchedulerService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

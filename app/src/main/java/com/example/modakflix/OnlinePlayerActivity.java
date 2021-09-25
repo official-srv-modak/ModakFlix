@@ -12,6 +12,7 @@ import static com.google.android.exoplayer2.offline.Download.STATE_STOPPED;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +39,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,21 +90,18 @@ import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.Util;
 
-import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import Opensubs.OpenSubtitle;
 import Opensubs.SubtitleInfo;
@@ -328,8 +327,7 @@ DefaultTrackSelector.Parameters qualityParams;
         subs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LoadSubs ls = new LoadSubs();
-                ls.execute();
+                openImagePreview();
             }
         });
     }
@@ -1598,8 +1596,52 @@ DefaultTrackSelector.Parameters qualityParams;
         @RequiresApi(api = Build.VERSION_CODES.N)
         protected Integer doInBackground(String... urls) {
 
-            getSubtitle(videoName);
+
+            //getSubtitle(videoName);
             return 0;
         }
+    }
+    private void openImagePreview()
+    {
+        try {
+            androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(this);
+            View layoutView = getLayoutInflater().inflate(R.layout.image_preview_dialog, null);
+            Dialog settingsDialog = adb.setView(layoutView).create();
+            settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(settingsDialog.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            settingsDialog.getWindow().setAttributes(lp);
+
+            // Set the elements
+
+            // Set open from storage button
+            Button openStgBtn = layoutView.findViewById(R.id.openFromInternal);
+            openStgBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            // Set download subtitle button
+            Button downloadSubtitle = layoutView.findViewById(R.id.downloadSubtitle);
+            downloadSubtitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            settingsDialog.setContentView(layoutView);
+            settingsDialog.show();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 }

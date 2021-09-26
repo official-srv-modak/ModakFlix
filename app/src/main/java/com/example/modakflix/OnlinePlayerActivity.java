@@ -358,7 +358,7 @@ DefaultTrackSelector.Parameters qualityParams;
             public void onClick(View view) {
 
               //  while(!PermissionClass.permissionCompletedFlag);
-
+                player.setPlayWhenReady(false);
                 openSubtitleSelector();
             }
         });
@@ -2010,6 +2010,7 @@ DefaultTrackSelector.Parameters qualityParams;
     private void openSubtitleSelector()
     {
         try {
+            boolean dismissFlag = true;
             androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(this);
             View layoutView = getLayoutInflater().inflate(R.layout.subtitle_preview_dialog, null);
             Dialog settingsDialog = adb.setView(layoutView).create();
@@ -2032,12 +2033,14 @@ DefaultTrackSelector.Parameters qualityParams;
 
                     if(!PermissionClass.checkRequiredPermission(OnlinePlayerActivity.this))
                     {
+                        player.setPlayWhenReady(false);
                         REQEST_CODE = 122;
                         PermissionClass p = new PermissionClass(OnlinePlayerActivity.this, OnlinePlayerActivity.this, REQEST_CODE);
                         p.getPermission();
                     }
                     else
                     {
+                        player.setPlayWhenReady(false);
                         chooseSubtitle();
                     }
                     settingsDialog.dismiss();

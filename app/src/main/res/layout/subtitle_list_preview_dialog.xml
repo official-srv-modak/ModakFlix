@@ -3,40 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_margin="10dp"
     app:cardCornerRadius="10dp">
 
     <ScrollView
         android:id="@+id/previewImageAttachScroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/border_white_round">
 
         <LinearLayout
-            android:id="@+id/previewImageAttach"
+            android:id="@+id/previewSubAttach"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/openFromInternal"
+            <TextView
+                android:id="@+id/titleSubListPreview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
                 android:layout_margin="10dp"
-                android:text="Open from storage" />
-
-            <Button
-                android:id="@+id/downloadSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="Download subtitle" />
-
+                android:text="TextView" />
         </LinearLayout>
     </ScrollView>
 </androidx.cardview.widget.CardView>

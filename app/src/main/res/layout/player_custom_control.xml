@@ -25,12 +25,12 @@
                 android:id="@+id/img_bwd"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_replay_10_white_24dp" />
+                android:src="@drawable/exo_notification_rewind" />
 
 
             <ImageView
@@ -61,11 +61,11 @@
                 android:id="@+id/img_fwd"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginTop="@dimen/_5sdp"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginRight="20dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_forward_10_white_24dp" />
+                android:src="@drawable/exo_controls_fastforward" />
 
 
         </RelativeLayout>

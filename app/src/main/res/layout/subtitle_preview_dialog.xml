@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="10dp">
+
+    <ScrollView
+        android:id="@+id/previewImageAttachScroll"
+        android:layout_width="match_parent"
+        android:background="@drawable/border_white_round"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/previewImageAttach"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/openFromInternal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:text="Open from storage" />
+
+            <Button
+                android:id="@+id/downloadSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="Download subtitle" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.cardview.widget.CardView>

@@ -1,6 +1,5 @@
 package com.example.modakflix;
 
-import static java.net.URL.*;
 import static android.net.Uri.parse;
 import static android.net.wifi.WifiConfiguration.Status.strings;
 import static com.example.modakflix.Description.modakflixPlayerAction;
@@ -16,7 +15,6 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
 
@@ -24,12 +22,9 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -38,8 +33,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Display;
@@ -63,12 +56,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -118,39 +105,29 @@ import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import Opensubs.OpenSubtitle;
 import Opensubs.SubtitleInfo;
@@ -1610,21 +1587,54 @@ DefaultTrackSelector.Parameters qualityParams;
         List<SubtitleInfo> subsList = searchSubtitle(showName);
         if(subsList!=null && subsList.size()>0)
         {
-            SubtitleInfo subSelected = subsList.get(0); ///////
-            subtitleUri = parse(subSelected.getSubDownloadLink());
-            Log.e("Subs", subSelected.toString());
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(OnlinePlayerActivity.this, "Subtitle found : "+subsList.toString(), Toast.LENGTH_LONG).show();
-                }
-            });
+            showSubtitleListDialog("Subtitles found for : "+videoName, subsList);
+
         }
 
 
         return subtitleUri;
 
     }
+
+    private void showSubtitleListDialog(String title, List<SubtitleInfo> subsList)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(OnlinePlayerActivity.this);
+                    View layoutView = getLayoutInflater().inflate(R.layout.subtitle_list_preview_dialog, null);
+                    Dialog settingsDialog = adb.setView(layoutView).create();
+                    settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+                    TextView titleView = layoutView.findViewById(R.id.titleSubListPreview);
+                    titleView.setText(title);
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                    lp.copyFrom(settingsDialog.getWindow().getAttributes());
+                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                    lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                    settingsDialog.getWindow().setAttributes(lp);
+
+                    // Set the elements
+                    LinearLayout ll = layoutView.findViewById(R.id.previewSubAttach);
+                    for(SubtitleInfo subtitleInfo : subsList)
+                    {
+                        TextView tv = new TextView(OnlinePlayerActivity.this);
+                        tv.setText(subtitleInfo.getSubFileName());
+                        ll.addView(tv);
+                    }
+
+                    settingsDialog.setContentView(layoutView);
+                    settingsDialog.show();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.R)
     public List<SubtitleInfo> searchSubtitle(String showName)
     {
@@ -1637,7 +1647,7 @@ DefaultTrackSelector.Parameters qualityParams;
 //  openSubtitle.ServerInfo();
 //  openSubtitle.getSubLanguages();
 
-            output = openSubtitle.getMovieSubsByName(showName, "1", "en");
+            output = openSubtitle.getMovieSubsByName(showName, "20", "en");
 
 //  openSubtitle.getTvSeriesSubs("game of thrones","1","1","10","eng");
 //  openSubtitle.Search("/home/Downloads/Minions.2015.720p.BRRip.850MB.MkvCage.mkv");
@@ -1829,20 +1839,7 @@ DefaultTrackSelector.Parameters qualityParams;
                    Log.i("uploadFile", "HTTP Response is : "
                            + serverResponseMessage + ": " + serverResponseCode);
 
-                   if(serverResponseCode == 200){
 
-                       runOnUiThread(new Runnable() {
-                            public void run() {
-
-                                String msg = "File Upload Completed.\n\n See uploaded file here : \n\n"
-                                              +" http://www.androidexample.com/media/uploads/"
-                                              +uploadFileName;
-
-                                Toast.makeText(OnlinePlayerActivity.this, "File Upload Complete.",
-                                             Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                   }
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
@@ -2014,7 +2011,7 @@ DefaultTrackSelector.Parameters qualityParams;
     {
         try {
             androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(this);
-            View layoutView = getLayoutInflater().inflate(R.layout.image_preview_dialog, null);
+            View layoutView = getLayoutInflater().inflate(R.layout.subtitle_preview_dialog, null);
             Dialog settingsDialog = adb.setView(layoutView).create();
             settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 

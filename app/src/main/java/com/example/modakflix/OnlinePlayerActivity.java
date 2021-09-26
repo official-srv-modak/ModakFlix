@@ -24,10 +24,12 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -36,6 +38,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Display;
@@ -112,6 +116,7 @@ import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -132,6 +137,7 @@ import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -158,7 +164,7 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 2000;
     private static final int UI_ANIMATION_DELAY = 300;
-    static Uri subtitleUri = parse("http://modakflix.com/resources/friends_reunion.gz");
+    static Uri subtitleUri = parse("");
     // Saved instance state keys.
     private static final String KEY_TRACK_SELECTOR_PARAMETERS = "track_selector_parameters";
     private static final String KEY_WINDOW = "window";
@@ -1648,7 +1654,7 @@ DefaultTrackSelector.Parameters qualityParams;
         return output;
 
     }
-    private class LoadSubs extends AsyncTask<String, Void, Integer> {
+    private class LoadSubsOnline extends AsyncTask<String, Void, Integer> {
         String zipPath;
         @RequiresApi(api = Build.VERSION_CODES.R)
         protected Integer doInBackground(String... urls) {
@@ -1658,8 +1664,12 @@ DefaultTrackSelector.Parameters qualityParams;
             try {
                 // subtitleUri = unzip(new File(zipPath), new File(zipPath.split(".gz")[0]+".srt"));
                 String filePath = unGunzipFile(zipPath, zipPath.split(".gz")[0]+".srt");
-                String temp = uploadFile(filePath, filePath, new File(filePath).getName());
-                subtitleUri = Uri.parse(temp);
+                if(filePath!=null && !filePath.isEmpty())
+                {
+                    String temp = uploadFile(filePath, filePath, new File(filePath).getName());
+                    subtitleUri = Uri.parse(temp);
+                }
+
 
 
             } catch (Exception e) {
@@ -1680,11 +1690,68 @@ DefaultTrackSelector.Parameters qualityParams;
         }
     }
 
+    private class LoadSubsOffline extends AsyncTask<String, Void, Integer> {
+        String filePath;
+        @RequiresApi(api = Build.VERSION_CODES.R)
+        protected Integer doInBackground(String... urls) {
+
+            try {
+                filePath = urls[0];
+                if(filePath!=null && !filePath.isEmpty())
+                {
+                    String temp = uploadFile(filePath, filePath, new File(filePath).getName());
+                    subtitleUri = Uri.parse(temp);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            if(subtitleUri!= null && !subtitleUri.toString().isEmpty())
+            {
+                if(subtitleUri!=null && !subtitleUri.toString().isEmpty())
+                    addSubtitle(subtitleUri);
+            }
+        }
+    }
+
+    public String chooseSubtitle()
+    {
+        final String[] filePathArray = {""};
+        new ChooserDialog(OnlinePlayerActivity.this)
+                .withStartFile("")
+                .withChosenListener(new ChooserDialog.Result() {
+                    @Override
+                    public void onChoosePath(String path, File pathFile) {
+                        Toast.makeText(OnlinePlayerActivity.this, "FILE: " + path, Toast.LENGTH_SHORT).show();
+                        LoadSubsOffline lsf = new LoadSubsOffline();
+                        lsf.execute(path);
+                    }
+                })
+                // to handle the back key pressed or clicked outside the dialog:
+                .withOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                        Log.d("CANCEL", "CANCEL");
+                        dialog.cancel(); // MUST have
+                    }
+                })
+                .build()
+                .show();
+
+        return filePathArray[0];
+    }
+
     public String uploadFile(String sourceFileUri, String uploadFilePath, String uploadFileName) {
 
         int serverResponseCode = 0;
         String output="";
-        String upLoadServerUri = "http://modakflix.com/upload.php";
+        String upLoadServerUri = Profiles.upload;
         String fileName = sourceFileUri;
 
         HttpURLConnection conn = null;
@@ -1974,7 +2041,7 @@ DefaultTrackSelector.Parameters qualityParams;
                     }
                     else
                     {
-                        selectFromExternalStorage();
+                        chooseSubtitle();
                     }
                     settingsDialog.dismiss();
                 }
@@ -1995,9 +2062,8 @@ DefaultTrackSelector.Parameters qualityParams;
                     }
                     else
                     {
-                        LoadSubs ls =  new LoadSubs();
+                        LoadSubsOnline ls =  new LoadSubsOnline();
                         ls.execute();
-
                     }
                     settingsDialog.dismiss();
                 }
@@ -2050,7 +2116,7 @@ DefaultTrackSelector.Parameters qualityParams;
                 case 122:
                     break;
                 case 123:
-                    LoadSubs ls =  new LoadSubs();
+                    LoadSubsOnline ls =  new LoadSubsOnline();
                     ls.execute();
                     break;
                 default:
@@ -2058,14 +2124,18 @@ DefaultTrackSelector.Parameters qualityParams;
             }
 
             if (requestCode == SELECT_ITEM) {
-                Uri selectedImageUri = data.getData();
-                onResume();
-                addSubtitle(selectedImageUri);
+                if(data!=null)
+                {
+                    try {
+                        Uri selectedImageUri = data.getData();
 
-                try {
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }

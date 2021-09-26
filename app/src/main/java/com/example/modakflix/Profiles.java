@@ -55,6 +55,7 @@ public class Profiles extends AppCompatActivity {
     public static String get_description = domain_name+"get_description.php";
     public static String add_profile = domain_name+"add_profile.php";
     public static String reset_show = domain_name+"reset_show.php";
+    public static String upload = domain_name+"upload.php";
     private static int actResume = 0;
 
     public static String fetchIpDataFromFile(String ipInfoFilePath)
@@ -119,6 +120,7 @@ public class Profiles extends AppCompatActivity {
         get_description = domain_name+"get_description.php";
         add_profile = domain_name+"add_profile.php";
         reset_show = domain_name+"reset_show.php";
+        upload = domain_name+"upload.php";
         actResume = 0;
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 

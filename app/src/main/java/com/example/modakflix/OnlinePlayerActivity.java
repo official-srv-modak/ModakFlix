@@ -19,6 +19,7 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -58,9 +59,12 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -110,17 +114,24 @@ import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1643,6 +1654,18 @@ DefaultTrackSelector.Parameters qualityParams;
         protected Integer doInBackground(String... urls) {
             subtitleUri = getSubtitle(videoName);
             zipPath = downloadZip(subtitleUri);
+
+            try {
+                // subtitleUri = unzip(new File(zipPath), new File(zipPath.split(".gz")[0]+".srt"));
+                String filePath = unGunzipFile(zipPath, zipPath.split(".gz")[0]+".srt");
+                String temp = uploadFile(filePath, filePath, new File(filePath).getName());
+                subtitleUri = Uri.parse(temp);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             return 0;
         }
 
@@ -1651,18 +1674,152 @@ DefaultTrackSelector.Parameters qualityParams;
             super.onPostExecute(integer);
             if(subtitleUri!= null && !subtitleUri.toString().isEmpty())
             {
-                try {
-                   // subtitleUri = unzip(new File(zipPath), new File(zipPath.split(".gz")[0]+".srt"));
-                    subtitleUri = Uri.fromFile(new File(unGunzipFile(zipPath, zipPath.split(".gz")[0]+".srt")));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 if(subtitleUri!=null && !subtitleUri.toString().isEmpty())
                     addSubtitle(subtitleUri);
             }
         }
     }
 
+    public String uploadFile(String sourceFileUri, String uploadFilePath, String uploadFileName) {
+
+        int serverResponseCode = 0;
+        String output="";
+        String upLoadServerUri = "http://modakflix.com/upload.php";
+        String fileName = sourceFileUri;
+
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+        File sourceFile = new File(sourceFileUri);
+
+        if (!sourceFile.isFile()) {
+
+
+
+            Log.e("uploadFile", "Source File not exist :"
+                    +uploadFilePath + "" + uploadFileName);
+
+
+        }
+        else
+        {
+            try {
+
+                // open a URL connection to the Servlet
+                FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                URL url = new URL(upLoadServerUri);
+
+                // Open a HTTP  connection to  the URL
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setDoInput(true); // Allow Inputs
+                conn.setDoOutput(true); // Allow Outputs
+                conn.setUseCaches(false); // Don't use a Cached Copy
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Connection", "Keep-Alive");
+                conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                conn.setRequestProperty("uploaded_file", fileName);
+
+                dos = new DataOutputStream(conn.getOutputStream());
+
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""
+                        + fileName + "\"" + lineEnd);
+
+                   dos.writeBytes(lineEnd);
+
+                   // create a buffer of  maximum size
+                   bytesAvailable = fileInputStream.available();
+
+                   bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                   buffer = new byte[bufferSize];
+
+                   // read file and write it into form...
+                   bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                   while (bytesRead > 0) {
+
+                     dos.write(buffer, 0, bufferSize);
+                     bytesAvailable = fileInputStream.available();
+                     bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                     bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    }
+
+                   // send multipart form data necesssary after file data...
+                   dos.writeBytes(lineEnd);
+                   dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+                   // Responses from the server (code and message)
+                   serverResponseCode = conn.getResponseCode();
+                   String serverResponseMessage = conn.getResponseMessage();
+
+                   Log.i("uploadFile", "HTTP Response is : "
+                           + serverResponseMessage + ": " + serverResponseCode);
+
+                   if(serverResponseCode == 200){
+
+                       runOnUiThread(new Runnable() {
+                            public void run() {
+
+                                String msg = "File Upload Completed.\n\n See uploaded file here : \n\n"
+                                              +" http://www.androidexample.com/media/uploads/"
+                                              +uploadFileName;
+
+                                Toast.makeText(OnlinePlayerActivity.this, "File Upload Complete.",
+                                             Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                   }
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    {
+                        output += inputLine;
+                    }
+                }
+                in.close();
+
+                   //close the streams //
+                   fileInputStream.close();
+                   dos.flush();
+                   dos.close();
+
+              } catch (MalformedURLException ex) {
+
+                  ex.printStackTrace();
+
+                  runOnUiThread(new Runnable() {
+                      public void run() {
+                          Toast.makeText(OnlinePlayerActivity.this, "MalformedURLException",
+                                                              Toast.LENGTH_SHORT).show();
+                      }
+                  });
+
+                  Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+              } catch (Exception e) {
+
+                  e.printStackTrace();
+
+                  runOnUiThread(new Runnable() {
+                      public void run() {
+                          Toast.makeText(OnlinePlayerActivity.this, "Got Exception : see logcat ",
+                                  Toast.LENGTH_SHORT).show();
+                      }
+                  });
+                  Log.e("Upload file to server Exception", "Exception : "
+                                                   + e.getMessage(), e);
+              }
+
+
+           } // End else block
+        return output;
+         }
 
     private String downloadZip(Uri uri) {
         File sdCardRoot = new File("");
@@ -1952,5 +2109,6 @@ DefaultTrackSelector.Parameters qualityParams;
 
         player.seekTo(startPosition);
     }
+
 
 }

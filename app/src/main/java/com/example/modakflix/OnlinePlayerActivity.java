@@ -2086,11 +2086,18 @@ DefaultTrackSelector.Parameters qualityParams;
             public void run() {
                 androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(OnlinePlayerActivity.this);
                 alertDialogBuilder.setMessage(message);
-                alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        chooseSubtitle();
+                    }
+                });
+                alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 });
+
                 alertDialogBuilder.show();
             }
         });
@@ -2121,23 +2128,6 @@ DefaultTrackSelector.Parameters qualityParams;
                     break;
                 default:
                     Toast.makeText(this, "Invalid Request made.", Toast.LENGTH_LONG).show();
-            }
-
-            if (requestCode == SELECT_ITEM) {
-                if(data!=null)
-                {
-                    try {
-                        Uri selectedImageUri = data.getData();
-
-
-
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
             }
 
 

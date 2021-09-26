@@ -13,7 +13,7 @@
     <string name="video_player_audio">Audio</string>
     <string name="video_player_video">Video</string>
     <string name="package_name">com.example.modakflix</string>
-    <string name="server_no_response">Stupid opensubtitles.org server is greedy and not responding.</string>
+    <string name="server_no_response">Stupid opensubtitles.org server is greedy and not responding. Add it manually?</string>
 
 
     <string name="permission_seek_msg">"We need storage permisson to get the subtitle."</string>

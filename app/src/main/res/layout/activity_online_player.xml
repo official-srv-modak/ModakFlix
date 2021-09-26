@@ -99,14 +99,6 @@
 
         </LinearLayout>
 
-    <Button
-        android:id="@+id/subtitles"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="10dp"
-        android:text="Subtitle" />
-
     <TextView
         android:id="@+id/showNameOnlinePlayer"
         android:layout_width="match_parent"
@@ -117,6 +109,14 @@
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/subtitles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="10dp"
+        android:text="Subtitle" />
 
     <ScrollView
         android:layout_width="match_parent"

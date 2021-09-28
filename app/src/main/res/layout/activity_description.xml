@@ -95,15 +95,6 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/playBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10pt"
-                android:background="@color/black"
-                android:text="Play with Internal player"
-                app:iconTint="#FFFFFF" />
 
             <Button
                 android:id="@+id/playWithBtn"
@@ -115,6 +106,16 @@
                 android:background="@color/black"
                 android:layout_margin="10pt"
                 android:text="Play with MX Player" />
+
+            <Button
+                android:id="@+id/playBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10pt"
+                android:background="@color/black"
+                android:text="Play with Internal player"
+                app:iconTint="#FFFFFF" />
 
         </LinearLayout>
 

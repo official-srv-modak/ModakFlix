@@ -2054,7 +2054,7 @@ DefaultTrackSelector.Parameters qualityParams;
                 @Override
                 public void onClick(View v) {
 
-                    if(!PermissionClass.checkRequiredPermission(OnlinePlayerActivity.this))
+                    /*if(!PermissionClass.checkRequiredPermission(OnlinePlayerActivity.this))
                     {
                         REQEST_CODE = 123;
                         PermissionClass p = new PermissionClass(OnlinePlayerActivity.this, OnlinePlayerActivity.this, REQEST_CODE);
@@ -2065,7 +2065,8 @@ DefaultTrackSelector.Parameters qualityParams;
                         LoadSubsOnline ls =  new LoadSubsOnline();
                         ls.execute();
                     }
-                    settingsDialog.dismiss();
+                    settingsDialog.dismiss();*/
+                    Toast.makeText(OnlinePlayerActivity.this, getString(R.string.feature_disabled), Toast.LENGTH_LONG).show();
                 }
             });
 

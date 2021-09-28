@@ -96,11 +96,11 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     }
                     case R.id.contactUs: {
-                        showContactUs("Developer - Sourav Modak\nContact Number - +91 9500166574\nE-Mail - official.srv.modak@gmail.com");
+                        showContactUs("Developer - Sourav Modak\nContact Number - +91 9500166574\nE-Mail - official.srv.modak@gmail.com.");
                         break;
                     }
                     case R.id.resetIp: {
-                        showServerDialogNoExit("Do you really want to reset IP? It can crash app if false IP is set");
+                        showServerDialogNoExit(getString(R.string.reset_ip_message));
                         break;
                     }
                 }

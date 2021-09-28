@@ -21,8 +21,8 @@ android {
         applicationId "com.example.modakflix"
         minSdk 23
         targetSdk 30
-        versionCode 3
-        versionName "1.0.3"
+        versionCode 4
+        versionName "1.0.4"
         versionNameSuffix '_stable'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

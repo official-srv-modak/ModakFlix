@@ -22,9 +22,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -33,9 +35,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -48,6 +52,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +60,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
@@ -679,45 +685,42 @@ DefaultTrackSelector.Parameters qualityParams;
                 break;
 
             case R.id.img_full_screen_enter_exit:
-                Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-                int orientation = display.getOrientation();
+                Format videoFormat = player.getVideoFormat();
+                if(videoFormat != null)
+                {
+                    Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+                    int orientation = display.getOrientation();
 
-                if (orientation == Surface.ROTATION_90 || orientation == Surface.ROTATION_270) {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    if (orientation == Surface.ROTATION_90 || orientation == Surface.ROTATION_270) {
+                        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                        if(getSupportActionBar() != null){
+                            getSupportActionBar().show();
+                        }
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) playerView.getLayoutParams();
+                        adjustBlackBars();
+                        params.width = params.MATCH_PARENT;
+                        params.height = (int) ( 200 * getApplicationContext().getResources().getDisplayMetrics().density);
+                        playerView.setLayoutParams(params);
+                    }
 
-
-                    playerView.setLayoutParams(
-                            new PlayerView.LayoutParams(
-                                    // or ViewGroup.LayoutParams.WRAP_CONTENT
-                                    PlayerView.LayoutParams.MATCH_PARENT,
-                                    // or ViewGroup.LayoutParams.WRAP_CONTENT,
-                                    ScreenUtils.convertDIPToPixels(OnlinePlayerActivity.this, playerHeight)));
-
-
-                    frameLayoutMain.setLayoutParams(new LinearLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
-                    imgFullScreenEnterExit.setImageResource(R.drawable.exo_controls_fullscreen_enter);
-                    isScreenLandscape = false;
-                    FullScreencall();
-
-                    hide();
-                } else {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                    FullScreencall();
-
-                    playerView.setLayoutParams(
-                            new PlayerView.LayoutParams(
-                                    // or ViewGroup.LayoutParams.WRAP_CONTENT
-                                    PlayerView.LayoutParams.MATCH_PARENT,
-                                    // or ViewGroup.LayoutParams.WRAP_CONTENT,
-                                    PlayerView.LayoutParams.MATCH_PARENT));
-
-
-                    frameLayoutMain.setLayoutParams(new LinearLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-                    imgFullScreenEnterExit.setImageResource(R.drawable.exo_controls_fullscreen_exit);
-                    isScreenLandscape = true;
-                    hide();
-
+                    else{
+                        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
+                                |View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                                |View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                        if(getSupportActionBar() != null){
+                            getSupportActionBar().hide();
+                        }
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) playerView.getLayoutParams();
+                        adjustBlackBars();
+                        params.width = params.MATCH_PARENT;
+                        params.height = params.MATCH_PARENT;
+                        playerView.setLayoutParams(params);
+                    }
                 }
+                else
+                    Toast.makeText(this, "Video loading... please wait", Toast.LENGTH_LONG).show();
 
                 break;
 
@@ -767,6 +770,41 @@ DefaultTrackSelector.Parameters qualityParams;
         }
 
 
+    }
+
+    private void adjustBlackBars()
+    {
+        Format videoFormat = player.getVideoFormat();
+        if(videoFormat != null)
+        {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) playerView.getLayoutParams();
+            params.gravity = Gravity.CENTER;
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int displaywidth = displayMetrics.widthPixels;
+            int displayHeight = displayMetrics.heightPixels;
+
+            int playerHeight = videoFormat.height;
+            int playerWidth= videoFormat.width;
+            double heightRatio = (double) displayHeight/playerWidth;
+            double widthRatio = (double) displaywidth/playerHeight;
+
+            if(heightRatio < widthRatio && isScreenOriatationPortrait(this))
+            {
+                double apparentHeight = (double) heightRatio * playerHeight;
+                double diff = displaywidth - apparentHeight;
+                double putTopMargin = diff/2.5;
+                double putBottomMargin = diff/2.5;
+                params.topMargin = (int) putTopMargin;
+                params.bottomMargin = (int) putBottomMargin;
+                params.setMarginEnd(0);
+                params.setMarginStart(0);
+                playerView.setLayoutParams(params);
+            }
+        }
+    }
+    public static boolean isScreenOriatationPortrait(Context context) {
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
     private void exoVideoDownloadDecision(ExoDownloadState exoDownloadState){

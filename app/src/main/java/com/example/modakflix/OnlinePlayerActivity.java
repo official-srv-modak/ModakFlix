@@ -1346,7 +1346,6 @@ DefaultTrackSelector.Parameters qualityParams;
     @Override
     public void onBackPressed() {
 
-        finishResultAction();
         Bundle bundle = new Bundle();
         bundle.putString("video_id","0");
         bundle.putString("video_name", videoName);
@@ -1356,7 +1355,7 @@ DefaultTrackSelector.Parameters qualityParams;
         bundle.putString("position", String.valueOf(startPosition));
         bundle.putLong("video_duration", videoDurationInMilliSeconds);
         //onSaveInstanceState(bundle);
-        if (isScreenLandscape) {
+        if (!isScreenOriatationPortrait(this)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             playerView.setLayoutParams(
@@ -1375,8 +1374,9 @@ DefaultTrackSelector.Parameters qualityParams;
             hide();
 
         } else {
-             OnlinePlayerActivity.this.finish();
-            //super.onBackPressed();
+            finishResultAction();
+            OnlinePlayerActivity.this.finish();
+                super.onBackPressed();
         }
     }
 

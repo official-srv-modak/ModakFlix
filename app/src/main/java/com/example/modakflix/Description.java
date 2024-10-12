@@ -79,7 +79,6 @@ public class Description extends AppCompatActivity {
     private static String username = "";
     private static String descriptionStr = "";
     private static String imageUrl = "";
-    public static String modakflixPlayerAction = "modakflix_player_current_pos";
 
     class MKPlayer extends MKPlayerActivity{
 
@@ -113,117 +112,117 @@ public class Description extends AppCompatActivity {
                 PostProcess p = new PostProcess();
                 p.execute(data);
             }
-            else if (data.getAction().equals(modakflixPlayerAction)) {
-                //data.getData()
-                PostProcess p = new PostProcess();
-                p.execute(data);
-            }
+//            else if (data.getAction().equals(modakflixPlayerAction)) {
+//                //data.getData()
+//                PostProcess p = new PostProcess();
+//                p.execute(data);
+//            }
 
     }
 
     private void doPostProcess(Intent data)
     {
-        if(data.getAction().equals(modakflixPlayerAction))
-        {
-            long pos = data.getLongExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
-            long dur = data.getLongExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
-            String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
-            Uri uri = data.getData();
-            String name = "";
-            durFromMx = dur;
-            posFromMx = pos;
-            if(pos != -1 && dur != -1)
-            {
-                try {
-                    name = URLDecoder.decode(uri.toString().split("/")[uri.toString().split("/").length - 2], "UTF-8");
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    double rem = 0;
-                    rem = dur - pos;
-                    rem = (rem/dur)*100;
-                    if (rem >= 5)
-                    {
-                        Movies.pingDataServer(Profiles.record_position_path+"?username="+username+"&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
-                    }
-
-                    else
-                        Movies.pingDataServer(Profiles.delete_position_path+"?username="+username+"&show="+name);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                Button openWith = findViewById(R.id.playWithBtn);
-                long rem = dur - pos;
-                rem /= 1000;
-                final long[] mins = {rem / 60};
-                long hrs = mins[0] /60;
-                if(hrs > 0)
-                {
-                    mins[0] = mins[0] %60;
-                    if(hrs > 0)
-                    {
-                        mins[0] = mins[0] %60;
-                        openWith.setText("Resume "+hrs+" hour "+ mins[0] +" min(s) left");
-                    }
-                    else
-                    {
-                        openWith.setText("Resume "+ mins[0] +" min(s) left");
-                    }
-                    //openWith.setText("Resume "+(int)hrs+" hour "+(int)mins+" min(s) left");
-                    long finalMins = mins[0];
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Button playBtn = findViewById(R.id.playBtn);
-                            if(hrs > 0)
-                            {
-                                mins[0] = mins[0] %60;
-                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
-                            }
-                            else
-                            {
-                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
-                            }
-                           // playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins +" min(s) left");
-                        }
-                    });
-                }
-                else
-                {
-                    if(hrs > 0)
-                    {
-                        mins[0] = mins[0] %60;
-                        openWith.setText("Resume "+hrs+" hour "+ mins[0] +" min(s) left");
-                    }
-                    else
-                    {
-                        openWith.setText("Resume "+ mins[0] +" min(s) left");
-                    }
-                    //openWith.setText("Resume "+(int) mins[0] +" min(s) left");
-                    long finalMins1 = mins[0];
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Button playBtn = findViewById(R.id.playBtn);
-                            if(hrs > 0)
-                            {
-                                mins[0] = mins[0] %60;
-                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
-                            }
-                            else
-                            {
-                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
-                            }
-                            //playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins1 +" min(s) left");
-                        }
-                    });
-                }
-            }
-        }
-        else
-        {
+////        if(data.getAction().equals(modakflixPlayerAction))
+////        {
+////            long pos = data.getLongExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
+////            long dur = data.getLongExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
+////            String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
+////            Uri uri = data.getData();
+////            String name = "";
+////            durFromMx = dur;
+////            posFromMx = pos;
+////            if(pos != -1 && dur != -1)
+////            {
+////                try {
+////                    name = URLDecoder.decode(uri.toString().split("/")[uri.toString().split("/").length - 2], "UTF-8");
+////
+////                } catch (UnsupportedEncodingException e) {
+////                    e.printStackTrace();
+////                }
+////                try {
+////                    double rem = 0;
+////                    rem = dur - pos;
+////                    rem = (rem/dur)*100;
+////                    if (rem >= 5)
+////                    {
+////                        Movies.pingDataServer(Profiles.record_position_path+"?username="+username+"&show="+ URLDecoder.decode(uri.toString(), "UTF-8")+"&pos="+pos+"&duration="+dur+"&cause="+cause+"&name="+name);
+////                    }
+////
+////                    else
+////                        Movies.pingDataServer(Profiles.delete_position_path+"?username="+username+"&show="+name);
+////                } catch (UnsupportedEncodingException e) {
+////                    e.printStackTrace();
+////                }
+////                Button openWith = findViewById(R.id.playWithBtn);
+////                long rem = dur - pos;
+////                rem /= 1000;
+////                final long[] mins = {rem / 60};
+////                long hrs = mins[0] /60;
+////                if(hrs > 0)
+////                {
+////                    mins[0] = mins[0] %60;
+////                    if(hrs > 0)
+////                    {
+////                        mins[0] = mins[0] %60;
+////                        openWith.setText("Resume "+hrs+" hour "+ mins[0] +" min(s) left");
+////                    }
+////                    else
+////                    {
+////                        openWith.setText("Resume "+ mins[0] +" min(s) left");
+////                    }
+////                    //openWith.setText("Resume "+(int)hrs+" hour "+(int)mins+" min(s) left");
+////                    long finalMins = mins[0];
+////                    runOnUiThread(new Runnable() {
+////                        @Override
+////                        public void run() {
+////                            Button playBtn = findViewById(R.id.playBtn);
+////                            if(hrs > 0)
+////                            {
+////                                mins[0] = mins[0] %60;
+////                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
+////                            }
+////                            else
+////                            {
+////                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
+////                            }
+////                           // playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins +" min(s) left");
+////                        }
+////                    });
+////                }
+////                else
+////                {
+////                    if(hrs > 0)
+////                    {
+////                        mins[0] = mins[0] %60;
+////                        openWith.setText("Resume "+hrs+" hour "+ mins[0] +" min(s) left");
+////                    }
+////                    else
+////                    {
+////                        openWith.setText("Resume "+ mins[0] +" min(s) left");
+////                    }
+////                    //openWith.setText("Resume "+(int) mins[0] +" min(s) left");
+////                    long finalMins1 = mins[0];
+////                    runOnUiThread(new Runnable() {
+////                        @Override
+////                        public void run() {
+////                            Button playBtn = findViewById(R.id.playBtn);
+////                            if(hrs > 0)
+////                            {
+////                                mins[0] = mins[0] %60;
+////                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
+////                            }
+////                            else
+////                            {
+////                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
+////                            }
+////                            //playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins1 +" min(s) left");
+////                        }
+////                    });
+////                }
+////            }
+////        }
+//        else
+//        {
             int pos = data.getIntExtra("position", -1); // Last playback position in milliseconds. This extra will not exist if playback is completed.
             int dur = data.getIntExtra("duration", -1); // Duration of last played video in milliseconds. This extra will not exist if playback is completed.
             String cause = data.getStringExtra("end_by"); //  Indicates reason of activity closure.
@@ -275,16 +274,16 @@ public class Description extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Button playBtn = findViewById(R.id.playBtn);
-                            if(hrs > 0)
-                            {
-                                mins[0] = mins[0] %60;
-                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
-                            }
-                            else
-                            {
-                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
-                            }
+//                            Button playBtn = findViewById(R.id.playBtn);
+//                            if(hrs > 0)
+//                            {
+//                                mins[0] = mins[0] %60;
+//                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
+//                            }
+//                            else
+//                            {
+//                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
+//                            }
                             //playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins +" min(s) left");
                         }
                     });
@@ -305,22 +304,22 @@ public class Description extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Button playBtn = findViewById(R.id.playBtn);
-                            if(hrs > 0)
-                            {
-                                mins[0] = mins[0] %60;
-                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
-                            }
-                            else
-                            {
-                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
-                            }
+//                            Button playBtn = findViewById(R.id.playBtn);
+//                            if(hrs > 0)
+//                            {
+//                                mins[0] = mins[0] %60;
+//                                playBtn.setText("Resume with internal player : "+hrs+" hour "+ mins[0] +" min(s) left");
+//                            }
+//                            else
+//                            {
+//                                playBtn.setText("Resume with internal player : "+ mins[0] +" min(s) left");
+//                            }
                             //playBtn.setText("Resume with internal player : "+hrs+" hour "+ finalMins1 +" min(s) left");
                         }
                     });
                 }
             }
-        }
+//        }
     }
 
     @Override
@@ -510,30 +509,30 @@ public class Description extends AppCompatActivity {
                     }
                 }
             });
-            Button playBtn = findViewById(R.id.playBtn);
-
-            if(hrs > 0)
-            {
-                mins = mins%60;
-                playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
-            }
-            else
-            {
-                playBtn.setText("Resume with internal player : "+mins+" min(s) left");
-            }
-            //playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
-            int finalDur = dur;
-            int finalPos = pos;
-            playBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /*Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
-                    modakFlixPlayer.putExtra("url", videoUrl);
-                    modakFlixPlayer.putExtra("resume_pos", pos1);
-                    startActivityForResult(modakFlixPlayer, 1);*/
-                    startModakFlixPlayer("0", name, videoUrl, descriptionStr, imageUrl, String.valueOf(finalPos));
-                }
-            });
+//            Button playBtn = findViewById(R.id.playBtn);
+//
+//            if(hrs > 0)
+//            {
+//                mins = mins%60;
+//                playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
+//            }
+//            else
+//            {
+//                playBtn.setText("Resume with internal player : "+mins+" min(s) left");
+//            }
+//            //playBtn.setText("Resume with internal player : "+hrs+" hour "+mins+" min(s) left");
+//            int finalDur = dur;
+//            int finalPos = pos;
+//            playBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    /*Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
+//                    modakFlixPlayer.putExtra("url", videoUrl);
+//                    modakFlixPlayer.putExtra("resume_pos", pos1);
+//                    startActivityForResult(modakFlixPlayer, 1);*/
+////                    startModakFlixPlayer("0", name, videoUrl, descriptionStr, imageUrl, String.valueOf(finalPos));
+//                }
+//            });
 
             resetShowBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -551,17 +550,17 @@ public class Description extends AppCompatActivity {
         else    // Not coming to resume
         {
             String videoUrl = handleUrl(card.getString("url"));
-            Button playBtn = findViewById(R.id.playBtn);
-            playBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    /*Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
-                    modakFlixPlayer.putExtra("url", videoUrl);
-                    startActivityForResult(modakFlixPlayer, 1);*/
-                    startModakFlixPlayer("0", name, videoUrl, descriptionStr, imageUrl, "0");
-                }
-            });
+//            Button playBtn = findViewById(R.id.playBtn);
+//            playBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    /*Intent modakFlixPlayer = ModakFlixPlayer.makeIntent(Description.this);
+//                    modakFlixPlayer.putExtra("url", videoUrl);
+//                    startActivityForResult(modakFlixPlayer, 1);*/
+////                    startModakFlixPlayer("0", name, videoUrl, descriptionStr, imageUrl, "0");
+//                }
+//            });
 
             Button openWith = findViewById(R.id.playWithBtn);
             openWith.setOnClickListener(new View.OnClickListener() {
@@ -597,22 +596,22 @@ public class Description extends AppCompatActivity {
 
     }
 
-    private void startModakFlixPlayer(String... videoInfo)
-    {
-        Bundle bundle = new Bundle();
-        bundle.putString("video_id", videoInfo[0]);
-        bundle.putString("video_name", videoInfo[1]);
-        bundle.putString("video_url", videoInfo[2]);
-        bundle.putString("description", videoInfo[3]);
-        bundle.putString("image_url", videoInfo[4]);
-        bundle.putString("position", videoInfo[5]);
-        bundle.putLong("video_duration", Long.parseLong(videoInfo[0]));
-
-
-        Intent intent = new Intent(Description.this, OnlinePlayerActivity.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, 1);
-    }
+//    private void startModakFlixPlayer(String... videoInfo)
+//    {
+//        Bundle bundle = new Bundle();
+//        bundle.putString("video_id", videoInfo[0]);
+//        bundle.putString("video_name", videoInfo[1]);
+//        bundle.putString("video_url", videoInfo[2]);
+//        bundle.putString("description", videoInfo[3]);
+//        bundle.putString("image_url", videoInfo[4]);
+//        bundle.putString("position", videoInfo[5]);
+//        bundle.putLong("video_duration", Long.parseLong(videoInfo[0]));
+//
+//
+//        Intent intent = new Intent(Description.this, OnlinePlayerActivity.class);
+//        intent.putExtras(bundle);
+//        startActivityForResult(intent, 1);
+//    }
 
     private class BackgroundProcess extends AsyncTask<String, Void, Integer> {
         protected Integer doInBackground(String... params) {

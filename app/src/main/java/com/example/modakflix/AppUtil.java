@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 
-import com.google.android.exoplayer2.offline.Download;
 
 import java.text.DecimalFormat;
 
@@ -19,16 +18,16 @@ public class AppUtil {
 
 
 
-    public static VideoModel getVideoDetail(String videoUri){
-        VideoModel videoModel = null;
-        for (VideoModel videoModels : ModakflixAdaptivePlayer.getInstance().videoModels) {
-            if(videoModels.getVideoUrl().equalsIgnoreCase(videoUri.toString())){
-                videoModel = videoModels;
-                break;
-            }
-        }
-        return videoModel;
-    }
+//    public static VideoModel getVideoDetail(String videoUri){
+//        VideoModel videoModel = null;
+//        for (VideoModel videoModels : ModakflixAdaptivePlayer.getInstance().videoModels) {
+//            if(videoModels.getVideoUrl().equalsIgnoreCase(videoUri.toString())){
+//                videoModel = videoModels;
+//                break;
+//            }
+//        }
+//        return videoModel;
+//    }
 
 
     public static String createExoDownloadNotificationChannel(Context context) {
@@ -95,33 +94,33 @@ public class AppUtil {
         return String.format("%.0f",n)+"%";
     }
 
-    public  static String downloadStatusFromId(Download download){
-
-        String value ="";
-
-        switch (download.state) {
-            case Download.STATE_COMPLETED:
-                value = "Download Completed";
-                break;
-            case Download.STATE_DOWNLOADING:
-                value = "Downloading...";
-                break;
-            case Download.STATE_FAILED:
-                value = "Failed";
-                break;
-            case Download.STATE_QUEUED:
-                value = "Added in Queue";
-                break;
-            case Download.STATE_REMOVING:
-                value = "Removing...";
-                break;
-            case Download.STATE_RESTARTING:
-                value = "Restarting...";
-                break;
-            case Download.STATE_STOPPED:
-                value = "Paused";
-                break;
-        }
-        return value;
-    }
+//    public  static String downloadStatusFromId(Download download){
+//
+//        String value ="";
+//
+//        switch (download.state) {
+//            case Download.STATE_COMPLETED:
+//                value = "Download Completed";
+//                break;
+//            case Download.STATE_DOWNLOADING:
+//                value = "Downloading...";
+//                break;
+//            case Download.STATE_FAILED:
+//                value = "Failed";
+//                break;
+//            case Download.STATE_QUEUED:
+//                value = "Added in Queue";
+//                break;
+//            case Download.STATE_REMOVING:
+//                value = "Removing...";
+//                break;
+//            case Download.STATE_RESTARTING:
+//                value = "Restarting...";
+//                break;
+//            case Download.STATE_STOPPED:
+//                value = "Paused";
+//                break;
+//        }
+//        return value;
+//    }
 }

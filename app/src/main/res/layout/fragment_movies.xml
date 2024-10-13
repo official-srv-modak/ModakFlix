@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/coordinator1"
-    android:background="@drawable/background"
     tools:context=".Movies">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

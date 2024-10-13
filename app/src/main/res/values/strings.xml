@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">ModakFlix</string>
+    <string name="app_name">BootStream</string>
     <string name="tab_text_1">Movies</string>
     <string name="tab_text_2">Tv Shows</string>
     <string name="navigation_drawer_open">Drawer Open</string>

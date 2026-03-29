@@ -12,7 +12,7 @@
     <string name="video_player_subs">Subtitle</string>
     <string name="video_player_audio">Audio</string>
     <string name="video_player_video">Video</string>
-    <string name="package_name">com.example.modakflix</string>
+    <string name="package_name">com.souravmodak.modakflix</string>
     <string name="server_no_response">Stupid opensubtitles.org server is greedy and not responding. Add it manually?</string>
     <string name="feature_disabled">Feature disabled as of now.</string>
     <string name="reset_ip_message">    Do you really want to reset IP? It can crash app if false IP is set.</string>

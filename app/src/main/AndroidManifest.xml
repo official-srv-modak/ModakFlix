@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.modakflix">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
-        android:name=".ModakflixAdaptivePlayer"
+        android:name="com.souravmodak.modakflix.ModakflixAdaptivePlayer"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
@@ -21,20 +23,23 @@
         android:theme="@style/Theme.ModakFlix"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".PermissionClass"
+            android:name="com.souravmodak.modakflix.PermissionClass"
             android:exported="true" />
         <activity
-            android:name=".EditProfile"
+            android:name="com.souravmodak.modakflix.EditProfile"
+            android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".Profiles"
+            android:name="com.souravmodak.modakflix.Profiles"
+            android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".SplashScreen"
+            android:name="com.souravmodak.modakflix.SplashScreen"
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan">
@@ -45,35 +50,40 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchActivity"
+            android:name="com.souravmodak.modakflix.SearchActivity"
+            android:exported="false"
             android:label="@string/title_activity_search"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".Description"
+            android:name="com.souravmodak.modakflix.Description"
+            android:exported="false"
             android:label="@string/title_activity_description"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.souravmodak.modakflix.MainActivity"
+            android:exported="false"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.ModakFlix.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".DownloadActivity"
+            android:name="com.souravmodak.modakflix.DownloadActivity"
+            android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".OnlinePlayerActivity"
+            android:name="com.souravmodak.modakflix.OnlinePlayerActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -81,7 +91,8 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".OfflinePlayerActivity"
+            android:name="com.souravmodak.modakflix.OfflinePlayerActivity"
+            android:exported="false"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -90,8 +101,9 @@
             tools:ignore="LockedOrientationActivity" />
 
         <service
-            android:name=".DemoDownloadService"
-            android:exported="false">
+            android:name="com.souravmodak.modakflix.DemoDownloadService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync">
             <intent-filter>
                 <action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />
 

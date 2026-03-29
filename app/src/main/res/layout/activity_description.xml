@@ -5,55 +5,51 @@
     android:id="@+id/swipeRefreshDesc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".Description"
-    android:background="@color/black">
+    android:fitsSystemWindows="true"
+    android:background="@color/black"
+    tools:context=".Description">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        android:fillViewport="true">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#000000"
             android:id="@+id/linearLayout3"
-            android:orientation="vertical" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <ImageButton
                     android:id="@+id/backBtn"
-                    android:layout_width="67dp"
-                    android:layout_height="64dp"
-                    android:background="#00FFFFFF"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/navigation_drawer_close"
+                    android:padding="12dp"
+                    android:scaleType="fitCenter"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@drawable/ic_arrow_back" />
+                    app:srcCompat="@drawable/ic_arrow_back"
+                    app:tint="@color/white" />
 
                 <ImageView
                     android:id="@+id/resetShowBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:padding="12dp"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.95"
-                    app:layout_constraintStart_toEndOf="@+id/backBtn"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_download_complete" />
+                    app:srcCompat="@drawable/ic_download_complete"
+                    app:tint="@color/white" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -61,7 +57,7 @@
                 android:id="@+id/showName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10pt"
+                android:layout_marginHorizontal="16dp"
                 android:text="Show Name"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
@@ -71,16 +67,16 @@
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
-                android:layout_height="273dp"
-                android:layout_margin="10pt"
-                android:layout_marginLeft="10sp"
+                android:layout_height="300dp"
+                android:layout_margin="16dp"
+                android:scaleType="centerCrop"
                 tools:srcCompat="@drawable/placeholder" />
 
             <TextView
                 android:id="@+id/summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10pt"
+                android:layout_marginHorizontal="16dp"
                 android:textAlignment="textStart"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
@@ -89,33 +85,30 @@
                 android:id="@+id/rest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18sp"
-                android:layout_marginHorizontal="10pt"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
                 android:textAlignment="textStart"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
-
-
-            <Button
-                android:id="@+id/playWithBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10pt"
-                android:layout_marginBottom="10pt"
-                android:background="@color/black"
-                android:layout_margin="10pt"
-                android:text="Play with MX Player" />
 
             <Button
                 android:id="@+id/playBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10pt"
-                android:background="@color/black"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                android:backgroundTint="#673AB7"
                 android:text="Play with Internal player"
-                app:iconTint="#FFFFFF" />
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/playWithBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:backgroundTint="#673AB7"
+                android:textColor="@color/white"
+                android:text="Play with MX Player" />
 
         </LinearLayout>
 

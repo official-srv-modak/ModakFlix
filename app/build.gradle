@@ -24,16 +24,17 @@ android {
         applicationId "com.souravmodak.modakflix"
         minSdk 24
         targetSdk 35
-        versionCode 6
-        versionName "1.0.6"
-        versionNameSuffix '_stable'
+        versionCode 7
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            // Enabling R8 (Shrinking/Obfuscation) is highly recommended for Play Store
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

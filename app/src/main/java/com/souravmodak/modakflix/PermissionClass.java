@@ -29,6 +29,11 @@ public class PermissionClass extends AppCompatActivity {
 
     static boolean permissionCompletedFlag = false;
     static int REQUEST_CODE;
+    
+    // Default constructor for system instantiation
+    public PermissionClass() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,17 +47,18 @@ public class PermissionClass extends AppCompatActivity {
     static boolean flag = false;
 
     public static boolean permissionFlag = false;
-    public PermissionClass(Context context, Activity activity, int REQUEST_CODE) {
-        this.context = context;
-        this.activity = activity;
-        this.REQUEST_CODE = REQUEST_CODE;
+    
+    // Static helper method instead of a constructor with arguments
+    public static void init(Context context, Activity activity, int REQUEST_CODE) {
+        PermissionClass.context = context;
+        PermissionClass.activity = activity;
+        PermissionClass.REQUEST_CODE = REQUEST_CODE;
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     public static void permission(int flag)
     {
-        new PermissionClass(context, activity, REQUEST_CODE);
         if(!PermissionClass.permissionFlag)
         {
             if(flag == 0)
@@ -84,7 +90,6 @@ public class PermissionClass extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.R)
     public static Boolean checkAndRequestPermissions(Activity activity, Context context)
     {
-        new PermissionClass(context, activity, REQUEST_CODE);
         int permissionReadStorage = ContextCompat.checkSelfPermission(context,
                 Manifest.permission.READ_EXTERNAL_STORAGE);
 
@@ -222,20 +227,4 @@ public class PermissionClass extends AppCompatActivity {
             act.startActivityForResult(intent, REQUEST_CODE);
         }
     }
-
-    /*@RequiresApi(api = Build.VERSION_CODES.R)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 123) {
-            // There are no request codes
-            if(!Environment.isExternalStorageManager())
-            {
-                Toast.makeText(this, "Cannot continue without write permission.", Toast.LENGTH_LONG).show();
-                System.exit(0);
-            }
-            PermissionClass.permission(1);
-
-        }
-    }*/
 }

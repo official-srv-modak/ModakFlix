@@ -25,6 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,11 +61,11 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
-import com.obsez.android.lib.filechooser.ChooserDialog;
 import com.souravmodak.modakflix.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -106,6 +108,8 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
     private boolean mVisible;
     private ProgressDialog pDialog;
 
+    private ActivityResultLauncher<Intent> subtitlePickerLauncher;
+
     private static boolean isBehindLiveWindow(PlaybackException e) {
         Throwable cause = e.getCause();
         while (cause != null) {
@@ -127,6 +131,19 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
         dataSourceFactory = buildDataSourceFactory();
         hideStatusBar();
         setContentView(R.layout.activity_online_player);
+
+        subtitlePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri uri = result.getData().getData();
+                        if (uri != null) {
+                            getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            addSubtitle(uri);
+                        }
+                    }
+                }
+        );
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -523,10 +540,12 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void chooseSubtitle() {
-        new ChooserDialog(this)
-                .withChosenListener((path, pathFile) -> addSubtitle(Uri.fromFile(pathFile)))
-                .build()
-                .show();
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        String[] mimeTypes = {"application/x-subrip", "text/vtt", "text/plain", "application/octet-stream"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        subtitlePickerLauncher.launch(intent);
     }
 
     private void addSubtitle(Uri uri) {
@@ -538,7 +557,7 @@ public class OnlinePlayerActivity extends AppCompatActivity implements View.OnCl
                 .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
                 .build();
         MediaItem mediaItem = MediaItem.fromUri(videoUrl).buildUpon()
-                .setSubtitleConfigurations(List.of(subtitle))
+                .setSubtitleConfigurations(Collections.singletonList(subtitle))
                 .build();
         player.setMediaItem(mediaItem);
         player.prepare();

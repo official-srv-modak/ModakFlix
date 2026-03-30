@@ -1,42 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    app:cardCornerRadius="10dp">
+    app:cardBackgroundColor="@color/surface"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="8dp">
 
-    <ScrollView
-        android:id="@+id/previewImageAttachScroll"
+    <LinearLayout
+        android:id="@+id/previewImageAttach"
         android:layout_width="match_parent"
-        android:background="@drawable/border_white_round"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        <LinearLayout
-            android:id="@+id/previewImageAttach"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginBottom="24dp"
+            android:text="Subtitles"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="@color/white" />
 
-            <Button
-                android:id="@+id/openFromInternal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:text="Open from storage" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/openFromInternal"
+            style="@style/Widget.ModakFlix.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/surface_variant"
+            android:text="Open from storage"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_menu"
+            app:iconTint="@color/white" />
 
-            <Button
-                android:id="@+id/downloadSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="Download subtitle" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/downloadSubtitle"
+            style="@style/Widget.ModakFlix.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary"
+            android:text="Download subtitle"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_download"
+            app:iconTint="@color/white" />
 
-        </LinearLayout>
-    </ScrollView>
-</androidx.cardview.widget.CardView>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

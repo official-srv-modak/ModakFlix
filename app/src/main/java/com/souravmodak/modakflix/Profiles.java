@@ -46,8 +46,8 @@ public class Profiles extends AppCompatActivity {
     public static String domain_name = "http://"+ip+"/";
     public static String record_position_path = domain_name+"record_position.php";
     public static String delete_position_path = domain_name+"delete_from_shows_watched.php";
-    public static String get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";
-    public static String reset_profile = domain_name+"reset_profile.php?username=admin";
+    public static String get_shows_watched_path = domain_name+"get_shows_watched.php?username=";
+    public static String reset_profile = domain_name+"reset_profile.php?username=";
     public static String get_movies_list = domain_name+"get_movies_list_json.php";
     public static String reload_shows_watched = domain_name+"reload_shows_watched.php";
     public static String search_shows = domain_name+"search_show.php";
@@ -67,7 +67,7 @@ public class Profiles extends AppCompatActivity {
         {
             file = new File(ipInfoFilePath);
         }
-        if(file != null)
+        if(file != null && file.exists())
         {
             try {
                 ObjectInputStream objIn = new ObjectInputStream(new FileInputStream(file));
@@ -108,20 +108,8 @@ public class Profiles extends AppCompatActivity {
         ipInfoFilePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/ipInfo.dat";
         ip = fetchIpDataFromFile(ipInfoFilePath);
 
-        domain_name = "http://"+ip+"/";
-        record_position_path = domain_name+"record_position.php";
-        delete_position_path = domain_name+"delete_from_shows_watched.php";
-        get_shows_watched_path = domain_name+"get_shows_watched.php?username=admin";
-        reset_profile = domain_name+"reset_profile.php?username=admin";
-        get_movies_list = domain_name+"get_movies_list_json.php";
-        reload_shows_watched = domain_name+"reload_shows_watched.php";
-        search_shows = domain_name+"search_show.php";
-        get_profiles = domain_name+"get_profiles.php";
-        reload_description = domain_name+"reload_description.php";
-        get_description = domain_name+"get_description.php";
-        add_profile = domain_name+"add_profile.php";
-        reset_show = domain_name+"reset_show.php";
-        upload = domain_name+"upload.php";
+        updatePaths(ip);
+        
         actResume = 0;
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
@@ -139,33 +127,34 @@ public class Profiles extends AppCompatActivity {
 
         try
         {
-            this.getSupportActionBar().hide();
+            if (this.getSupportActionBar() != null) {
+                this.getSupportActionBar().hide();
+            }
         }
         catch (NullPointerException e){}
-
-        /*LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(0, 27, 0, 0);
-        AppBarLayout ap = findViewById(R.id.appBarLayout);
-        ap.setLayoutParams(lp);*/
 
         LoadCard ld = new LoadCard();
         ld.execute(get_profiles);
 
     }
 
-    /*boolean hasAnimationStarted;
-    AppBarLayout logo;
-    public void onWindowFocusChanged(boolean hasFocus) {
-        logo = findViewById(R.id.appBarLayout);
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && !hasAnimationStarted) {
-            hasAnimationStarted=true;
-            DisplayMetrics metrics = getResources().getDisplayMetrics();
-            ObjectAnimator translationY = ObjectAnimator.ofFloat(logo, "y", metrics.heightPixels / 2 - (metrics.heightPixels / 2)); // metrics.heightPixels or root.getHeight()
-            translationY.setDuration(1);
-            translationY.start();
-        }
-    }*/
+    public static void updatePaths(String newIp) {
+        ip = newIp;
+        domain_name = "http://"+ip+"/";
+        record_position_path = domain_name+"record_position.php";
+        delete_position_path = domain_name+"delete_from_shows_watched.php";
+        get_shows_watched_path = domain_name+"get_shows_watched.php?username=";
+        reset_profile = domain_name+"reset_profile.php?username=";
+        get_movies_list = domain_name+"get_movies_list_json.php";
+        reload_shows_watched = domain_name+"reload_shows_watched.php";
+        search_shows = domain_name+"search_show.php";
+        get_profiles = domain_name+"get_profiles.php";
+        reload_description = domain_name+"reload_description.php";
+        get_description = domain_name+"get_description.php";
+        add_profile = domain_name+"add_profile.php";
+        reset_show = domain_name+"reset_show.php";
+        upload = domain_name+"upload.php";
+    }
 
     public void showServerDialog(String Message)
     {
@@ -176,8 +165,6 @@ public class Profiles extends AppCompatActivity {
         alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Movies.writeIpData("192.168.0.4");
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profiles.this);
                 builder.setMessage("Enter Server's Local IP Address");
                 final EditText input = new EditText(Profiles.this);
@@ -188,8 +175,9 @@ public class Profiles extends AppCompatActivity {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        writeIpData(ipInfoFilePath, input.getText().toString().trim());
-                        ip = input.getText().toString().trim();
+                        String newIp = input.getText().toString().trim();
+                        writeIpData(ipInfoFilePath, newIp);
+                        updatePaths(newIp);
                         Intent intent = new Intent(Profiles.this, SplashScreen.class);
                         finish();
                         startActivity(intent);
@@ -208,117 +196,109 @@ public class Profiles extends AppCompatActivity {
 
     }
 
-    private class LoadCard extends AsyncTask<String, Void, Integer> {
-        protected Integer doInBackground(String... urls) {
-
-            JSONObject jsonData = null, resumeData = null;
+    private class LoadCard extends AsyncTask<String, Void, JSONObject> {
+        @Override
+        protected JSONObject doInBackground(String... urls) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                jsonData = Movies.getDataFromServer(urls[0]);
+                return Movies.getDataFromServer(urls[0]);
             }
-            final JSONObject finalJsonData = jsonData;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONArray show = null;
-                    try {
-                        show = finalJsonData.getJSONArray("cards");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        showServerDialog("Server not found! Want to input local IP?");
-                    }
-                    LinearLayout c = findViewById(R.id.linearLayout2);
-                    if(show!=null)
-                    {
-                        for (int i = 0; i < show.length(); ) {
-                            LinearLayout linearLayout2 = new LinearLayout(Profiles.this);
-
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
-                                    (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            linearLayout2.setLayoutParams(params);
-                            linearLayout2.setWeightSum(2f);
-                            linearLayout2.setOrientation(LinearLayout.HORIZONTAL);
-                            linearLayout2.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
-
-                            for (int j = 0; j < 2 && i<show.length(); j++) {
-                                JSONObject card = null;
-                                try {
-                                    card = show.getJSONObject(i++);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                View view = LayoutInflater.from(Profiles.this).inflate(R.layout.profiles, null);
-                                @SuppressLint({"NewApi", "LocalSuppress"}) int uniqueId = View.generateViewId();
-                                view.setId(uniqueId);
-
-                                TextView tv = view.findViewById(R.id.accountName);
-                                try {
-                                    tv.setText(card.getString("first_name") + " " + card.getString("last_name"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                linearLayout2.addView(view);
-
-
-                                view.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        overridePendingTransition(0, R.anim.fade_out);
-                                        Intent intent = new Intent(Profiles.this, MainActivity.class);
-                                        intent.putExtra("username", tv.getText());
-                                        intent.putExtra("ip", ip);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                });
-                            }
-                            // c.removeView(loading);
-                            c.addView(linearLayout2);
-                        }
-                    }
-                    View view = LayoutInflater.from(Profiles.this).inflate(R.layout.profiles, null);
-                    @SuppressLint({"NewApi", "LocalSuppress"}) int uniqueId = View.generateViewId();
-                    view.setId(uniqueId);
-                    TextView tv = view.findViewById(R.id.accountName);
-                    tv.setText("Edit Profiles");
-
-                    view.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            overridePendingTransition(0, R.anim.fade_out);
-                            Intent intent = new Intent(Profiles.this, EditProfile.class);
-                            intent.putExtra("profileData", finalJsonData.toString());
-                            startActivity(intent);
-                        }
-                    });
-                    c.addView(view);
-                    TextView loading = findViewById(R.id.loading);
-                    loading.setVisibility(View.INVISIBLE);
-                }
-            });
-
             return null;
-        }
-        ProgressDialog progressDialog = new ProgressDialog(Profiles.this);;
-
-        /*@Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-
-            progressDialog.setMessage("Loading...");
-            progressDialog.setIndeterminate(false);
-            progressDialog.setCancelable(true);
-            progressDialog.show();
-
-
-            int temp = 0;
         }
 
         @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
-                progressDialog.dismiss();
-        }*/
+        protected void onPostExecute(final JSONObject finalJsonData) {
+            super.onPostExecute(finalJsonData);
+            
+            JSONArray show = null;
+            if (finalJsonData != null) {
+                try {
+                    show = finalJsonData.getJSONArray("cards");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showServerDialog("Server not found! Want to input local IP?");
+                }
+            } else {
+                showServerDialog("Server not found! Want to input local IP?");
+            }
 
+            LinearLayout c = findViewById(R.id.linearLayout2);
+            if (c == null) return;
+            
+            c.removeAllViews(); // Clear existing views before adding new ones
+            
+            if(show!=null)
+            {
+                for (int i = 0; i < show.length(); ) {
+                    LinearLayout linearLayout2 = new LinearLayout(Profiles.this);
+
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
+                            (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    linearLayout2.setLayoutParams(params);
+                    linearLayout2.setWeightSum(2f);
+                    linearLayout2.setOrientation(LinearLayout.HORIZONTAL);
+                    linearLayout2.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
+
+                    for (int j = 0; j < 2 && i<show.length(); j++) {
+                        JSONObject card = null;
+                        try {
+                            card = show.getJSONObject(i++);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (card == null) continue;
+
+                        View view = LayoutInflater.from(Profiles.this).inflate(R.layout.profiles, null);
+                        @SuppressLint({"NewApi", "LocalSuppress"}) int uniqueId = View.generateViewId();
+                        view.setId(uniqueId);
+
+                        final TextView tv = view.findViewById(R.id.accountName);
+                        try {
+                            tv.setText(card.getString("first_name") + " " + card.getString("last_name"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        linearLayout2.addView(view);
+
+
+                        view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                overridePendingTransition(0, R.anim.fade_out);
+                                Intent intent = new Intent(Profiles.this, MainActivity.class);
+                                intent.putExtra("username", tv.getText().toString());
+                                intent.putExtra("ip", ip);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                    }
+                    c.addView(linearLayout2);
+                }
+            }
+            
+            View editView = LayoutInflater.from(Profiles.this).inflate(R.layout.profiles, null);
+            @SuppressLint({"NewApi", "LocalSuppress"}) int editUniqueId = View.generateViewId();
+            editView.setId(editUniqueId);
+            TextView editTv = editView.findViewById(R.id.accountName);
+            editTv.setText("Edit Profiles");
+
+            editView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    overridePendingTransition(0, R.anim.fade_out);
+                    Intent intent = new Intent(Profiles.this, EditProfile.class);
+                    if (finalJsonData != null) {
+                        intent.putExtra("profileData", finalJsonData.toString());
+                    }
+                    startActivity(intent);
+                }
+            });
+            c.addView(editView);
+            
+            TextView loading = findViewById(R.id.loading);
+            if (loading != null) loading.setVisibility(View.INVISIBLE);
+            View progress = findViewById(R.id.progress);
+            if (progress != null) progress.setVisibility(View.GONE);
+        }
     }
 }

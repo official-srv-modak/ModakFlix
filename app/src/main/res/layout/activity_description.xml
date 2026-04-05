@@ -5,11 +5,11 @@
     android:id="@+id/swipeRefreshDesc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/black"
+    android:fitsSystemWindows="true"
     tools:context=".Description">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -18,21 +18,23 @@
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#000000"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/_32sdp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/_8sdp"
+                android:paddingBottom="@dimen/_8sdp">
 
                 <ImageButton
                     android:id="@+id/backBtn"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_margin="8dp"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/navigation_drawer_close"
-                    android:padding="12dp"
+                    android:padding="@dimen/_8sdp"
                     android:scaleType="fitCenter"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -41,10 +43,11 @@
 
                 <ImageView
                     android:id="@+id/resetShowBtn"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_margin="8dp"
-                    android:padding="12dp"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/_8sdp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -53,65 +56,100 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_4sdp"
+                app:cardBackgroundColor="@color/black"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="@dimen/_12sdp"
+                app:strokeColor="#33FFFFFF"
+                app:strokeWidth="1dp">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="@dimen/_220sdp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:minHeight="@dimen/_300sdp"
+                    android:scaleType="fitCenter"
+                    tools:srcCompat="@drawable/placeholder" />
+            </com.google.android.material.card.MaterialCardView>
+
             <TextView
                 android:id="@+id/showName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.02"
                 android:text="Show Name"
                 android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/_24ssp" />
 
-            <ImageView
-                android:id="@+id/image"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/playBtn"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_margin="16dp"
-                android:scaleType="centerCrop"
-                tools:srcCompat="@drawable/placeholder" />
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:backgroundTint="#673AB7"
+                android:paddingVertical="@dimen/_12sdp"
+                android:text="Play with Internal player"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_15ssp"
+                android:textStyle="bold"
+                app:cornerRadius="@dimen/_8sdp"
+                app:icon="@drawable/ic_play_arrow_black_24dp"
+                app:iconGravity="textStart"
+                app:iconSize="@dimen/_20sdp"
+                app:iconTint="@color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/playWithBtn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_12sdp"
+                android:text="Play with MX Player"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_15ssp"
+                app:cornerRadius="@dimen/_8sdp"
+                app:strokeColor="#673AB7"
+                app:strokeWidth="2dp" />
 
             <TextView
                 android:id="@+id/summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:textAlignment="textStart"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:alpha="0.85"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="5dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_15ssp" />
 
             <TextView
                 android:id="@+id/rest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:textAlignment="textStart"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/playBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginVertical="16dp"
-                android:backgroundTint="#673AB7"
-                android:text="Play with Internal player"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/playWithBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:backgroundTint="#673AB7"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:alpha="0.7"
+                android:fontFamily="sans-serif-medium"
                 android:textColor="@color/white"
-                android:text="Play with MX Player" />
+                android:textSize="@dimen/_13ssp" />
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ModakFlix"
         android:usesCleartextTraffic="true">
+
+        <property
+            android:name="android.pageSizeCompat"
+            android:value="true" />
+
         <activity
             android:name="com.souravmodak.modakflix.PermissionClass"
             android:exported="true" />
